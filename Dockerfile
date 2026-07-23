@@ -1,18 +1,15 @@
-FROM rocker/verse:4.4.0
+FROM rocker/verse:4.3.3
 
 WORKDIR /work
 
-RUN Rscript -e ' \
-  options(repos = c(CRAN = "https://cloud.r-project.org")); \
-  packages <- c( \
-    "dplyr", "ggplot2", "here", "janitor", "readr", \
-    "rsample", "stringr", "tibble", "tidyr", "yardstick" \
-  ); \
-  install.packages(packages, dependencies = NA); \
-  missing <- packages[!vapply( \
-    packages, requireNamespace, logical(1), quietly = TRUE \
-  )]; \
-  if (length(missing)) { \
-    stop("Package installation failed for: ", paste(missing, collapse = ", ")) \
-  } \
-'
+ENV RENV_CONFIG_REPOS_OVERRIDE=https://cloud.r-project.org
+
+COPY renv.lock renv.lock
+COPY .Rprofile .Rprofile
+COPY renv/activate.R renv/activate.R
+
+RUN Rscript -e 'renv::restore(prompt = FALSE)'
+
+COPY . .
+
+RUN Rscript -e 'renv::status()'

@@ -1,2 +1,7 @@
-renv/library
 .git
+.Rproj.user
+.Rhistory
+.RData
+
+renv/*
+!renv/activate.R
