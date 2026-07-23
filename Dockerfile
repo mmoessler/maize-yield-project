@@ -13,3 +13,5 @@ RUN Rscript -e 'renv::restore(prompt = FALSE)'
 COPY . .
 
 RUN Rscript -e 'renv::status()'
+
+CMD ["Rscript", "scripts/run-all.R"]
