@@ -1,0 +1,16 @@
+# R
+.Rhistory
+.Ruserdata
+.Rproj.user/
+
+# Data
+data-raw/
+data-processed/
+
+# Quarto
+.quarto/
+reports/*_files/
+reports/*.html
+
+# Logs
+docker-build.log

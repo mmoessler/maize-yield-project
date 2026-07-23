@@ -1,0 +1,98 @@
+---
+title: "Understanding Changes in Maize Yield in Southern Africa"
+author: "Learner name"
+date: today
+format:
+  html:
+    toc: true
+    code-fold: false
+execute:
+  echo: true
+  warning: true
+  message: false
+---
+
+## Research question
+
+How have maize yields changed across selected Southern African countries, and how well do simple models predict recent observed yields?
+
+## Data and provenance
+
+The intended source is FAOSTAT Crops and Livestock Products data. During offline use, the project may use a bundled synthetic sample. Confirm the active source before interpreting results.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(ggplot2)
+library(here)
+library(readr)
+
+maize <- read_csv(
+  here("data-processed", "maize-yield-panel.csv"),
+  show_col_types = FALSE
+)
+```
+
+## Data preparation
+
+Describe filtering, duplicate handling, reshaping, unit conversion, missing values, and derived variables. Refer to `R/02-prepare-maize-data.R` for the complete transformation.
+
+```{r}
+#| label: data-overview
+maize |>
+  summarise(
+    rows = n(),
+    countries = n_distinct(country),
+    first_year = min(year, na.rm = TRUE),
+    last_year = max(year, na.rm = TRUE),
+    missing_yield = sum(is.na(yield_tonnes_per_hectare))
+  )
+```
+
+## Exploratory analysis
+
+```{r}
+#| label: fig-yield-trends
+#| fig-cap: "Maize yield trends by country."
+ggplot(maize, aes(year, yield_tonnes_per_hectare)) +
+  geom_line() +
+  facet_wrap(vars(country), scales = "free_y") +
+  labs(x = NULL, y = "Yield (tonnes per hectare)") +
+  theme_minimal()
+```
+
+Address:
+
+- Which countries have the highest recent yields?
+- How have yields changed over time?
+- Are production changes more consistent with yield changes or harvested-area changes?
+
+## Modeling
+
+```{r}
+#| label: model-results
+performance <- read_csv(
+  here("data-processed", "model-performance.csv"),
+  show_col_types = FALSE
+)
+performance
+```
+
+Interpret the coefficient on `year` in the descriptive model and compare predictive performance on 2018 onward data. Explain why a model can be useful for description without being suitable for causal claims.
+
+## Limitations
+
+Discuss measurement quality, missingness, country comparability, revisions, omitted variables, the simplicity of the models, and the difference between association and causation.
+
+## Conclusion
+
+Provide two or three findings supported by the analysis. Avoid claims that go beyond the data and methods.
+
+## Reproducibility statement
+
+This report was generated from version-controlled scripts using relative paths. Raw data were not edited manually. Package versions should be recorded with `renv`. The source, download date, transformation steps, and known limitations are documented in `metadata/`.
+
+```{r}
+#| label: session-info
+sessionInfo()
+```
