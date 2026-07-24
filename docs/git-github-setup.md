@@ -188,6 +188,17 @@ that is expected because this test authenticates you but does not open an intera
 
 See [Testing your SSH connection — GitHub Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection) for expected output and troubleshooting.
 
+## Videos
+
+Use these videos as demonstrations alongside the written steps. Interfaces can change after a video is recorded, so follow the current written instructions when a button or menu looks different.
+
+- [Create a GitHub account](https://www.youtube.com/watch?v=RGOj5yH7evk&t=425s) — freeCodeCamp course, starting at the GitHub sign-up demonstration.
+- [Install Git](https://www.youtube.com/watch?v=RGOj5yH7evk&t=714s) — the same course, starting at its Git installation section.
+- [Create and add an SSH key to GitHub](https://www.youtube.com/watch?v=ZgARMqR3qq8) — an official GitHub for Beginners walkthrough.
+- [Configure SSH and push to GitHub](https://www.youtube.com/watch?v=RGOj5yH7evk&t=1230s) — freeCodeCamp course, starting at its SSH section.
+
+Pause after each step and compare the result in your terminal with the checkpoints in this guide. Never display your private SSH key while following a recording.
+
 ## Final checklist
 
 Run these commands:

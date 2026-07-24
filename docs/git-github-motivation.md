@@ -154,6 +154,15 @@ Git and GitHub are therefore part of the scientific workflow, not only tools for
 4. What information should a commit message communicate?
 5. How could Git help identify when an analysis result changed?
 
+## Videos
+
+The following videos provide an alternative introduction to the concepts in this guide:
+
+- [Git and GitHub for Beginners: What are Git and version control?](https://www.youtube.com/watch?v=RGOj5yH7evk&t=70s) — freeCodeCamp, starting at the explanation of Git and version control.
+- [GitHub for Beginners](https://www.youtube.com/playlist?list=PL0lo9MOBetEFcp4SCWinBdpml9B2U25-f) — GitHub's official beginner video series covering repositories, collaboration, and common workflows.
+
+The freeCodeCamp video is a longer course. The link opens at the section most relevant to this guide; continue watching if you would like to see the concepts applied at the command line.
+
 ## Further reading
 
 - [About version control — Pro Git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control)

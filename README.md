@@ -68,6 +68,19 @@ The main scripts are:
 | `scripts/run-all.R` | Run the analysis from acquisition through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
 
+## Further documentation
+
+### Version control and collaboration using Git & GitHub
+
+The following guides introduce the version-control tools and workflows used in this project. New learners should work through them in the listed order.
+
+Part 1) Version control and collaboration using git & github:
+
+1. [Why use Git and GitHub?](docs/git-github-motivation.md) — motivation for version control, reproducibility, and collaboration.
+2. [Set up Git and GitHub](docs/git-github-setup.md) — install Git, create a GitHub account, configure your identity, and connect securely with SSH.
+3. [Create your maize yield repository](docs/git-github-repository-setup.md) — clone the course repository, create your own GitHub repository, and configure the `origin` and `upstream` remotes.
+4. [A collaborative Git workflow](docs/git-workflow.md) — practise pulling, changing, staging, committing, pushing, integrating diverging histories, and resolving merge conflicts.
+
 ## Analysis workflow
 
 ```text
