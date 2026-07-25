@@ -316,6 +316,20 @@ If the changes are not intentional, use `renv::restore()` to return the project 
 - [ ] I know which `renv` files belong in Git.
 - [ ] I do not commit `renv/library/`.
 
+## Videos
+
+- [`renv`: Project Environments for R](https://www.youtube.com/watch?v=4wRiPG9LM3o) — a 20-minute Posit introduction by `renv` maintainer Kevin Ushey. It covers project-local libraries, the lockfile, the global cache, `snapshot()`, and `restore()`.
+- [You should be using `renv`](https://www.youtube.com/watch?v=GwVx_pf2uz4) — a practical Posit conference talk by E. David Aja about diagnosing environments, collaborating, and moving projects between computers.
+
+Both presentations initialize demonstration projects. Remember that the maize yield repository is already initialized: use `renv::restore()` to recreate its recorded library rather than running `renv::init()` again.
+
+While watching, identify the direction of each operation:
+
+```text
+project library ──snapshot──► renv.lock
+project library ◄──restore─── renv.lock
+```
+
 ## Further reading
 
 - [`renv` workflow](https://rstudio.github.io/renv/)

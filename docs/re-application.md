@@ -421,6 +421,46 @@ If Quarto is absent, install it or render in the container, whose `rocker/verse`
 - [ ] I understand which container paths persist on the host.
 - [ ] I know when the Docker image must be rebuilt.
 
+## Videos
+
+No video below uses this exact maize yield repository. Use the videos for the general operations and the commands in this guide for the course analysis.
+
+### Local R with `renv`
+
+- [`renv`: Project Environments for R](https://www.youtube.com/watch?v=4wRiPG9LM3o) — Kevin Ushey demonstrates project-local R libraries, environment status, snapshotting, restoring, and the package cache.
+- [You should be using `renv`](https://www.youtube.com/watch?v=GwVx_pf2uz4) — shows why a shared lockfile helps collaborators run an R project with the intended dependencies.
+
+For this project, map the demonstrations to:
+
+```bash
+Rscript scripts/00-setup.R
+Rscript scripts/run-all.R
+```
+
+The setup script performs the restore and status check non-interactively.
+
+### Build and run the container
+
+- [Docker Tutorial for Beginners](https://www.youtube.com/watch?v=3c-iBn73dDE) — demonstrates the full image and container workflow, including `docker build`, `docker run`, Dockerfiles, volumes, interactive container inspection, and Compose.
+- [Docker in 100 Seconds](https://www.youtube.com/watch?v=Gjnup-PuquQ) — a quick review of the relationship among this repository's Dockerfile, the `maize-yield-project` image, and a running analysis container.
+
+When the longer tutorial mounts source or application data, compare that with this project's four bind mounts:
+
+```text
+host data-raw       ↔ container /work/data-raw
+host data-processed ↔ container /work/data-processed
+host figures        ↔ container /work/figures
+host reports        ↔ container /work/reports
+```
+
+The written guide remains authoritative for the project-specific image name, paths, and commands. In particular, rebuild the image after changing tracked analysis code, and use `-it` plus `bash` or `R` only for the interactive modes.
+
+### Docker Compose
+
+- [Ultimate Docker Compose Tutorial](https://www.youtube.com/watch?v=SXwC9fSwct8) — demonstrates how a Compose file records services and replaces a collection of long Docker commands.
+
+Compose is included in the course environment setup, but this repository does not currently provide a Compose file. Do not try to run the video's service names against the maize project.
+
 ## Further reading
 
 - [`renv` setup for this project](renv-setup.md)

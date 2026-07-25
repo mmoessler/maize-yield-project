@@ -262,8 +262,22 @@ Inspect usage with `docker system df`. Ask the instructor before deleting shared
 - [ ] `docker run --rm hello-world` succeeds.
 - [ ] I can explain the difference between an image and a container.
 - [ ] I know that this repository currently does not contain a Compose file.
-- [ ] I understand that mounted host directories are writable from the
-      container.
+- [ ] I understand that mounted host directories are writable from the container.
+
+## Videos
+
+### Concepts and first commands
+
+- [Docker in 100 Seconds](https://www.youtube.com/watch?v=Gjnup-PuquQ) — a short visual overview of containers, images, Dockerfiles, and how Docker differs from a virtual machine.
+- [Docker Tutorial for Beginners](https://www.youtube.com/watch?v=3c-iBn73dDE) — TechWorld with Nana's complete beginner course, including installation, basic commands, debugging, Dockerfiles, volumes, and containerized development.
+
+Use Docker's current written installation instructions in this guide even when a video's installer screens differ. Operating-system requirements and Docker Desktop interfaces change more quickly than the underlying concepts.
+
+### Docker Compose
+
+- [Ultimate Docker Compose Tutorial](https://www.youtube.com/watch?v=SXwC9fSwct8) — TechWorld with Nana explains why Compose is useful, translates `docker run` settings into YAML, and demonstrates `up`, `down`, services, variables, and multi-container applications.
+
+The Compose demonstration uses multiple application services. This maize repository currently has no `compose.yaml`; watch it to learn the tool, but use the project's documented `docker build` and `docker run` commands until a Compose configuration is provided.
 
 ## Further reading
 

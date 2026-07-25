@@ -204,6 +204,17 @@ Do not commit package libraries, passwords, tokens, or confidential data.
 4. What is the difference between a Docker image and a container?
 5. Name two reproducibility concerns that neither `renv` nor Docker solves by itself.
 
+## Videos
+
+These videos provide complementary explanations of the motivation and tools:
+
+- [`renv`: Project Environments for R](https://www.youtube.com/watch?v=4wRiPG9LM3o) — Kevin Ushey from Posit introduces the "it worked before" problem, project-local libraries, isolation, portability, lockfiles, `snapshot()`, and `restore()`.
+- [You should be using `renv`](https://www.youtube.com/watch?v=GwVx_pf2uz4) — E. David Aja at rstudio::conf explains how `renv` supports diagnosis, collaboration, and moving R projects between environments.
+- [Docker in 100 Seconds](https://www.youtube.com/watch?v=Gjnup-PuquQ) — Fireship gives a concise visual explanation of containers, virtual machines, Dockerfiles, images, and running containers.
+- [Docker Tutorial for Beginners](https://www.youtube.com/watch?v=3c-iBn73dDE) — TechWorld with Nana provides a longer introduction to the motivation for containers and demonstrates images, containers, commands, Dockerfiles, volumes, and Compose.
+
+The Docker videos use web-application examples rather than an R analysis. Focus on the environment concepts: a Dockerfile describes an image, an image packages the environment, and a container is a running instance of that image.
+
 ## Further reading
 
 - [Introduction to `renv`](https://rstudio.github.io/renv/articles/renv)
