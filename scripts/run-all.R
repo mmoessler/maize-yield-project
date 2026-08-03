@@ -1,5 +1,11 @@
 # Run the complete teaching workflow from the repository root.
 
+source("scripts/functions.R")
+
+assert_project_root()
+ensure_project_directories()
+check_required_packages()
+
 scripts <- c(
   "scripts/01-acquire-faostat-data.R",
   "scripts/02-prepare-maize-data.R",

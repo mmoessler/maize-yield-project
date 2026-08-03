@@ -1,5 +1,11 @@
 # Create exploratory summaries and figures.
 
+source("scripts/functions.R")
+
+assert_project_root()
+ensure_project_directories()
+check_required_packages(c("dplyr", "ggplot2", "here", "readr"))
+
 library(dplyr)
 library(ggplot2)
 library(here)
@@ -31,7 +37,7 @@ yield_plot <- ggplot(maize, aes(year, yield_tonnes_per_hectare, group = country)
     subtitle = "Selected Southern African countries",
     x = NULL,
     y = "Yield (tonnes per hectare)",
-    caption = "Source: FAOSTAT or bundled synthetic teaching sample"
+    caption = "Source: FAOSTAT or course-provided teaching sample"
   ) +
   theme_minimal()
 

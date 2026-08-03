@@ -2,6 +2,15 @@
 .Rproj.user
 .Rhistory
 .RData
+.env
+
+data-raw
+data-processed
+figures/*.png
+reports/*.html
+reports/*_files
+.quarto
 
 renv/*
 !renv/activate.R
+!renv/settings.json

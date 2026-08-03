@@ -18,7 +18,7 @@ How have maize yields changed across selected Southern African countries, and ho
 
 ## Data and provenance
 
-The intended source is FAOSTAT Crops and Livestock Products data. During offline use, the project may use a bundled synthetic sample. Confirm the active source before interpreting results.
+The intended source is FAOSTAT Crops and Livestock Products data. During offline use, the project may use a course-provided teaching sample. Confirm the active source before interpreting results.
 
 ```{r}
 #| label: setup
@@ -35,7 +35,7 @@ maize <- read_csv(
 
 ## Data preparation
 
-Describe filtering, duplicate handling, reshaping, unit conversion, missing values, and derived variables. Refer to `R/02-prepare-maize-data.R` for the complete transformation.
+Describe filtering, duplicate handling, reshaping, unit conversion, missing values, and derived variables. Refer to `scripts/02-prepare-maize-data.R` for the complete transformation.
 
 ```{r}
 #| label: data-overview

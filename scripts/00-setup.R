@@ -7,15 +7,12 @@
 # On a fresh checkout, this script installs renv if necessary and restores
 # the package versions recorded in renv.lock.
 
-project_root <- normalizePath(".", mustWork = TRUE)
+source("scripts/functions.R")
+
+project_root <- assert_project_root()
 lockfile <- file.path(project_root, "renv.lock")
 
-if (!file.exists(lockfile)) {
-  stop(
-    "Could not find renv.lock.\n",
-    "Run this script from the project root."
-  )
-}
+ensure_project_directories()
 
 # Install renv only when it is not already available.
 if (!requireNamespace("renv", quietly = TRUE)) {
@@ -46,4 +43,9 @@ if (!isTRUE(status$synchronized)) {
   )
 }
 
-message("Setup complete: the project library matches renv.lock.")
+check_required_packages()
+
+message(
+  "Setup complete: the project library matches renv.lock and ",
+  "required directories are available."
+)

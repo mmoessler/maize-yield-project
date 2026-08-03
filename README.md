@@ -70,16 +70,11 @@ The main scripts are:
 
 ## Further documentation
 
-### Version control and collaboration using Git & GitHub
+The parent learning module contains the instructional pages for each topic. This repository keeps one implementation note per topic so contributors can understand how the course ideas are realized in this project:
 
-The following guides introduce the version-control tools and workflows used in this project. New learners should work through them in the listed order.
-
-Part 1) Version control and collaboration using git & github:
-
-1. [Why use Git and GitHub?](docs/git-github-motivation.md) — motivation for version control, reproducibility, and collaboration.
-2. [Set up Git and GitHub](docs/git-github-setup.md) — install Git, create a GitHub account, configure your identity, and connect securely with SSH.
-3. [Create your maize yield repository](docs/git-github-repository-setup.md) — clone the course repository, create your own GitHub repository, and configure the `origin` and `upstream` remotes.
-4. [A collaborative Git workflow](docs/git-workflow.md) — practise pulling, changing, staging, committing, pushing, integrating diverging histories, and resolving merge conflicts.
+- [Version control implementation](docs/version-control.md) — tracked/ignored artifacts, commit workflow, submodule updates, and review checks.
+- [Reproducible-environment implementation](docs/reproducible-environment.md) — `renv`, Docker, setup checks, persistent outputs, and troubleshooting.
+- [Remote-computing implementation](docs/remote-computing.md) — running the project on a remote Linux server and the current infrastructure boundary.
 
 ## Analysis workflow
 
@@ -129,6 +124,8 @@ First restore the package environment:
 Rscript scripts/00-setup.R
 ```
 
+This also verifies the project context and creates the generated-data and output directories when they are absent.
+
 Then run the complete workflow:
 
 ```bash
@@ -137,8 +134,16 @@ Rscript scripts/run-all.R
 
 Individual analysis stages can also be run in numerical order. Each stage expects the outputs of the preceding stages to exist.
 
-The acquisition step downloads a large FAOSTAT bulk archive, so it requires an internet connection and may take some time. FAOSTAT bulk-download URLs and
-schemas can change; verify the endpoint before a course run.
+The acquisition step downloads a large FAOSTAT bulk archive, so it requires an internet connection and may take some time. FAOSTAT bulk-download URLs and schemas can change; verify the endpoint before a course run. If the download fails, the script can use the tracked course sample at `data-raw/faostat-maize-yield-sample.csv` and stops clearly when neither input is available.
+
+Maintainers can regenerate the compact course sample from the downloaded bulk
+data. The script selects maize yield, production, and harvested area for the
+nine project countries from 1990 through 2022:
+
+```bash
+Rscript scripts/01-acquire-faostat-data.R
+Rscript scripts/create-teaching-sample.R
+```
 
 To render only the report after the processed outputs have been created:
 
@@ -165,7 +170,7 @@ docker run --rm \
   maize-yield-project
 ```
 
-See [`docs/setup-for-using-renv-with-docker.md`](docs/setup-for-using-renv-with-docker.md) for additional setup and interactive-use instructions.
+See [Reproducible-environment implementation](docs/reproducible-environment.md) for architecture, interactive use, environment updates, and troubleshooting.
 
 ## Generated outputs
 

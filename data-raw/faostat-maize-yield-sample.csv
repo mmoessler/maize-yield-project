@@ -1,0 +1,892 @@
+area,item,element,year,unit,value,flag
+Botswana,Maize (corn),Area harvested,1990,ha,40700,A
+Botswana,Maize (corn),Production,1990,t,11800,A
+Botswana,Maize (corn),Yield,1990,kg/ha,289.9,A
+Botswana,Maize (corn),Area harvested,1991,ha,36600,A
+Botswana,Maize (corn),Production,1991,t,14500,A
+Botswana,Maize (corn),Yield,1991,kg/ha,396.2,A
+Botswana,Maize (corn),Area harvested,1992,ha,15800,A
+Botswana,Maize (corn),Production,1992,t,3000,A
+Botswana,Maize (corn),Yield,1992,kg/ha,189.9,A
+Botswana,Maize (corn),Area harvested,1993,ha,22000,A
+Botswana,Maize (corn),Production,1993,t,2976,A
+Botswana,Maize (corn),Yield,1993,kg/ha,135.3,A
+Botswana,Maize (corn),Area harvested,1994,ha,63600,A
+Botswana,Maize (corn),Production,1994,t,10800,A
+Botswana,Maize (corn),Yield,1994,kg/ha,169.8,A
+Botswana,Maize (corn),Area harvested,1995,ha,20000,A
+Botswana,Maize (corn),Production,1995,t,18953,A
+Botswana,Maize (corn),Yield,1995,kg/ha,947.6,A
+Botswana,Maize (corn),Area harvested,1996,ha,100000,A
+Botswana,Maize (corn),Production,1996,t,24629,A
+Botswana,Maize (corn),Yield,1996,kg/ha,246.3,A
+Botswana,Maize (corn),Area harvested,1997,ha,79000,A
+Botswana,Maize (corn),Production,1997,t,22649,A
+Botswana,Maize (corn),Yield,1997,kg/ha,286.7,A
+Botswana,Maize (corn),Area harvested,1998,ha,25756,A
+Botswana,Maize (corn),Production,1998,t,2344,A
+Botswana,Maize (corn),Yield,1998,kg/ha,91,A
+Botswana,Maize (corn),Area harvested,1999,ha,34171,A
+Botswana,Maize (corn),Production,1999,t,3796,A
+Botswana,Maize (corn),Yield,1999,kg/ha,111.1,A
+Botswana,Maize (corn),Area harvested,2000,ha,83258,A
+Botswana,Maize (corn),Production,2000,t,9347,A
+Botswana,Maize (corn),Yield,2000,kg/ha,112.3,A
+Botswana,Maize (corn),Area harvested,2001,ha,24977,A
+Botswana,Maize (corn),Production,2001,t,4976,A
+Botswana,Maize (corn),Yield,2001,kg/ha,199.2,A
+Botswana,Maize (corn),Area harvested,2002,ha,55803,A
+Botswana,Maize (corn),Production,2002,t,16447,A
+Botswana,Maize (corn),Yield,2002,kg/ha,294.7,A
+Botswana,Maize (corn),Area harvested,2003,ha,7617,A
+Botswana,Maize (corn),Production,2003,t,1633,A
+Botswana,Maize (corn),Yield,2003,kg/ha,214.4,A
+Botswana,Maize (corn),Area harvested,2004,ha,43208,A
+Botswana,Maize (corn),Production,2004,t,7529,A
+Botswana,Maize (corn),Yield,2004,kg/ha,174.3,A
+Botswana,Maize (corn),Area harvested,2005,ha,70000,X
+Botswana,Maize (corn),Production,2005,t,16080,X
+Botswana,Maize (corn),Yield,2005,kg/ha,229.7,X
+Botswana,Maize (corn),Area harvested,2006,ha,60373,A
+Botswana,Maize (corn),Production,2006,t,15162,A
+Botswana,Maize (corn),Yield,2006,kg/ha,251.1,A
+Botswana,Maize (corn),Area harvested,2007,ha,17705,A
+Botswana,Maize (corn),Production,2007,t,2158,A
+Botswana,Maize (corn),Yield,2007,kg/ha,121.9,A
+Botswana,Maize (corn),Area harvested,2008,ha,48633,A
+Botswana,Maize (corn),Production,2008,t,8967,A
+Botswana,Maize (corn),Yield,2008,kg/ha,184.4,A
+Botswana,Maize (corn),Area harvested,2009,ha,82710,A
+Botswana,Maize (corn),Production,2009,t,20093,A
+Botswana,Maize (corn),Yield,2009,kg/ha,242.9,A
+Botswana,Maize (corn),Area harvested,2010,ha,65388,A
+Botswana,Maize (corn),Production,2010,t,10572,A
+Botswana,Maize (corn),Yield,2010,kg/ha,161.7,A
+Botswana,Maize (corn),Area harvested,2011,ha,101425,A
+Botswana,Maize (corn),Production,2011,t,35222,A
+Botswana,Maize (corn),Yield,2011,kg/ha,347.3,A
+Botswana,Maize (corn),Area harvested,2012,ha,56051,A
+Botswana,Maize (corn),Production,2012,t,7677,A
+Botswana,Maize (corn),Yield,2012,kg/ha,137,A
+Botswana,Maize (corn),Area harvested,2013,ha,45267,A
+Botswana,Maize (corn),Production,2013,t,3844,A
+Botswana,Maize (corn),Yield,2013,kg/ha,84.9,A
+Botswana,Maize (corn),Area harvested,2014,ha,104197,A
+Botswana,Maize (corn),Production,2014,t,28550,A
+Botswana,Maize (corn),Yield,2014,kg/ha,274,A
+Botswana,Maize (corn),Area harvested,2015,ha,14857,A
+Botswana,Maize (corn),Production,2015,t,3792,A
+Botswana,Maize (corn),Yield,2015,kg/ha,255.2,A
+Botswana,Maize (corn),Area harvested,2016,ha,60320,I
+Botswana,Maize (corn),Production,2016,t,15095.45,I
+Botswana,Maize (corn),Yield,2016,kg/ha,250.3,E
+Botswana,Maize (corn),Area harvested,2017,ha,51030,A
+Botswana,Maize (corn),Production,2017,t,12265,A
+Botswana,Maize (corn),Yield,2017,kg/ha,240.3,A
+Botswana,Maize (corn),Area harvested,2018,ha,76608,A
+Botswana,Maize (corn),Production,2018,t,24633.18,A
+Botswana,Maize (corn),Yield,2018,kg/ha,321.5,A
+Botswana,Maize (corn),Area harvested,2019,ha,35862,A
+Botswana,Maize (corn),Production,2019,t,7277.64,A
+Botswana,Maize (corn),Yield,2019,kg/ha,202.9,A
+Botswana,Maize (corn),Area harvested,2020,ha,92872,A
+Botswana,Maize (corn),Production,2020,t,61946.57,A
+Botswana,Maize (corn),Yield,2020,kg/ha,667,A
+Botswana,Maize (corn),Area harvested,2021,ha,84503,A
+Botswana,Maize (corn),Production,2021,t,67436.11,A
+Botswana,Maize (corn),Yield,2021,kg/ha,798,A
+Botswana,Maize (corn),Area harvested,2022,ha,67932,A
+Botswana,Maize (corn),Production,2022,t,29782.35,A
+Botswana,Maize (corn),Yield,2022,kg/ha,438.4,A
+Eswatini,Maize (corn),Area harvested,1990,ha,84040,A
+Eswatini,Maize (corn),Production,1990,t,104232,A
+Eswatini,Maize (corn),Yield,1990,kg/ha,1240.3,A
+Eswatini,Maize (corn),Area harvested,1991,ha,58663,A
+Eswatini,Maize (corn),Production,1991,t,59279,A
+Eswatini,Maize (corn),Yield,1991,kg/ha,1010.5,A
+Eswatini,Maize (corn),Area harvested,1992,ha,60233,A
+Eswatini,Maize (corn),Production,1992,t,92971,A
+Eswatini,Maize (corn),Yield,1992,kg/ha,1543.5,A
+Eswatini,Maize (corn),Area harvested,1993,ha,60801,A
+Eswatini,Maize (corn),Production,1993,t,83815,A
+Eswatini,Maize (corn),Yield,1993,kg/ha,1378.5,A
+Eswatini,Maize (corn),Area harvested,1994,ha,65699,A
+Eswatini,Maize (corn),Production,1994,t,83657,A
+Eswatini,Maize (corn),Yield,1994,kg/ha,1273.3,A
+Eswatini,Maize (corn),Area harvested,1995,ha,67614,A
+Eswatini,Maize (corn),Production,1995,t,149190,A
+Eswatini,Maize (corn),Yield,1995,kg/ha,2206.5,A
+Eswatini,Maize (corn),Area harvested,1996,ha,66996,A
+Eswatini,Maize (corn),Production,1996,t,119028,A
+Eswatini,Maize (corn),Yield,1996,kg/ha,1776.6,A
+Eswatini,Maize (corn),Area harvested,1997,ha,71664,A
+Eswatini,Maize (corn),Production,1997,t,137726,A
+Eswatini,Maize (corn),Yield,1997,kg/ha,1921.8,A
+Eswatini,Maize (corn),Area harvested,1998,ha,61566,A
+Eswatini,Maize (corn),Production,1998,t,118074,A
+Eswatini,Maize (corn),Yield,1998,kg/ha,1917.8,A
+Eswatini,Maize (corn),Area harvested,1999,ha,75386,A
+Eswatini,Maize (corn),Production,1999,t,124057,A
+Eswatini,Maize (corn),Yield,1999,kg/ha,1645.6,A
+Eswatini,Maize (corn),Area harvested,2000,ha,68533,A
+Eswatini,Maize (corn),Production,2000,t,112779,A
+Eswatini,Maize (corn),Yield,2000,kg/ha,1645.6,A
+Eswatini,Maize (corn),Area harvested,2001,ha,57851,A
+Eswatini,Maize (corn),Production,2001,t,82536,A
+Eswatini,Maize (corn),Yield,2001,kg/ha,1426.7,A
+Eswatini,Maize (corn),Area harvested,2002,ha,67898,A
+Eswatini,Maize (corn),Production,2002,t,67639,A
+Eswatini,Maize (corn),Yield,2002,kg/ha,996.2,A
+Eswatini,Maize (corn),Area harvested,2003,ha,67682,A
+Eswatini,Maize (corn),Production,2003,t,69273,A
+Eswatini,Maize (corn),Yield,2003,kg/ha,1023.5,A
+Eswatini,Maize (corn),Area harvested,2004,ha,54470,A
+Eswatini,Maize (corn),Production,2004,t,68087,A
+Eswatini,Maize (corn),Yield,2004,kg/ha,1250,A
+Eswatini,Maize (corn),Area harvested,2005,ha,56425,A
+Eswatini,Maize (corn),Production,2005,t,74540,A
+Eswatini,Maize (corn),Yield,2005,kg/ha,1321,A
+Eswatini,Maize (corn),Area harvested,2006,ha,46973,A
+Eswatini,Maize (corn),Production,2006,t,67127,A
+Eswatini,Maize (corn),Yield,2006,kg/ha,1429.1,A
+Eswatini,Maize (corn),Area harvested,2007,ha,47409,A
+Eswatini,Maize (corn),Production,2007,t,26170,A
+Eswatini,Maize (corn),Yield,2007,kg/ha,552,A
+Eswatini,Maize (corn),Area harvested,2008,ha,60355,A
+Eswatini,Maize (corn),Production,2008,t,60012,A
+Eswatini,Maize (corn),Yield,2008,kg/ha,994.3,A
+Eswatini,Maize (corn),Area harvested,2009,ha,58334,X
+Eswatini,Maize (corn),Production,2009,t,75068,X
+Eswatini,Maize (corn),Yield,2009,kg/ha,1286.9,X
+Eswatini,Maize (corn),Area harvested,2010,ha,70334,X
+Eswatini,Maize (corn),Production,2010,t,84685,X
+Eswatini,Maize (corn),Yield,2010,kg/ha,1204,X
+Eswatini,Maize (corn),Area harvested,2011,ha,56064,X
+Eswatini,Maize (corn),Production,2011,t,75418,X
+Eswatini,Maize (corn),Yield,2011,kg/ha,1345.2,X
+Eswatini,Maize (corn),Area harvested,2012,ha,61260,X
+Eswatini,Maize (corn),Production,2012,t,81934,X
+Eswatini,Maize (corn),Yield,2012,kg/ha,1337.5,X
+Eswatini,Maize (corn),Area harvested,2013,ha,86754,X
+Eswatini,Maize (corn),Production,2013,t,118871,X
+Eswatini,Maize (corn),Yield,2013,kg/ha,1370.2,X
+Eswatini,Maize (corn),Area harvested,2014,ha,87164,X
+Eswatini,Maize (corn),Production,2014,t,119000,X
+Eswatini,Maize (corn),Yield,2014,kg/ha,1365.2,X
+Eswatini,Maize (corn),Area harvested,2015,ha,65040,I
+Eswatini,Maize (corn),Production,2015,t,82000,X
+Eswatini,Maize (corn),Yield,2015,kg/ha,1260.8,E
+Eswatini,Maize (corn),Area harvested,2016,ha,26942,I
+Eswatini,Maize (corn),Production,2016,t,33000,X
+Eswatini,Maize (corn),Yield,2016,kg/ha,1224.8,E
+Eswatini,Maize (corn),Area harvested,2017,ha,67815,I
+Eswatini,Maize (corn),Production,2017,t,84000,X
+Eswatini,Maize (corn),Yield,2017,kg/ha,1238.7,E
+Eswatini,Maize (corn),Area harvested,2018,ha,89051,I
+Eswatini,Maize (corn),Production,2018,t,113000,X
+Eswatini,Maize (corn),Yield,2018,kg/ha,1268.9,E
+Eswatini,Maize (corn),Area harvested,2019,ha,74430,I
+Eswatini,Maize (corn),Production,2019,t,95000,X
+Eswatini,Maize (corn),Yield,2019,kg/ha,1276.4,E
+Eswatini,Maize (corn),Area harvested,2020,ha,68000,X
+Eswatini,Maize (corn),Production,2020,t,87000,X
+Eswatini,Maize (corn),Yield,2020,kg/ha,1279.4,X
+Eswatini,Maize (corn),Area harvested,2021,ha,70000,X
+Eswatini,Maize (corn),Production,2021,t,100000,X
+Eswatini,Maize (corn),Yield,2021,kg/ha,1428.6,X
+Eswatini,Maize (corn),Area harvested,2022,ha,80000,X
+Eswatini,Maize (corn),Production,2022,t,127000,X
+Eswatini,Maize (corn),Yield,2022,kg/ha,1587.5,X
+Lesotho,Maize (corn),Area harvested,1990,ha,155976,A
+Lesotho,Maize (corn),Production,1990,t,171579,A
+Lesotho,Maize (corn),Yield,1990,kg/ha,1100,A
+Lesotho,Maize (corn),Area harvested,1991,ha,90461,A
+Lesotho,Maize (corn),Production,1991,t,48918,A
+Lesotho,Maize (corn),Yield,1991,kg/ha,540.8,A
+Lesotho,Maize (corn),Area harvested,1992,ha,105454,A
+Lesotho,Maize (corn),Production,1992,t,61074,A
+Lesotho,Maize (corn),Yield,1992,kg/ha,579.2,A
+Lesotho,Maize (corn),Area harvested,1993,ha,103437,A
+Lesotho,Maize (corn),Production,1993,t,91805,A
+Lesotho,Maize (corn),Yield,1993,kg/ha,887.5,A
+Lesotho,Maize (corn),Area harvested,1994,ha,172743,A
+Lesotho,Maize (corn),Production,1994,t,149063,A
+Lesotho,Maize (corn),Yield,1994,kg/ha,862.9,A
+Lesotho,Maize (corn),Area harvested,1995,ha,76955,A
+Lesotho,Maize (corn),Production,1995,t,62531,A
+Lesotho,Maize (corn),Yield,1995,kg/ha,812.6,A
+Lesotho,Maize (corn),Area harvested,1996,ha,150908,A
+Lesotho,Maize (corn),Production,1996,t,188489,A
+Lesotho,Maize (corn),Yield,1996,kg/ha,1249,A
+Lesotho,Maize (corn),Area harvested,1997,ha,144116,A
+Lesotho,Maize (corn),Production,1997,t,142050,A
+Lesotho,Maize (corn),Yield,1997,kg/ha,985.7,A
+Lesotho,Maize (corn),Area harvested,1998,ha,90030,A
+Lesotho,Maize (corn),Production,1998,t,118578,A
+Lesotho,Maize (corn),Yield,1998,kg/ha,1317.1,A
+Lesotho,Maize (corn),Area harvested,1999,ha,132360,A
+Lesotho,Maize (corn),Production,1999,t,124549,A
+Lesotho,Maize (corn),Yield,1999,kg/ha,941,A
+Lesotho,Maize (corn),Area harvested,2000,ha,157680,A
+Lesotho,Maize (corn),Production,2000,t,106800,A
+Lesotho,Maize (corn),Yield,2000,kg/ha,677.3,A
+Lesotho,Maize (corn),Area harvested,2001,ha,177485,A
+Lesotho,Maize (corn),Production,2001,t,158190,A
+Lesotho,Maize (corn),Yield,2001,kg/ha,891.3,A
+Lesotho,Maize (corn),Area harvested,2002,ha,137380,A
+Lesotho,Maize (corn),Production,2002,t,111110,A
+Lesotho,Maize (corn),Yield,2002,kg/ha,808.8,A
+Lesotho,Maize (corn),Area harvested,2003,ha,127470,A
+Lesotho,Maize (corn),Production,2003,t,82080,A
+Lesotho,Maize (corn),Yield,2003,kg/ha,643.9,A
+Lesotho,Maize (corn),Area harvested,2004,ha,127620,A
+Lesotho,Maize (corn),Production,2004,t,80996,A
+Lesotho,Maize (corn),Yield,2004,kg/ha,634.7,A
+Lesotho,Maize (corn),Area harvested,2005,ha,112302,A
+Lesotho,Maize (corn),Production,2005,t,78739,A
+Lesotho,Maize (corn),Yield,2005,kg/ha,701.1,A
+Lesotho,Maize (corn),Area harvested,2006,ha,123508,A
+Lesotho,Maize (corn),Production,2006,t,68762,A
+Lesotho,Maize (corn),Yield,2006,kg/ha,556.7,A
+Lesotho,Maize (corn),Area harvested,2007,ha,123661,A
+Lesotho,Maize (corn),Production,2007,t,60312,A
+Lesotho,Maize (corn),Yield,2007,kg/ha,487.7,A
+Lesotho,Maize (corn),Area harvested,2008,ha,137156,A
+Lesotho,Maize (corn),Production,2008,t,59651,A
+Lesotho,Maize (corn),Yield,2008,kg/ha,434.9,A
+Lesotho,Maize (corn),Area harvested,2009,ha,137366,A
+Lesotho,Maize (corn),Production,2009,t,57126,A
+Lesotho,Maize (corn),Yield,2009,kg/ha,415.9,A
+Lesotho,Maize (corn),Area harvested,2010,ha,141340,A
+Lesotho,Maize (corn),Production,2010,t,128213,A
+Lesotho,Maize (corn),Yield,2010,kg/ha,907.1,A
+Lesotho,Maize (corn),Area harvested,2011,ha,115688,A
+Lesotho,Maize (corn),Production,2011,t,73390,A
+Lesotho,Maize (corn),Yield,2011,kg/ha,634.4,A
+Lesotho,Maize (corn),Area harvested,2012,ha,126854,I
+Lesotho,Maize (corn),Production,2012,t,88186.69,I
+Lesotho,Maize (corn),Yield,2012,kg/ha,695.2,E
+Lesotho,Maize (corn),Area harvested,2013,ha,104926,A
+Lesotho,Maize (corn),Production,2013,t,86325,A
+Lesotho,Maize (corn),Yield,2013,kg/ha,822.7,A
+Lesotho,Maize (corn),Area harvested,2014,ha,132727,A
+Lesotho,Maize (corn),Production,2014,t,90072,A
+Lesotho,Maize (corn),Yield,2014,kg/ha,678.6,A
+Lesotho,Maize (corn),Area harvested,2015,ha,99884,A
+Lesotho,Maize (corn),Production,2015,t,65636,A
+Lesotho,Maize (corn),Yield,2015,kg/ha,657.1,A
+Lesotho,Maize (corn),Area harvested,2016,ha,40981,A
+Lesotho,Maize (corn),Production,2016,t,19181,A
+Lesotho,Maize (corn),Yield,2016,kg/ha,468,A
+Lesotho,Maize (corn),Area harvested,2017,ha,165882,A
+Lesotho,Maize (corn),Production,2017,t,172666,A
+Lesotho,Maize (corn),Yield,2017,kg/ha,1040.9,A
+Lesotho,Maize (corn),Area harvested,2018,ha,126564,A
+Lesotho,Maize (corn),Production,2018,t,109912,A
+Lesotho,Maize (corn),Yield,2018,kg/ha,868.4,A
+Lesotho,Maize (corn),Area harvested,2019,ha,32026,A
+Lesotho,Maize (corn),Production,2019,t,24621,A
+Lesotho,Maize (corn),Yield,2019,kg/ha,768.8,A
+Lesotho,Maize (corn),Area harvested,2020,ha,47669,A
+Lesotho,Maize (corn),Production,2020,t,21782,A
+Lesotho,Maize (corn),Yield,2020,kg/ha,456.9,A
+Lesotho,Maize (corn),Area harvested,2021,ha,86379,A
+Lesotho,Maize (corn),Production,2021,t,88553,A
+Lesotho,Maize (corn),Yield,2021,kg/ha,1025.2,A
+Lesotho,Maize (corn),Area harvested,2022,ha,89602,A
+Lesotho,Maize (corn),Production,2022,t,72096,A
+Lesotho,Maize (corn),Yield,2022,kg/ha,804.6,A
+Malawi,Maize (corn),Area harvested,1990,ha,1343784,A
+Malawi,Maize (corn),Production,1990,t,1342809,A
+Malawi,Maize (corn),Yield,1990,kg/ha,999.3,A
+Malawi,Maize (corn),Area harvested,1991,ha,1391878,A
+Malawi,Maize (corn),Production,1991,t,1589377,A
+Malawi,Maize (corn),Yield,1991,kg/ha,1141.9,A
+Malawi,Maize (corn),Area harvested,1992,ha,1368093,A
+Malawi,Maize (corn),Production,1992,t,657000,A
+Malawi,Maize (corn),Yield,1992,kg/ha,480.2,A
+Malawi,Maize (corn),Area harvested,1993,ha,1327040,A
+Malawi,Maize (corn),Production,1993,t,2033957,A
+Malawi,Maize (corn),Yield,1993,kg/ha,1532.7,A
+Malawi,Maize (corn),Area harvested,1994,ha,1129316,A
+Malawi,Maize (corn),Production,1994,t,1040000,A
+Malawi,Maize (corn),Yield,1994,kg/ha,920.9,A
+Malawi,Maize (corn),Area harvested,1995,ha,1229187,A
+Malawi,Maize (corn),Production,1995,t,1661457,A
+Malawi,Maize (corn),Yield,1995,kg/ha,1351.7,A
+Malawi,Maize (corn),Area harvested,1996,ha,1242588,A
+Malawi,Maize (corn),Production,1996,t,1793461,A
+Malawi,Maize (corn),Yield,1996,kg/ha,1443.3,A
+Malawi,Maize (corn),Area harvested,1997,ha,1233538,A
+Malawi,Maize (corn),Production,1997,t,1351842,A
+Malawi,Maize (corn),Yield,1997,kg/ha,1095.9,A
+Malawi,Maize (corn),Area harvested,1998,ha,1292670,A
+Malawi,Maize (corn),Production,1998,t,1772392,A
+Malawi,Maize (corn),Yield,1998,kg/ha,1371.1,A
+Malawi,Maize (corn),Area harvested,1999,ha,1369150,A
+Malawi,Maize (corn),Production,1999,t,2479406,A
+Malawi,Maize (corn),Yield,1999,kg/ha,1810.9,A
+Malawi,Maize (corn),Area harvested,2000,ha,1435220,A
+Malawi,Maize (corn),Production,2000,t,2501311,A
+Malawi,Maize (corn),Yield,2000,kg/ha,1742.8,A
+Malawi,Maize (corn),Area harvested,2001,ha,1446260,A
+Malawi,Maize (corn),Production,2001,t,1713064,A
+Malawi,Maize (corn),Yield,2001,kg/ha,1184.5,A
+Malawi,Maize (corn),Area harvested,2002,ha,1488449,A
+Malawi,Maize (corn),Production,2002,t,1556975,A
+Malawi,Maize (corn),Yield,2002,kg/ha,1046,A
+Malawi,Maize (corn),Area harvested,2003,ha,1617917,A
+Malawi,Maize (corn),Production,2003,t,1983440,A
+Malawi,Maize (corn),Yield,2003,kg/ha,1225.9,A
+Malawi,Maize (corn),Area harvested,2004,ha,1537650,A
+Malawi,Maize (corn),Production,2004,t,1608349,A
+Malawi,Maize (corn),Yield,2004,kg/ha,1046,A
+Malawi,Maize (corn),Area harvested,2005,ha,1513929,A
+Malawi,Maize (corn),Production,2005,t,1225234,A
+Malawi,Maize (corn),Yield,2005,kg/ha,809.3,A
+Malawi,Maize (corn),Area harvested,2006,ha,1762839,A
+Malawi,Maize (corn),Production,2006,t,2611486,A
+Malawi,Maize (corn),Yield,2006,kg/ha,1481.4,A
+Malawi,Maize (corn),Area harvested,2007,ha,1215356,A
+Malawi,Maize (corn),Production,2007,t,3226418,A
+Malawi,Maize (corn),Yield,2007,kg/ha,2654.7,A
+Malawi,Maize (corn),Area harvested,2008,ha,1596955,A
+Malawi,Maize (corn),Production,2008,t,2634701,A
+Malawi,Maize (corn),Yield,2008,kg/ha,1649.8,A
+Malawi,Maize (corn),Area harvested,2009,ha,1608996,A
+Malawi,Maize (corn),Production,2009,t,3582502,A
+Malawi,Maize (corn),Yield,2009,kg/ha,2226.5,A
+Malawi,Maize (corn),Area harvested,2010,ha,1696270,A
+Malawi,Maize (corn),Production,2010,t,3419409,A
+Malawi,Maize (corn),Yield,2010,kg/ha,2015.8,A
+Malawi,Maize (corn),Area harvested,2011,ha,1675377,A
+Malawi,Maize (corn),Production,2011,t,3699147,A
+Malawi,Maize (corn),Yield,2011,kg/ha,2207.9,A
+Malawi,Maize (corn),Area harvested,2012,ha,1650000,A
+Malawi,Maize (corn),Production,2012,t,3618699,A
+Malawi,Maize (corn),Yield,2012,kg/ha,2193.2,A
+Malawi,Maize (corn),Area harvested,2013,ha,1676758,A
+Malawi,Maize (corn),Production,2013,t,3639866,A
+Malawi,Maize (corn),Yield,2013,kg/ha,2170.8,A
+Malawi,Maize (corn),Area harvested,2014,ha,1704528,A
+Malawi,Maize (corn),Production,2014,t,3978123,A
+Malawi,Maize (corn),Yield,2014,kg/ha,2333.9,A
+Malawi,Maize (corn),Area harvested,2015,ha,1676213,A
+Malawi,Maize (corn),Production,2015,t,2776277,A
+Malawi,Maize (corn),Yield,2015,kg/ha,1656.3,A
+Malawi,Maize (corn),Area harvested,2016,ha,1674076,A
+Malawi,Maize (corn),Production,2016,t,2369493,A
+Malawi,Maize (corn),Yield,2016,kg/ha,1415.4,A
+Malawi,Maize (corn),Area harvested,2017,ha,1725367,A
+Malawi,Maize (corn),Production,2017,t,3464139,A
+Malawi,Maize (corn),Yield,2017,kg/ha,2007.8,A
+Malawi,Maize (corn),Area harvested,2018,ha,1685347,A
+Malawi,Maize (corn),Production,2018,t,2697959,A
+Malawi,Maize (corn),Yield,2018,kg/ha,1600.8,A
+Malawi,Maize (corn),Area harvested,2019,ha,1732516,A
+Malawi,Maize (corn),Production,2019,t,3391924,A
+Malawi,Maize (corn),Yield,2019,kg/ha,1957.8,A
+Malawi,Maize (corn),Area harvested,2020,ha,1761836,A
+Malawi,Maize (corn),Production,2020,t,3691866,A
+Malawi,Maize (corn),Yield,2020,kg/ha,2095.5,A
+Malawi,Maize (corn),Area harvested,2021,ha,1859995,A
+Malawi,Maize (corn),Production,2021,t,4581000,A
+Malawi,Maize (corn),Yield,2021,kg/ha,2462.9,A
+Malawi,Maize (corn),Area harvested,2022,ha,1814931,A
+Malawi,Maize (corn),Production,2022,t,3716479,A
+Malawi,Maize (corn),Yield,2022,kg/ha,2047.7,A
+Mozambique,Maize (corn),Area harvested,1990,ha,1010902,A
+Mozambique,Maize (corn),Production,1990,t,452911,A
+Mozambique,Maize (corn),Yield,1990,kg/ha,448,A
+Mozambique,Maize (corn),Area harvested,1991,ha,1009211,A
+Mozambique,Maize (corn),Production,1991,t,327089,A
+Mozambique,Maize (corn),Yield,1991,kg/ha,324.1,A
+Mozambique,Maize (corn),Area harvested,1992,ha,832132,A
+Mozambique,Maize (corn),Production,1992,t,132047,A
+Mozambique,Maize (corn),Yield,1992,kg/ha,158.7,A
+Mozambique,Maize (corn),Area harvested,1993,ha,841947,A
+Mozambique,Maize (corn),Production,1993,t,533083,A
+Mozambique,Maize (corn),Yield,1993,kg/ha,633.2,A
+Mozambique,Maize (corn),Area harvested,1994,ha,940013,A
+Mozambique,Maize (corn),Production,1994,t,489486,A
+Mozambique,Maize (corn),Yield,1994,kg/ha,520.7,A
+Mozambique,Maize (corn),Area harvested,1995,ha,1080437,A
+Mozambique,Maize (corn),Production,1995,t,734000,A
+Mozambique,Maize (corn),Yield,1995,kg/ha,679.4,A
+Mozambique,Maize (corn),Area harvested,1996,ha,1008000,X
+Mozambique,Maize (corn),Production,1996,t,947000,A
+Mozambique,Maize (corn),Yield,1996,kg/ha,939.5,E
+Mozambique,Maize (corn),Area harvested,1997,ha,1153575,A
+Mozambique,Maize (corn),Production,1997,t,1042026,A
+Mozambique,Maize (corn),Yield,1997,kg/ha,903.3,A
+Mozambique,Maize (corn),Area harvested,1998,ha,1248000,A
+Mozambique,Maize (corn),Production,1998,t,1124000,A
+Mozambique,Maize (corn),Yield,1998,kg/ha,900.6,A
+Mozambique,Maize (corn),Area harvested,1999,ha,1152160,X
+Mozambique,Maize (corn),Production,1999,t,1336080,X
+Mozambique,Maize (corn),Yield,1999,kg/ha,1159.6,X
+Mozambique,Maize (corn),Area harvested,2000,ha,1255866,A
+Mozambique,Maize (corn),Production,2000,t,1180432,A
+Mozambique,Maize (corn),Yield,2000,kg/ha,939.9,A
+Mozambique,Maize (corn),Area harvested,2001,ha,1193380,X
+Mozambique,Maize (corn),Production,2001,t,1143263,A
+Mozambique,Maize (corn),Yield,2001,kg/ha,958,E
+Mozambique,Maize (corn),Area harvested,2002,ha,1577800,A
+Mozambique,Maize (corn),Production,2002,t,1114774,A
+Mozambique,Maize (corn),Yield,2002,kg/ha,706.5,A
+Mozambique,Maize (corn),Area harvested,2003,ha,1356000,E
+Mozambique,Maize (corn),Production,2003,t,1181279,A
+Mozambique,Maize (corn),Yield,2003,kg/ha,871.1,E
+Mozambique,Maize (corn),Area harvested,2004,ha,1311600,X
+Mozambique,Maize (corn),Production,2004,t,1060396,A
+Mozambique,Maize (corn),Yield,2004,kg/ha,808.5,E
+Mozambique,Maize (corn),Area harvested,2005,ha,1902200,A
+Mozambique,Maize (corn),Production,2005,t,941517,A
+Mozambique,Maize (corn),Yield,2005,kg/ha,495,A
+Mozambique,Maize (corn),Area harvested,2006,ha,1663900,A
+Mozambique,Maize (corn),Production,2006,t,1395476,A
+Mozambique,Maize (corn),Yield,2006,kg/ha,838.7,A
+Mozambique,Maize (corn),Area harvested,2007,ha,1664300,A
+Mozambique,Maize (corn),Production,2007,t,1133910,A
+Mozambique,Maize (corn),Yield,2007,kg/ha,681.3,A
+Mozambique,Maize (corn),Area harvested,2008,ha,1964522,A
+Mozambique,Maize (corn),Production,2008,t,1213569,A
+Mozambique,Maize (corn),Yield,2008,kg/ha,617.7,A
+Mozambique,Maize (corn),Area harvested,2009,ha,1612000,X
+Mozambique,Maize (corn),Production,2009,t,1612000,X
+Mozambique,Maize (corn),Yield,2009,kg/ha,1000,X
+Mozambique,Maize (corn),Area harvested,2010,ha,1738042,A
+Mozambique,Maize (corn),Production,2010,t,2089890,A
+Mozambique,Maize (corn),Yield,2010,kg/ha,1202.4,A
+Mozambique,Maize (corn),Area harvested,2011,ha,1812717,A
+Mozambique,Maize (corn),Production,2011,t,2178842,A
+Mozambique,Maize (corn),Yield,2011,kg/ha,1202,A
+Mozambique,Maize (corn),Area harvested,2012,ha,1572000,A
+Mozambique,Maize (corn),Production,2012,t,2354778,A
+Mozambique,Maize (corn),Yield,2012,kg/ha,1498,A
+Mozambique,Maize (corn),Area harvested,2013,ha,1722500,A
+Mozambique,Maize (corn),Production,2013,t,1173709,A
+Mozambique,Maize (corn),Yield,2013,kg/ha,681.4,A
+Mozambique,Maize (corn),Area harvested,2014,ha,1703500,A
+Mozambique,Maize (corn),Production,2014,t,1357220,A
+Mozambique,Maize (corn),Yield,2014,kg/ha,796.7,A
+Mozambique,Maize (corn),Area harvested,2015,ha,1570526,A
+Mozambique,Maize (corn),Production,2015,t,1262038,A
+Mozambique,Maize (corn),Yield,2015,kg/ha,803.6,A
+Mozambique,Maize (corn),Area harvested,2016,ha,1662000,A
+Mozambique,Maize (corn),Production,2016,t,1217000,A
+Mozambique,Maize (corn),Yield,2016,kg/ha,732.3,A
+Mozambique,Maize (corn),Area harvested,2017,ha,1654000,A
+Mozambique,Maize (corn),Production,2017,t,1224000,A
+Mozambique,Maize (corn),Yield,2017,kg/ha,740,A
+Mozambique,Maize (corn),Area harvested,2018,ha,1613535,A
+Mozambique,Maize (corn),Production,2018,t,1406794,A
+Mozambique,Maize (corn),Yield,2018,kg/ha,871.9,A
+Mozambique,Maize (corn),Area harvested,2019,ha,1643827,A
+Mozambique,Maize (corn),Production,2019,t,1451686,A
+Mozambique,Maize (corn),Yield,2019,kg/ha,883.1,A
+Mozambique,Maize (corn),Area harvested,2020,ha,2286362,A
+Mozambique,Maize (corn),Production,2020,t,1632321,A
+Mozambique,Maize (corn),Yield,2020,kg/ha,713.9,A
+Mozambique,Maize (corn),Area harvested,2021,ha,1658437,A
+Mozambique,Maize (corn),Production,2021,t,1824281,A
+Mozambique,Maize (corn),Yield,2021,kg/ha,1100,A
+Mozambique,Maize (corn),Area harvested,2022,ha,1817487,A
+Mozambique,Maize (corn),Production,2022,t,2382511,A
+Mozambique,Maize (corn),Yield,2022,kg/ha,1310.9,A
+Namibia,Maize (corn),Area harvested,1990,ha,19180,A
+Namibia,Maize (corn),Production,1990,t,28523,A
+Namibia,Maize (corn),Yield,1990,kg/ha,1487.1,A
+Namibia,Maize (corn),Area harvested,1991,ha,42833,A
+Namibia,Maize (corn),Production,1991,t,51185,A
+Namibia,Maize (corn),Yield,1991,kg/ha,1195,A
+Namibia,Maize (corn),Area harvested,1992,ha,18000,E
+Namibia,Maize (corn),Production,1992,t,10715,A
+Namibia,Maize (corn),Yield,1992,kg/ha,595.3,E
+Namibia,Maize (corn),Area harvested,1993,ha,32846,A
+Namibia,Maize (corn),Production,1993,t,25500,A
+Namibia,Maize (corn),Yield,1993,kg/ha,776.4,A
+Namibia,Maize (corn),Area harvested,1994,ha,35357,A
+Namibia,Maize (corn),Production,1994,t,40834,A
+Namibia,Maize (corn),Yield,1994,kg/ha,1154.9,A
+Namibia,Maize (corn),Area harvested,1995,ha,21021,A
+Namibia,Maize (corn),Production,1995,t,18431,A
+Namibia,Maize (corn),Yield,1995,kg/ha,876.8,A
+Namibia,Maize (corn),Area harvested,1996,ha,27827,A
+Namibia,Maize (corn),Production,1996,t,19020,A
+Namibia,Maize (corn),Yield,1996,kg/ha,683.5,A
+Namibia,Maize (corn),Area harvested,1997,ha,31450,A
+Namibia,Maize (corn),Production,1997,t,49460,A
+Namibia,Maize (corn),Yield,1997,kg/ha,1572.7,A
+Namibia,Maize (corn),Area harvested,1998,ha,27029,A
+Namibia,Maize (corn),Production,1998,t,17860,A
+Namibia,Maize (corn),Yield,1998,kg/ha,660.8,A
+Namibia,Maize (corn),Area harvested,1999,ha,35740,A
+Namibia,Maize (corn),Production,1999,t,18855,A
+Namibia,Maize (corn),Yield,1999,kg/ha,527.6,A
+Namibia,Maize (corn),Area harvested,2000,ha,44000,A
+Namibia,Maize (corn),Production,2000,t,31550,A
+Namibia,Maize (corn),Yield,2000,kg/ha,717,A
+Namibia,Maize (corn),Area harvested,2001,ha,20900,A
+Namibia,Maize (corn),Production,2001,t,27700,A
+Namibia,Maize (corn),Yield,2001,kg/ha,1325.4,A
+Namibia,Maize (corn),Area harvested,2002,ha,21000,E
+Namibia,Maize (corn),Production,2002,t,27800,A
+Namibia,Maize (corn),Yield,2002,kg/ha,1323.8,E
+Namibia,Maize (corn),Area harvested,2003,ha,23400,A
+Namibia,Maize (corn),Production,2003,t,28891,A
+Namibia,Maize (corn),Yield,2003,kg/ha,1234.7,A
+Namibia,Maize (corn),Area harvested,2004,ha,24992,A
+Namibia,Maize (corn),Production,2004,t,28244,A
+Namibia,Maize (corn),Yield,2004,kg/ha,1130.1,A
+Namibia,Maize (corn),Area harvested,2005,ha,18014,A
+Namibia,Maize (corn),Production,2005,t,40723,A
+Namibia,Maize (corn),Yield,2005,kg/ha,2260.6,A
+Namibia,Maize (corn),Area harvested,2006,ha,28904,A
+Namibia,Maize (corn),Production,2006,t,60853,A
+Namibia,Maize (corn),Yield,2006,kg/ha,2105.3,A
+Namibia,Maize (corn),Area harvested,2007,ha,27356,A
+Namibia,Maize (corn),Production,2007,t,55523,A
+Namibia,Maize (corn),Yield,2007,kg/ha,2029.6,A
+Namibia,Maize (corn),Area harvested,2008,ha,27694,A
+Namibia,Maize (corn),Production,2008,t,58101,A
+Namibia,Maize (corn),Yield,2008,kg/ha,2098,A
+Namibia,Maize (corn),Area harvested,2009,ha,27127,A
+Namibia,Maize (corn),Production,2009,t,57320,A
+Namibia,Maize (corn),Yield,2009,kg/ha,2113,A
+Namibia,Maize (corn),Area harvested,2010,ha,26814,I
+Namibia,Maize (corn),Production,2010,t,53070.76,I
+Namibia,Maize (corn),Yield,2010,kg/ha,1979.2,E
+Namibia,Maize (corn),Area harvested,2011,ha,28038,I
+Namibia,Maize (corn),Production,2011,t,53800,X
+Namibia,Maize (corn),Yield,2011,kg/ha,1918.8,E
+Namibia,Maize (corn),Area harvested,2012,ha,46471,I
+Namibia,Maize (corn),Production,2012,t,87600,X
+Namibia,Maize (corn),Yield,2012,kg/ha,1885,E
+Namibia,Maize (corn),Area harvested,2013,ha,21632,I
+Namibia,Maize (corn),Production,2013,t,40000,X
+Namibia,Maize (corn),Yield,2013,kg/ha,1849.1,E
+Namibia,Maize (corn),Area harvested,2014,ha,34991,A
+Namibia,Maize (corn),Production,2014,t,55985,A
+Namibia,Maize (corn),Yield,2014,kg/ha,1600,A
+Namibia,Maize (corn),Area harvested,2015,ha,30184,I
+Namibia,Maize (corn),Production,2015,t,55870.88,I
+Namibia,Maize (corn),Yield,2015,kg/ha,1851,E
+Namibia,Maize (corn),Area harvested,2016,ha,22350,A
+Namibia,Maize (corn),Production,2016,t,43611,A
+Namibia,Maize (corn),Yield,2016,kg/ha,1951.3,A
+Namibia,Maize (corn),Area harvested,2017,ha,30174,A
+Namibia,Maize (corn),Production,2017,t,71037,A
+Namibia,Maize (corn),Yield,2017,kg/ha,2354.2,A
+Namibia,Maize (corn),Area harvested,2018,ha,25172,A
+Namibia,Maize (corn),Production,2018,t,59253,A
+Namibia,Maize (corn),Yield,2018,kg/ha,2353.9,A
+Namibia,Maize (corn),Area harvested,2019,ha,20811,I
+Namibia,Maize (corn),Production,2019,t,45000,A
+Namibia,Maize (corn),Yield,2019,kg/ha,2162.4,E
+Namibia,Maize (corn),Area harvested,2020,ha,27838,A
+Namibia,Maize (corn),Production,2020,t,60142,A
+Namibia,Maize (corn),Yield,2020,kg/ha,2160.4,A
+Namibia,Maize (corn),Area harvested,2021,ha,35046,A
+Namibia,Maize (corn),Production,2021,t,78127,A
+Namibia,Maize (corn),Yield,2021,kg/ha,2229.3,A
+Namibia,Maize (corn),Area harvested,2022,ha,51221,A
+Namibia,Maize (corn),Production,2022,t,98856,A
+Namibia,Maize (corn),Yield,2022,kg/ha,1930,A
+South Africa,Maize (corn),Area harvested,1990,ha,4163000,A
+South Africa,Maize (corn),Production,1990,t,9180000,A
+South Africa,Maize (corn),Yield,1990,kg/ha,2205.1,A
+South Africa,Maize (corn),Area harvested,1991,ha,3816000,A
+South Africa,Maize (corn),Production,1991,t,8614000,A
+South Africa,Maize (corn),Yield,1991,kg/ha,2257.3,A
+South Africa,Maize (corn),Area harvested,1992,ha,4173000,A
+South Africa,Maize (corn),Production,1992,t,3277000,A
+South Africa,Maize (corn),Yield,1992,kg/ha,785.3,A
+South Africa,Maize (corn),Area harvested,1993,ha,4377000,A
+South Africa,Maize (corn),Production,1993,t,9997000,A
+South Africa,Maize (corn),Yield,1993,kg/ha,2284,A
+South Africa,Maize (corn),Area harvested,1994,ha,4661000,A
+South Africa,Maize (corn),Production,1994,t,13275000,A
+South Africa,Maize (corn),Yield,1994,kg/ha,2848.1,A
+South Africa,Maize (corn),Area harvested,1995,ha,3526000,A
+South Africa,Maize (corn),Production,1995,t,4866000,A
+South Africa,Maize (corn),Yield,1995,kg/ha,1380,A
+South Africa,Maize (corn),Area harvested,1996,ha,3761000,A
+South Africa,Maize (corn),Production,1996,t,10171000,A
+South Africa,Maize (corn),Yield,1996,kg/ha,2704.3,A
+South Africa,Maize (corn),Area harvested,1997,ha,4023060,A
+South Africa,Maize (corn),Production,1997,t,10136000,A
+South Africa,Maize (corn),Yield,1997,kg/ha,2519.5,A
+South Africa,Maize (corn),Area harvested,1998,ha,3559750,A
+South Africa,Maize (corn),Production,1998,t,7693000,A
+South Africa,Maize (corn),Yield,1998,kg/ha,2161.1,A
+South Africa,Maize (corn),Area harvested,1999,ha,3567383,A
+South Africa,Maize (corn),Production,1999,t,7946000,A
+South Africa,Maize (corn),Yield,1999,kg/ha,2227.4,A
+South Africa,Maize (corn),Area harvested,2000,ha,4012000,A
+South Africa,Maize (corn),Production,2000,t,11431183,A
+South Africa,Maize (corn),Yield,2000,kg/ha,2849.2,A
+South Africa,Maize (corn),Area harvested,2001,ha,3189000,A
+South Africa,Maize (corn),Production,2001,t,7772000,A
+South Africa,Maize (corn),Yield,2001,kg/ha,2437.1,A
+South Africa,Maize (corn),Area harvested,2002,ha,3533459,A
+South Africa,Maize (corn),Production,2002,t,10076000,A
+South Africa,Maize (corn),Yield,2002,kg/ha,2851.6,A
+South Africa,Maize (corn),Area harvested,2003,ha,3650904,A
+South Africa,Maize (corn),Production,2003,t,9705000,A
+South Africa,Maize (corn),Yield,2003,kg/ha,2658.2,A
+South Africa,Maize (corn),Area harvested,2004,ha,3204110,A
+South Africa,Maize (corn),Production,2004,t,9710070,A
+South Africa,Maize (corn),Yield,2004,kg/ha,3030.5,A
+South Africa,Maize (corn),Area harvested,2005,ha,3223000,A
+South Africa,Maize (corn),Production,2005,t,11715948,A
+South Africa,Maize (corn),Yield,2005,kg/ha,3635.1,A
+South Africa,Maize (corn),Area harvested,2006,ha,2032446,A
+South Africa,Maize (corn),Production,2006,t,6935056,A
+South Africa,Maize (corn),Yield,2006,kg/ha,3412.2,A
+South Africa,Maize (corn),Area harvested,2007,ha,2551800,A
+South Africa,Maize (corn),Production,2007,t,7125000,A
+South Africa,Maize (corn),Yield,2007,kg/ha,2792.1,A
+South Africa,Maize (corn),Area harvested,2008,ha,2799000,A
+South Africa,Maize (corn),Production,2008,t,12700000,A
+South Africa,Maize (corn),Yield,2008,kg/ha,4537.3,A
+South Africa,Maize (corn),Area harvested,2009,ha,2427500,A
+South Africa,Maize (corn),Production,2009,t,12050000,A
+South Africa,Maize (corn),Yield,2009,kg/ha,4964,A
+South Africa,Maize (corn),Area harvested,2010,ha,2742000,A
+South Africa,Maize (corn),Production,2010,t,12815000,A
+South Africa,Maize (corn),Yield,2010,kg/ha,4673.6,A
+South Africa,Maize (corn),Area harvested,2011,ha,2372300,A
+South Africa,Maize (corn),Production,2011,t,10360000,A
+South Africa,Maize (corn),Yield,2011,kg/ha,4367.1,A
+South Africa,Maize (corn),Area harvested,2012,ha,2699200,A
+South Africa,Maize (corn),Production,2012,t,12120656,A
+South Africa,Maize (corn),Yield,2012,kg/ha,4490.5,A
+South Africa,Maize (corn),Area harvested,2013,ha,2781200,A
+South Africa,Maize (corn),Production,2013,t,11810600,A
+South Africa,Maize (corn),Yield,2013,kg/ha,4246.6,A
+South Africa,Maize (corn),Area harvested,2014,ha,2688200,A
+South Africa,Maize (corn),Production,2014,t,14250000,A
+South Africa,Maize (corn),Yield,2014,kg/ha,5300.9,A
+South Africa,Maize (corn),Area harvested,2015,ha,3048050,A
+South Africa,Maize (corn),Production,2015,t,10628800,A
+South Africa,Maize (corn),Yield,2015,kg/ha,3487.1,A
+South Africa,Maize (corn),Area harvested,2016,ha,2212880,A
+South Africa,Maize (corn),Production,2016,t,8214240,A
+South Africa,Maize (corn),Yield,2016,kg/ha,3712,A
+South Africa,Maize (corn),Area harvested,2017,ha,2995250,A
+South Africa,Maize (corn),Production,2017,t,17551000,A
+South Africa,Maize (corn),Yield,2017,kg/ha,5859.6,A
+South Africa,Maize (corn),Area harvested,2018,ha,2633685,A
+South Africa,Maize (corn),Production,2018,t,13103975,A
+South Africa,Maize (corn),Yield,2018,kg/ha,4975.5,A
+South Africa,Maize (corn),Area harvested,2019,ha,2596500,A
+South Africa,Maize (corn),Production,2019,t,11824180,A
+South Africa,Maize (corn),Yield,2019,kg/ha,4553.9,A
+South Africa,Maize (corn),Area harvested,2020,ha,2908260,A
+South Africa,Maize (corn),Production,2020,t,15843545,A
+South Africa,Maize (corn),Yield,2020,kg/ha,5447.8,A
+South Africa,Maize (corn),Area harvested,2021,ha,2755400,A
+South Africa,Maize (corn),Production,2021,t,16315000,A
+South Africa,Maize (corn),Yield,2021,kg/ha,5921.1,A
+South Africa,Maize (corn),Area harvested,2022,ha,2623000,A
+South Africa,Maize (corn),Production,2022,t,15470000,A
+South Africa,Maize (corn),Yield,2022,kg/ha,5897.8,A
+Zambia,Maize (corn),Area harvested,1990,ha,763277,A
+Zambia,Maize (corn),Production,1990,t,1092671,A
+Zambia,Maize (corn),Yield,1990,kg/ha,1431.6,A
+Zambia,Maize (corn),Area harvested,1991,ha,639390,A
+Zambia,Maize (corn),Production,1991,t,1095908,A
+Zambia,Maize (corn),Yield,1991,kg/ha,1714,A
+Zambia,Maize (corn),Area harvested,1992,ha,661305,A
+Zambia,Maize (corn),Production,1992,t,483492,A
+Zambia,Maize (corn),Yield,1992,kg/ha,731.1,A
+Zambia,Maize (corn),Area harvested,1993,ha,633326,A
+Zambia,Maize (corn),Production,1993,t,1597767,A
+Zambia,Maize (corn),Yield,1993,kg/ha,2522.8,A
+Zambia,Maize (corn),Area harvested,1994,ha,679355,A
+Zambia,Maize (corn),Production,1994,t,1020749,A
+Zambia,Maize (corn),Yield,1994,kg/ha,1502.5,A
+Zambia,Maize (corn),Area harvested,1995,ha,520165,A
+Zambia,Maize (corn),Production,1995,t,737835,A
+Zambia,Maize (corn),Yield,1995,kg/ha,1418.5,A
+Zambia,Maize (corn),Area harvested,1996,ha,675565,A
+Zambia,Maize (corn),Production,1996,t,1409485,A
+Zambia,Maize (corn),Yield,1996,kg/ha,2086.4,A
+Zambia,Maize (corn),Area harvested,1997,ha,649039,A
+Zambia,Maize (corn),Production,1997,t,960188,A
+Zambia,Maize (corn),Yield,1997,kg/ha,1479.4,A
+Zambia,Maize (corn),Area harvested,1998,ha,510372,A
+Zambia,Maize (corn),Production,1998,t,638134,A
+Zambia,Maize (corn),Yield,1998,kg/ha,1250.3,A
+Zambia,Maize (corn),Area harvested,1999,ha,597454,A
+Zambia,Maize (corn),Production,1999,t,822056,A
+Zambia,Maize (corn),Yield,1999,kg/ha,1375.9,A
+Zambia,Maize (corn),Area harvested,2000,ha,586907,A
+Zambia,Maize (corn),Production,2000,t,1040000,A
+Zambia,Maize (corn),Yield,2000,kg/ha,1772,A
+Zambia,Maize (corn),Area harvested,2001,ha,582000,A
+Zambia,Maize (corn),Production,2001,t,802000,A
+Zambia,Maize (corn),Yield,2001,kg/ha,1378,A
+Zambia,Maize (corn),Area harvested,2002,ha,362787,A
+Zambia,Maize (corn),Production,2002,t,606172,A
+Zambia,Maize (corn),Yield,2002,kg/ha,1670.9,A
+Zambia,Maize (corn),Area harvested,2003,ha,671000,A
+Zambia,Maize (corn),Production,2003,t,1157860,A
+Zambia,Maize (corn),Yield,2003,kg/ha,1725.6,A
+Zambia,Maize (corn),Area harvested,2004,ha,631000,A
+Zambia,Maize (corn),Production,2004,t,1214000,A
+Zambia,Maize (corn),Yield,2004,kg/ha,1923.9,A
+Zambia,Maize (corn),Area harvested,2005,ha,465832,A
+Zambia,Maize (corn),Production,2005,t,866187,A
+Zambia,Maize (corn),Yield,2005,kg/ha,1859.4,A
+Zambia,Maize (corn),Area harvested,2006,ha,618959,A
+Zambia,Maize (corn),Production,2006,t,1424400,A
+Zambia,Maize (corn),Yield,2006,kg/ha,2301.3,A
+Zambia,Maize (corn),Area harvested,2007,ha,585291,A
+Zambia,Maize (corn),Production,2007,t,1366158,A
+Zambia,Maize (corn),Yield,2007,kg/ha,2334.2,A
+Zambia,Maize (corn),Area harvested,2008,ha,539877,A
+Zambia,Maize (corn),Production,2008,t,1211566,A
+Zambia,Maize (corn),Yield,2008,kg/ha,2244.2,A
+Zambia,Maize (corn),Area harvested,2009,ha,911942,A
+Zambia,Maize (corn),Production,2009,t,1887010,A
+Zambia,Maize (corn),Yield,2009,kg/ha,2069.2,A
+Zambia,Maize (corn),Area harvested,2010,ha,1080556,A
+Zambia,Maize (corn),Production,2010,t,2795483,A
+Zambia,Maize (corn),Yield,2010,kg/ha,2587.1,A
+Zambia,Maize (corn),Area harvested,2011,ha,1101785,A
+Zambia,Maize (corn),Production,2011,t,3020380,A
+Zambia,Maize (corn),Yield,2011,kg/ha,2741.4,A
+Zambia,Maize (corn),Area harvested,2012,ha,1074658,A
+Zambia,Maize (corn),Production,2012,t,2852687,A
+Zambia,Maize (corn),Yield,2012,kg/ha,2654.5,A
+Zambia,Maize (corn),Area harvested,2013,ha,997880,A
+Zambia,Maize (corn),Production,2013,t,2532800,A
+Zambia,Maize (corn),Yield,2013,kg/ha,2538.2,A
+Zambia,Maize (corn),Area harvested,2014,ha,1205202,A
+Zambia,Maize (corn),Production,2014,t,3350671,A
+Zambia,Maize (corn),Yield,2014,kg/ha,2780.2,A
+Zambia,Maize (corn),Area harvested,2015,ha,863818,A
+Zambia,Maize (corn),Production,2015,t,2618221,A
+Zambia,Maize (corn),Yield,2015,kg/ha,3031,A
+Zambia,Maize (corn),Area harvested,2016,ha,1157754,A
+Zambia,Maize (corn),Production,2016,t,2873052,A
+Zambia,Maize (corn),Yield,2016,kg/ha,2481.6,A
+Zambia,Maize (corn),Area harvested,2017,ha,1433944,A
+Zambia,Maize (corn),Production,2017,t,3606549,A
+Zambia,Maize (corn),Yield,2017,kg/ha,2515.1,A
+Zambia,Maize (corn),Area harvested,2018,ha,1086006,A
+Zambia,Maize (corn),Production,2018,t,2394906.98,A
+Zambia,Maize (corn),Yield,2018,kg/ha,2205.2,A
+Zambia,Maize (corn),Area harvested,2019,ha,841693,A
+Zambia,Maize (corn),Production,2019,t,2004389.36,A
+Zambia,Maize (corn),Yield,2019,kg/ha,2381.4,A
+Zambia,Maize (corn),Area harvested,2020,ha,1333519,A
+Zambia,Maize (corn),Production,2020,t,3387469.57,A
+Zambia,Maize (corn),Yield,2020,kg/ha,2540.2,A
+Zambia,Maize (corn),Area harvested,2021,ha,1410102,A
+Zambia,Maize (corn),Production,2021,t,3620243.9,A
+Zambia,Maize (corn),Yield,2021,kg/ha,2567.4,A
+Zambia,Maize (corn),Area harvested,2022,ha,1115489,A
+Zambia,Maize (corn),Production,2022,t,2706243.46,A
+Zambia,Maize (corn),Yield,2022,kg/ha,2426.1,A
+Zimbabwe,Maize (corn),Area harvested,1990,ha,1145870,A
+Zimbabwe,Maize (corn),Production,1990,t,1971542,A
+Zimbabwe,Maize (corn),Yield,1990,kg/ha,1720.6,A
+Zimbabwe,Maize (corn),Area harvested,1991,ha,1101200,A
+Zimbabwe,Maize (corn),Production,1991,t,1585760,A
+Zimbabwe,Maize (corn),Yield,1991,kg/ha,1440,A
+Zimbabwe,Maize (corn),Area harvested,1992,ha,881000,A
+Zimbabwe,Maize (corn),Production,1992,t,361900,A
+Zimbabwe,Maize (corn),Yield,1992,kg/ha,410.8,A
+Zimbabwe,Maize (corn),Area harvested,1993,ha,1248347,A
+Zimbabwe,Maize (corn),Production,1993,t,2063003,A
+Zimbabwe,Maize (corn),Yield,1993,kg/ha,1652.6,A
+Zimbabwe,Maize (corn),Area harvested,1994,ha,1738450,A
+Zimbabwe,Maize (corn),Production,1994,t,2109283,A
+Zimbabwe,Maize (corn),Yield,1994,kg/ha,1213.3,A
+Zimbabwe,Maize (corn),Area harvested,1995,ha,1487606,A
+Zimbabwe,Maize (corn),Production,1995,t,884962,A
+Zimbabwe,Maize (corn),Yield,1995,kg/ha,594.9,A
+Zimbabwe,Maize (corn),Area harvested,1996,ha,1459611,A
+Zimbabwe,Maize (corn),Production,1996,t,2065347,A
+Zimbabwe,Maize (corn),Yield,1996,kg/ha,1415,A
+Zimbabwe,Maize (corn),Area harvested,1997,ha,1406074,A
+Zimbabwe,Maize (corn),Production,1997,t,1552703,A
+Zimbabwe,Maize (corn),Yield,1997,kg/ha,1104.3,A
+Zimbabwe,Maize (corn),Area harvested,1998,ha,1181207,A
+Zimbabwe,Maize (corn),Production,1998,t,1195929,A
+Zimbabwe,Maize (corn),Yield,1998,kg/ha,1012.5,A
+Zimbabwe,Maize (corn),Area harvested,1999,ha,1477990,A
+Zimbabwe,Maize (corn),Production,1999,t,1606588,A
+Zimbabwe,Maize (corn),Yield,1999,kg/ha,1087,A
+Zimbabwe,Maize (corn),Area harvested,2000,ha,1373117,A
+Zimbabwe,Maize (corn),Production,2000,t,1619651,A
+Zimbabwe,Maize (corn),Yield,2000,kg/ha,1179.5,A
+Zimbabwe,Maize (corn),Area harvested,2001,ha,1239988,A
+Zimbabwe,Maize (corn),Production,2001,t,1526328,A
+Zimbabwe,Maize (corn),Yield,2001,kg/ha,1230.9,A
+Zimbabwe,Maize (corn),Area harvested,2002,ha,1327854,A
+Zimbabwe,Maize (corn),Production,2002,t,604758,A
+Zimbabwe,Maize (corn),Yield,2002,kg/ha,455.4,A
+Zimbabwe,Maize (corn),Area harvested,2003,ha,1352368,A
+Zimbabwe,Maize (corn),Production,2003,t,1058786,A
+Zimbabwe,Maize (corn),Yield,2003,kg/ha,782.9,A
+Zimbabwe,Maize (corn),Area harvested,2004,ha,1818038,A
+Zimbabwe,Maize (corn),Production,2004,t,2357152,A
+Zimbabwe,Maize (corn),Yield,2004,kg/ha,1296.5,A
+Zimbabwe,Maize (corn),Area harvested,2005,ha,2027268,A
+Zimbabwe,Maize (corn),Production,2005,t,1255822.07,A
+Zimbabwe,Maize (corn),Yield,2005,kg/ha,619.5,A
+Zimbabwe,Maize (corn),Area harvested,2006,ha,2043941,A
+Zimbabwe,Maize (corn),Production,2006,t,1997403,A
+Zimbabwe,Maize (corn),Yield,2006,kg/ha,977.2,A
+Zimbabwe,Maize (corn),Area harvested,2007,ha,1744615,A
+Zimbabwe,Maize (corn),Production,2007,t,1509210,A
+Zimbabwe,Maize (corn),Yield,2007,kg/ha,865.1,A
+Zimbabwe,Maize (corn),Area harvested,2008,ha,1730000,A
+Zimbabwe,Maize (corn),Production,2008,t,496000,A
+Zimbabwe,Maize (corn),Yield,2008,kg/ha,286.7,A
+Zimbabwe,Maize (corn),Area harvested,2009,ha,1508000,X
+Zimbabwe,Maize (corn),Production,2009,t,700000,X
+Zimbabwe,Maize (corn),Yield,2009,kg/ha,464.2,X
+Zimbabwe,Maize (corn),Area harvested,2010,ha,1362563,A
+Zimbabwe,Maize (corn),Production,2010,t,1192399,A
+Zimbabwe,Maize (corn),Yield,2010,kg/ha,875.1,A
+Zimbabwe,Maize (corn),Area harvested,2011,ha,1538577,A
+Zimbabwe,Maize (corn),Production,2011,t,1010473,A
+Zimbabwe,Maize (corn),Yield,2011,kg/ha,656.8,A
+Zimbabwe,Maize (corn),Area harvested,2012,ha,1385161,A
+Zimbabwe,Maize (corn),Production,2012,t,1095953.67,A
+Zimbabwe,Maize (corn),Yield,2012,kg/ha,791.2,A
+Zimbabwe,Maize (corn),Area harvested,2013,ha,1260893,A
+Zimbabwe,Maize (corn),Production,2013,t,939282.26,A
+Zimbabwe,Maize (corn),Yield,2013,kg/ha,744.9,A
+Zimbabwe,Maize (corn),Area harvested,2014,ha,1048268,A
+Zimbabwe,Maize (corn),Production,2014,t,974955.97,A
+Zimbabwe,Maize (corn),Yield,2014,kg/ha,930.1,A
+Zimbabwe,Maize (corn),Area harvested,2015,ha,1107688,A
+Zimbabwe,Maize (corn),Production,2015,t,642792.81,A
+Zimbabwe,Maize (corn),Yield,2015,kg/ha,580.3,A
+Zimbabwe,Maize (corn),Area harvested,2016,ha,1161997,A
+Zimbabwe,Maize (corn),Production,2016,t,511816,A
+Zimbabwe,Maize (corn),Yield,2016,kg/ha,440.5,A
+Zimbabwe,Maize (corn),Area harvested,2017,ha,1099945,A
+Zimbabwe,Maize (corn),Production,2017,t,1532572,A
+Zimbabwe,Maize (corn),Yield,2017,kg/ha,1393.3,A
+Zimbabwe,Maize (corn),Area harvested,2018,ha,1155075,A
+Zimbabwe,Maize (corn),Production,2018,t,1560100,A
+Zimbabwe,Maize (corn),Yield,2018,kg/ha,1350.6,A
+Zimbabwe,Maize (corn),Area harvested,2019,ha,991354,A
+Zimbabwe,Maize (corn),Production,2019,t,773976,A
+Zimbabwe,Maize (corn),Yield,2019,kg/ha,780.7,A
+Zimbabwe,Maize (corn),Area harvested,2020,ha,1018884,A
+Zimbabwe,Maize (corn),Production,2020,t,1202347,A
+Zimbabwe,Maize (corn),Yield,2020,kg/ha,1180.1,A
+Zimbabwe,Maize (corn),Area harvested,2021,ha,957793,A
+Zimbabwe,Maize (corn),Production,2021,t,1469664,A
+Zimbabwe,Maize (corn),Yield,2021,kg/ha,1534.4,A
+Zimbabwe,Maize (corn),Area harvested,2022,ha,1139286,A
+Zimbabwe,Maize (corn),Production,2022,t,869100.29,A
+Zimbabwe,Maize (corn),Yield,2022,kg/ha,762.8,A

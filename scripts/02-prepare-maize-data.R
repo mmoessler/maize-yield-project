@@ -2,6 +2,12 @@
 
 source("scripts/functions.R")
 
+assert_project_root()
+ensure_project_directories()
+check_required_packages(
+  c("dplyr", "here", "janitor", "readr", "stringr", "tidyr")
+)
+
 library(dplyr)
 library(here)
 library(janitor)
