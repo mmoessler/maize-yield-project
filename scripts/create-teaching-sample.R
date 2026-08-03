@@ -1,7 +1,7 @@
 # Create a compact, repository-friendly teaching sample from FAOSTAT data.
 #
 # Run this script after acquiring the full normalized FAOSTAT dataset:
-#   Rscript scripts/01-acquire-faostat-data.R
+#   Rscript scripts/acquire-faostat-data.R
 #   Rscript scripts/create-teaching-sample.R
 #
 # Optional command-line arguments override the input and output paths:
@@ -51,7 +51,7 @@ last_year <- 2022L
 if (!file.exists(input_file)) {
   stop(
     "FAOSTAT input not found: ", input_file, "\n",
-    "Run scripts/01-acquire-faostat-data.R first or provide an input path.",
+    "Run scripts/acquire-faostat-data.R first or provide an input path.",
     call. = FALSE
   )
 }

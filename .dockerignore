@@ -4,7 +4,8 @@
 .RData
 .env
 
-data-raw
+data-raw/*
+!data-raw/faostat-maize-yield-sample.csv
 data-processed
 figures/*.png
 reports/*.html

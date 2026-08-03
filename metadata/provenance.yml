@@ -1,0 +1,44 @@
+artifact: data-raw/faostat-maize-yield-sample.csv
+provider: Food and Agriculture Organization of the United Nations (FAO)
+database: FAOSTAT
+dataset: Crops and Livestock Products
+release: "Not encoded in the bulk archive filename; teaching snapshot created 2026-08-03"
+accessed: "2026-08-03"
+source: https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip
+retrieval: >-
+  Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
+  by scripts/create-teaching-sample.R to maize observations for nine Southern
+  African countries, three elements, and 1990-2022.
+checksum_algorithm: SHA-256
+checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
+size_bytes: 44803
+rows_excluding_header: 891
+grain: >-
+  One row represents one maize element for one reporting area and calendar
+  year, expressed in one unit.
+candidate_key:
+  - area
+  - item
+  - element
+  - year
+  - unit
+license: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
+terms: https://www.fao.org/contact-us/terms/db-terms-of-use/en
+metadata_reference: https://www.fao.org/faostat/en/#data/QCL
+citation: >-
+  FAO. 2026. FAOSTAT: Crops and livestock products. Accessed 3 August 2026.
+  https://www.fao.org/faostat/en/#data/QCL. Licence: CC BY 4.0.
+sensitivity: >-
+  Aggregated national statistics; no personal, confidential, or
+  location-sensitive microdata are present in this teaching extract.
+redistribution: >-
+  Included for teaching under the stated licence and terms. Attribution must
+  be retained, no FAO endorsement may be implied, and dataset metadata must be
+  checked for third-party exceptions before reuse.
+retention: >-
+  Preserve the tracked teaching snapshot with its metadata. Downloaded bulk
+  files and derived outputs are reproducible working artifacts and are ignored.
+known_limitations: >-
+  FAOSTAT values can be official, estimated, imputed, or supplied by external
+  organizations and historical series may be revised. The teaching extract
+  omits provider numeric codes and notes and is not the complete source dataset.

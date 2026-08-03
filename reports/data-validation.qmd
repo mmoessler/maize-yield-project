@@ -1,0 +1,144 @@
+---
+title: "FAOSTAT teaching extract: data-validation report"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+---
+
+## Purpose and status
+
+This report documents the evidence used to decide whether the fixed FAOSTAT
+teaching extract has the expected identity, structure, coverage, and basic
+semantic properties. Validation does not prove that provider values are
+accurate or that the data are fit for every research question.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(here)
+library(readr)
+
+input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
+results_file <- here("data-processed", "data-validation-results.csv")
+
+if (!file.exists(results_file)) {
+  stop("Run Rscript scripts/validate-data.R before rendering this report.")
+}
+
+maize <- read_csv(input_file, show_col_types = FALSE)
+validation <- read_csv(results_file, show_col_types = FALSE)
+```
+
+```{r}
+#| label: validation-status
+validation |>
+  count(status, name = "checks")
+
+validation
+```
+
+`failure` means the input is not the expected teaching artifact and should not
+continue. `warning` preserves a finding that needs interpretation but does not
+silently remove or replace observations. `pass` means that the observed data
+match one documented expectation.
+
+## Source and provenance
+
+- Artifact: `data-raw/faostat-maize-yield-sample.csv`
+- Provider: Food and Agriculture Organization of the United Nations (FAO)
+- Dataset: FAOSTAT Crops and Livestock Products
+- Snapshot created: 3 August 2026
+- SHA-256: `fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be`
+- Licence: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
+
+The complete retrieval history, citation, sharing conditions, and limitations
+are recorded in `metadata/provenance.yml`.
+
+## Grain and candidate key
+
+One row represents one maize element for one reporting area and calendar year,
+expressed in one unit.
+
+The tested candidate key is:
+
+```text
+area + item + element + year + unit
+```
+
+The teaching extract uses readable area and item labels because provider codes
+were removed when the compact snapshot was created. Future integrations should
+use stable provider codes rather than labels wherever those codes are available.
+
+## Dimensions and coverage
+
+```{r}
+#| label: dimensions-coverage
+tibble(
+  rows = nrow(maize),
+  columns = ncol(maize),
+  countries = n_distinct(maize$area),
+  first_year = min(maize$year),
+  last_year = max(maize$year)
+)
+
+maize |>
+  count(area, name = "observations")
+```
+
+## Categories, units, and flags
+
+```{r}
+#| label: categories-units
+maize |>
+  count(item, element, unit, name = "observations")
+
+maize |>
+  count(flag, name = "observations", sort = TRUE)
+```
+
+Flag definitions are recorded in `metadata/flag-code-list.csv`. Flags qualify
+the source of a value and must not be discarded without a justified preparation
+decision.
+
+## Missingness and ranges
+
+```{r}
+#| label: missingness
+maize |>
+  summarise(across(everything(), ~ sum(is.na(.x)))) |>
+  tidyr::pivot_longer(everything(), names_to = "variable", values_to = "missing")
+```
+
+```{r}
+#| label: ranges
+maize |>
+  group_by(element, unit) |>
+  summarise(
+    minimum = min(value, na.rm = TRUE),
+    maximum = max(value, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+A blank source value would be missing, not zero. Plausible ranges depend on the
+element and unit; no universal upper threshold is imposed.
+
+## Findings and deferred decisions
+
+The production–area–yield relationship is a diagnostic, not an automatic
+repair rule. Differences can arise through rounding, estimation, imputation,
+or provider methodology. Any warning remains visible for interpretation during
+data preparation.
+
+The following questions remain outside automated validation:
+
+- whether provider estimates accurately represent agricultural conditions;
+- whether national statistics are comparable across countries and years;
+- whether revisions occurred after the snapshot was created;
+- whether country-level annual data are fit for a particular causal question;
+- how flags should affect a specific analysis.
+
+No rows are deleted and no source values are changed by validation.

@@ -19,7 +19,7 @@ input_file <- here("data-raw", "faostat-crops-livestock-products.csv")
 output_file <- here("data-processed", "maize-yield-panel.csv")
 
 if (!file.exists(input_file)) {
-  stop("Raw data not found. Run scripts/01-acquire-faostat-data.R first.")
+  stop("Raw data not found. Run scripts/acquire-faostat-data.R first.")
 }
 
 countries <- c(

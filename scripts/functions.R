@@ -8,6 +8,7 @@ project_directories <- c(
 )
 
 required_project_packages <- c(
+  "digest",
   "dplyr",
   "ggplot2",
   "here",
@@ -15,7 +16,8 @@ required_project_packages <- c(
   "readr",
   "stringr",
   "tibble",
-  "tidyr"
+  "tidyr",
+  "yaml"
 )
 
 assert_project_root <- function() {
@@ -74,7 +76,7 @@ check_required_packages <- function(
       "The project package environment is incomplete.\n",
       "Missing package(s): ",
       paste(missing_packages, collapse = ", "),
-      "\nRun: Rscript scripts/00-setup.R",
+      "\nRun: Rscript scripts/setup.R",
       call. = FALSE
     )
   }

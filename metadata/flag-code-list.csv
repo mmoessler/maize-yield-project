@@ -1,0 +1,5 @@
+flag,description,source
+A,Official figure,FAOSTAT Crops and Livestock Products bulk metadata
+E,Estimated value,FAOSTAT Crops and Livestock Products bulk metadata
+I,Value imputed by a receiving agency,FAOSTAT Crops and Livestock Products bulk metadata
+X,Figure from external organization,FAOSTAT Crops and Livestock Products bulk metadata

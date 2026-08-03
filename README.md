@@ -44,10 +44,11 @@ The models describe associations and provide simple predictive benchmarks. They 
 
 ```text
 maize-yield-project/
-├── data-raw/          # Downloaded source data (generated; not tracked)
+├── data-raw/          # Tracked teaching sample and ignored bulk source data
 ├── data-processed/    # Clean data and model outputs (generated; not tracked)
 ├── docs/              # Supplementary setup documentation
 ├── figures/           # Generated plots
+├── metadata/          # Data dictionary, code lists, and provenance
 ├── reports/           # Quarto report source and rendered output
 ├── renv/              # renv bootstrap and settings
 ├── scripts/           # Numbered analysis scripts and shared functions
@@ -60,21 +61,24 @@ The main scripts are:
 
 | Script | Purpose |
 |---|---|
-| `scripts/00-setup.R` | Restore and verify the package environment |
-| `scripts/01-acquire-faostat-data.R` | Download and extract FAOSTAT data |
-| `scripts/02-prepare-maize-data.R` | Create the country-year maize panel |
-| `scripts/03-explore-maize-data.R` | Produce summaries and a trend figure |
-| `scripts/04-model-maize-yield.R` | Fit models and evaluate recent predictions |
+| `scripts/setup.R` | Restore and verify the package environment |
+| `scripts/acquire-faostat-data.R` | Download and extract FAOSTAT data |
+| `scripts/validate-data.R` | Validate the fixed teaching extract |
+| `scripts/prepare-maize-data.R` | Create the country-year maize panel |
+| `scripts/explore-maize-data.R` | Produce summaries and a trend figure |
+| `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
+| `scripts/create-teaching-sample.R` | Regenerate the fixed teaching extract |
 | `scripts/run-all.R` | Run the analysis from acquisition through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
 
 ## Further documentation
 
-The parent learning module contains the instructional pages for each topic. This repository keeps one implementation note per topic so contributors can understand how the course ideas are realized in this project:
+This repository keeps one implementation note per topic so students and contributors can understand how the course ideas are realized in the project:
 
-- [Version control implementation](docs/version-control.md) — tracked/ignored artifacts, commit workflow, submodule updates, and review checks.
+- [Version control implementation](docs/version-control.md) — tracked/ignored artifacts, remotes, commit workflow, and review checks.
 - [Reproducible-environment implementation](docs/reproducible-environment.md) — `renv`, Docker, setup checks, persistent outputs, and troubleshooting.
 - [Remote-computing implementation](docs/remote-computing.md) — running the project on a remote Linux server and the current infrastructure boundary.
+- [Data-management implementation](docs/data-management.md) — source identity, metadata, provenance, validation, and governance decisions.
 
 ## Analysis workflow
 
@@ -83,6 +87,8 @@ FAOSTAT bulk data
         │
         ▼
 data acquisition and preparation
+        │
+        ├──► metadata and validation report
         │
         ▼
 country-year maize yield panel
@@ -121,7 +127,7 @@ Run commands from the repository root.
 First restore the package environment:
 
 ```bash
-Rscript scripts/00-setup.R
+Rscript scripts/setup.R
 ```
 
 This also verifies the project context and creates the generated-data and output directories when they are absent.
@@ -132,7 +138,17 @@ Then run the complete workflow:
 Rscript scripts/run-all.R
 ```
 
-Individual analysis stages can also be run in numerical order. Each stage expects the outputs of the preceding stages to exist.
+`scripts/run-all.R` records the canonical execution order:
+
+1. `scripts/acquire-faostat-data.R`
+2. `scripts/validate-data.R`
+3. `scripts/prepare-maize-data.R`
+4. `scripts/explore-maize-data.R`
+5. `scripts/model-maize-yield.R`
+6. render the validation and analysis reports
+
+Individual stages can also be run in this order. Each stage expects the outputs
+of the preceding stages to exist.
 
 The acquisition step downloads a large FAOSTAT bulk archive, so it requires an internet connection and may take some time. FAOSTAT bulk-download URLs and schemas can change; verify the endpoint before a course run. If the download fails, the script can use the tracked course sample at `data-raw/faostat-maize-yield-sample.csv` and stops clearly when neither input is available.
 
@@ -141,7 +157,7 @@ data. The script selects maize yield, production, and harvested area for the
 nine project countries from 1990 through 2022:
 
 ```bash
-Rscript scripts/01-acquire-faostat-data.R
+Rscript scripts/acquire-faostat-data.R
 Rscript scripts/create-teaching-sample.R
 ```
 
@@ -184,7 +200,15 @@ After a successful run, the principal outputs are:
 - `figures/maize-yield-over-time.png`
 - `reports/maize-yield-report.html`
 
-Raw data, processed data, and rendered reports are excluded from version control because they are downloaded or generated by the workflow.
+Full downloaded raw data, processed data, validation results, and rendered
+reports are excluded from version control because they are external or
+generated workflow artifacts.
+
+The compact teaching sample is the deliberate exception: it is tracked with a
+checksum, dictionary, provenance record, licence information, and validation
+rules so that the project remains inspectable and usable offline. See the
+[data-management implementation](docs/data-management.md) for the artifact
+policy and maintenance workflow.
 
 ## Reproducibility and interpretation
 

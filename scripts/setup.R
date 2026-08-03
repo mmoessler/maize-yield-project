@@ -2,7 +2,7 @@
 #
 # Run from the project root:
 #
-#   Rscript scripts/00-setup.R
+#   Rscript scripts/setup.R
 #
 # On a fresh checkout, this script installs renv if necessary and restores
 # the package versions recorded in renv.lock.

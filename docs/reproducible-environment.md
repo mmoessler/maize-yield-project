@@ -27,7 +27,7 @@ project scripts
 | `renv.lock` | Records R 4.3.3, CRAN, and package versions |
 | `renv/activate.R` | Bootstraps and activates `renv` |
 | `renv/settings.json` | Records project `renv` behavior |
-| `scripts/00-setup.R` | Restores and verifies the local package environment |
+| `scripts/setup.R` | Restores and verifies the local package environment |
 | `scripts/functions.R` | Checks project context/packages and creates output directories |
 | `Dockerfile` | Builds the broader container environment |
 | `.dockerignore` | Keeps local state, data, outputs, and secrets out of the image |
@@ -45,7 +45,7 @@ Requirements:
 Run from the project root:
 
 ```bash
-Rscript scripts/00-setup.R
+Rscript scripts/setup.R
 ```
 
 The setup script:
@@ -67,15 +67,16 @@ After setup:
 Rscript scripts/run-all.R
 ```
 
-`run-all.R` verifies project context, directories, and packages before starting. It then runs the numbered scripts and renders the Quarto report when Quarto is available.
+`run-all.R` verifies project context, directories, and packages before starting. It then runs the workflow stages in their documented order and renders the Quarto reports when Quarto is available.
 
 Individual stages can be run in order:
 
 ```bash
-Rscript scripts/01-acquire-faostat-data.R
-Rscript scripts/02-prepare-maize-data.R
-Rscript scripts/03-explore-maize-data.R
-Rscript scripts/04-model-maize-yield.R
+Rscript scripts/acquire-faostat-data.R
+Rscript scripts/validate-data.R
+Rscript scripts/prepare-maize-data.R
+Rscript scripts/explore-maize-data.R
+Rscript scripts/model-maize-yield.R
 ```
 
 Each stage creates required directories and checks its package subset. It still expects outputs from preceding stages.
@@ -120,7 +121,7 @@ Another contributor receives the change with:
 
 ```bash
 git pull
-Rscript scripts/00-setup.R
+Rscript scripts/setup.R
 ```
 
 Do not run `snapshot()` merely to remove a warning. Confirm that the resulting lockfile represents the packages actually required by the project.
@@ -203,7 +204,7 @@ Run commands from the directory containing `renv.lock`, `scripts/`, and `maize-y
 Run:
 
 ```bash
-Rscript scripts/00-setup.R
+Rscript scripts/setup.R
 ```
 
 Then inspect `renv::status()`. Do not install packages into an unrelated global library as a substitute for restoring the project.

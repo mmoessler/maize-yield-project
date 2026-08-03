@@ -12,7 +12,7 @@ library(here)
 library(readr)
 
 data_file <- here("data-processed", "maize-yield-panel.csv")
-if (!file.exists(data_file)) stop("Run scripts/02-prepare-maize-data.R first.")
+if (!file.exists(data_file)) stop("Run scripts/prepare-maize-data.R first.")
 
 maize <- read_csv(data_file, show_col_types = FALSE)
 

@@ -7,10 +7,11 @@ ensure_project_directories()
 check_required_packages()
 
 scripts <- c(
-  "scripts/01-acquire-faostat-data.R",
-  "scripts/02-prepare-maize-data.R",
-  "scripts/03-explore-maize-data.R",
-  "scripts/04-model-maize-yield.R"
+  "scripts/acquire-faostat-data.R",
+  "scripts/validate-data.R",
+  "scripts/prepare-maize-data.R",
+  "scripts/explore-maize-data.R",
+  "scripts/model-maize-yield.R"
 )
 
 for (script in scripts) {
@@ -19,7 +20,18 @@ for (script in scripts) {
 }
 
 if (nzchar(Sys.which("quarto"))) {
-  system2("quarto", c("render", "reports/maize-yield-report.qmd"))
+  reports <- c(
+    "reports/data-validation.qmd",
+    "reports/maize-yield-report.qmd"
+  )
+
+  for (report in reports) {
+    status <- system2("quarto", c("render", report))
+
+    if (!identical(status, 0L)) {
+      stop("Quarto failed to render: ", report, call. = FALSE)
+    }
+  }
 } else {
-  message("Quarto was not found. Render reports/maize-yield-report.qmd manually.")
+  message("Quarto was not found. Render the reports in reports/ manually.")
 }

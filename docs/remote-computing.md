@@ -45,7 +45,7 @@ git status
 ## Run with local R on the server
 
 ```bash
-Rscript scripts/00-setup.R
+Rscript scripts/setup.R
 Rscript scripts/run-all.R
 ```
 

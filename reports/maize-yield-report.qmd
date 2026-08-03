@@ -35,7 +35,7 @@ maize <- read_csv(
 
 ## Data preparation
 
-Describe filtering, duplicate handling, reshaping, unit conversion, missing values, and derived variables. Refer to `scripts/02-prepare-maize-data.R` for the complete transformation.
+Describe filtering, duplicate handling, reshaping, unit conversion, missing values, and derived variables. Refer to `scripts/prepare-maize-data.R` for the complete transformation.
 
 ```{r}
 #| label: data-overview
