@@ -1,0 +1,142 @@
+---
+title: "FAOSTAT–MODIS data-integration report"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+---
+
+## Purpose and scope
+
+This report audits the integration of the FAOSTAT maize country–year panel
+with annual MODIS/Terra net primary productivity (NPP) at one teaching
+reference pixel per country.
+
+The reference pixel demonstrates acquisition, spatial metadata, identifier
+alignment, temporal overlap, unit scaling, a one-to-one join, and lineage. It
+does **not** measure national vegetation, national cropland, or maize fields.
+It must not be interpreted as a country-level environmental predictor.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(here)
+library(readr)
+
+integrated_file <- here("data-interim", "maize-yield-with-npp.csv")
+audit_file <- here("data-processed", "data-integration-audit.csv")
+satellite_file <- here("data-raw", "modis-npp-reference-sites.csv")
+
+required_files <- c(integrated_file, audit_file, satellite_file)
+missing_files <- required_files[!file.exists(required_files)]
+
+if (length(missing_files) > 0) {
+  stop("Run Rscript scripts/integrate-data.R before rendering this report.")
+}
+
+integrated <- read_csv(integrated_file, show_col_types = FALSE)
+audit <- read_csv(audit_file, show_col_types = FALSE)
+satellite <- read_csv(satellite_file, show_col_types = FALSE)
+```
+
+## Intended grain, key, and relationship
+
+- FAOSTAT prepared grain: one row per country and calendar year.
+- MODIS teaching grain: one row per project country reference pixel and year.
+- Integrated grain: one row per project country and calendar year, retaining
+  the maize study population.
+- Integrated key: `project_country_id + year`.
+- Expected join relationship: one-to-one for overlapping keys.
+- Join type: left join from the FAOSTAT maize panel.
+
+The two inputs are technically aligned to country identifier and calendar
+year. They are not spatially equivalent: a country statistic and one raster
+pixel represent very different areas.
+
+## Sources and lineage
+
+The complete source records are in `metadata/source-register.yml`; output-field
+lineage is in `metadata/integration-data-dictionary.csv`.
+
+The MODIS teaching snapshot contains the raw integer `Npp_500m` value and
+`Npp_QC_500m` percentage returned by the ORNL DAAC service. Integration applies
+the documented MOD17A3HGF scale factor of `0.0001` to obtain
+kg C/m²/year. Provider fill values from 32761 through 32767 become missing.
+
+Country mappings and WGS84 reference coordinates are explicit in
+`metadata/country-crosswalk.csv`. The coordinates identify teaching pixels;
+they were not selected from a crop mask or sampling design.
+
+## Join audit
+
+```{r}
+#| label: audit-results
+audit
+```
+
+```{r}
+#| label: output-key-check
+tibble(
+  rows = nrow(integrated),
+  unique_keys = n_distinct(integrated$project_country_id, integrated$year),
+  countries = n_distinct(integrated$project_country_id),
+  first_year = min(integrated$year),
+  last_year = max(integrated$year),
+  rows_with_satellite = sum(!is.na(integrated$modis_date))
+)
+```
+
+## Temporal coverage and unmatched keys
+
+The maize panel covers 1990–2022. The compact satellite snapshot deliberately
+covers only 2018–2022. Earlier maize keys remain in the integrated output with
+missing satellite fields because the left join preserves the maize study
+population.
+
+```{r}
+#| label: coverage
+integrated |>
+  mutate(has_satellite_record = !is.na(modis_date)) |>
+  count(year, has_satellite_record) |>
+  filter(year >= 2016)
+```
+
+## Satellite values and quality information
+
+```{r}
+#| label: satellite-summary
+integrated |>
+  filter(!is.na(modis_date)) |>
+  group_by(project_country_id, project_country_name) |>
+  summarise(
+    years = n(),
+    mean_reference_npp = mean(reference_site_npp_kg_c_m2_year, na.rm = TRUE),
+    maximum_gap_filled_percent = max(npp_qc_percent, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+The quality percentage remains visible. This introductory workflow does not
+silently remove records based on it; a later analysis must justify any
+threshold.
+
+## Limitations and appropriate use
+
+- One pixel cannot represent a country, its cropland, or its maize-growing
+  areas.
+- The reference coordinates are teaching choices, not a probability sample.
+- NPP represents total vegetation productivity and is not crop yield.
+- A 500 m raster pixel and a country-level agricultural statistic have
+  incompatible spatial support even when their identifiers and years join.
+- MOD17A3HGF is a processed, gap-filled satellite product rather than an
+  untouched sensor observation.
+- The satellite snapshot covers only the five evaluation years.
+
+The scientifically responsible conclusion is therefore about the integration
+workflow: it demonstrates how to acquire, align, join, audit, and document two
+sources. A substantive environmental analysis would require crop masks,
+country or production-zone boundaries, area-weighted raster summaries,
+growing-season alignment, uncertainty assessment, and a defensible sampling
+design.

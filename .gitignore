@@ -9,6 +9,8 @@
 # Data
 data-raw/*
 !data-raw/faostat-maize-yield-sample.csv
+!data-raw/modis-npp-reference-sites.csv
+data-interim/
 data-processed/
 
 # Quarto

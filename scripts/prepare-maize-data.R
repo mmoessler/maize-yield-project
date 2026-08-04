@@ -32,7 +32,12 @@ raw <- read_csv(input_file, show_col_types = FALSE) |> clean_names()
 # Support either the FAOSTAT normalized bulk schema or the bundled sample schema.
 if (all(c("area", "item", "element", "year", "unit", "value") %in% names(raw))) {
   tidy <- raw |>
-    filter(area %in% countries, item == "Maize (corn)") |>
+    filter(
+      area %in% countries,
+      item == "Maize (corn)",
+      year >= 1990,
+      year <= 2022
+    ) |>
     transmute(
       country = area,
       year = as.integer(year),
@@ -51,13 +56,45 @@ if (all(c("area", "item", "element", "year", "unit", "value") %in% names(raw))) 
   stop("Unexpected input schema. Inspect names(raw) and update the mapping.")
 }
 
+expected_measure_units <- c(
+  "yield|kg/ha",
+  "yield|100 mg/ha",
+  "harvested-area|ha",
+  "production|t"
+)
+observed_measure_units <- tidy |>
+  distinct(measure, unit) |>
+  transmute(pair = paste(measure, unit, sep = "|")) |>
+  pull(pair)
+unexpected_measure_units <- setdiff(
+  observed_measure_units,
+  expected_measure_units
+)
+
+if (length(unexpected_measure_units) > 0) {
+  stop(
+    "Unexpected measure/unit combination(s): ",
+    paste(unexpected_measure_units, collapse = ", "),
+    call. = FALSE
+  )
+}
+
+tidy <- tidy |>
+  mutate(
+    value = case_when(
+      measure == "yield" & unit == "kg/ha" ~ value / 1000,
+      measure == "yield" & unit == "100 mg/ha" ~ value / 10000,
+      TRUE ~ value
+    )
+  )
+
 panel <- tidy |>
   distinct(country, year, measure, .keep_all = TRUE) |>
   select(country, year, measure, value) |>
   pivot_wider(names_from = measure, values_from = value) |>
   arrange(country, year) |>
   mutate(
-    yield_tonnes_per_hectare = yield / 10000,
+    yield_tonnes_per_hectare = yield,
     production_tonnes = production,
     harvested_area_hectares = `harvested-area`,
     log_yield = safe_log(yield_tonnes_per_hectare)

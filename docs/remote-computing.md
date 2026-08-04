@@ -60,6 +60,7 @@ docker build -t maize-yield-project .
 mkdir -p data-raw data-processed figures reports
 docker run --rm \
   -v "$(pwd)/data-raw:/work/data-raw" \
+  -v "$(pwd)/data-interim:/work/data-interim" \
   -v "$(pwd)/data-processed:/work/data-processed" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \

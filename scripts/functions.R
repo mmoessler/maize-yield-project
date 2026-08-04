@@ -2,6 +2,7 @@
 
 project_directories <- c(
   "data-raw",
+  "data-interim",
   "data-processed",
   "figures",
   "reports"
@@ -13,6 +14,7 @@ required_project_packages <- c(
   "ggplot2",
   "here",
   "janitor",
+  "jsonlite",
   "readr",
   "stringr",
   "tibble",

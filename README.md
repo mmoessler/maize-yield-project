@@ -4,7 +4,7 @@ This repository contains a small, instructional data science project for the **I
 certificate.
 
 The project uses maize production data to demonstrate a complete and reproducible analysis workflow: acquiring data, preparing a tidy analytical
-dataset, exploring trends, fitting simple models, evaluating predictions, and communicating results in a report. It is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
+dataset, integrating a small satellite-derived teaching source, exploring trends, fitting simple models, evaluating predictions, and communicating results in reports. It is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
 
 ## Research question
 
@@ -30,6 +30,7 @@ The project introduces:
 
 - reproducible project organization and project-relative file paths;
 - data acquisition and provenance;
+- identifier crosswalks, satellite-source integration, and join audits;
 - cleaning, filtering, reshaping, and unit conversion;
 - exploratory summaries and visualization;
 - train/test splits for predictive evaluation;
@@ -45,13 +46,14 @@ The models describe associations and provide simple predictive benchmarks. They 
 ```text
 maize-yield-project/
 ├── data-raw/          # Tracked teaching sample and ignored bulk source data
+├── data-interim/      # Integrated multi-source data (generated; not tracked)
 ├── data-processed/    # Clean data and model outputs (generated; not tracked)
 ├── docs/              # Supplementary setup documentation
 ├── figures/           # Generated plots
-├── metadata/          # Data dictionary, code lists, and provenance
+├── metadata/          # Dictionaries, crosswalks, source register, and provenance
 ├── reports/           # Quarto report source and rendered output
 ├── renv/              # renv bootstrap and settings
-├── scripts/           # Numbered analysis scripts and shared functions
+├── scripts/           # Workflow scripts and shared functions
 ├── Dockerfile         # Reproducible container definition
 ├── renv.lock          # Pinned R package versions
 └── maize-yield-project.Rproj
@@ -63,8 +65,10 @@ The main scripts are:
 |---|---|
 | `scripts/setup.R` | Restore and verify the package environment |
 | `scripts/acquire-faostat-data.R` | Download and extract FAOSTAT data |
+| `scripts/acquire-modis-data.R` | Use or deliberately refresh the MODIS NPP teaching snapshot |
 | `scripts/validate-data.R` | Validate the fixed teaching extract |
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
+| `scripts/integrate-data.R` | Join the maize panel to satellite reference-pixel NPP and audit the result |
 | `scripts/explore-maize-data.R` | Produce summaries and a trend figure |
 | `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
 | `scripts/create-teaching-sample.R` | Regenerate the fixed teaching extract |
@@ -79,6 +83,7 @@ This repository keeps one implementation note per topic so students and contribu
 - [Reproducible-environment implementation](docs/reproducible-environment.md) — `renv`, Docker, setup checks, persistent outputs, and troubleshooting.
 - [Remote-computing implementation](docs/remote-computing.md) — running the project on a remote Linux server and the current infrastructure boundary.
 - [Data-management implementation](docs/data-management.md) — source identity, metadata, provenance, validation, and governance decisions.
+- [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, reference pixels, crosswalks, join audits, and lineage.
 
 ## Analysis workflow
 
@@ -86,19 +91,22 @@ This repository keeps one implementation note per topic so students and contribu
 FAOSTAT bulk data
         │
         ▼
-data acquisition and preparation
+acquisition, validation and preparation
         │
         ├──► metadata and validation report
         │
         ▼
 country-year maize yield panel
         │
+        ├──── MODIS reference-pixel NPP
+        │              │
+        │              ▼
+        ├──► integrated interim dataset and join audit
         ├──► descriptive summaries and visualization
-        │
         └──► model fitting and test-period evaluation
                          │
                          ▼
-                   Quarto report
+                    Quarto reports
 ```
 
 The preparation script supports the normalized FAOSTAT schema. It selects maize yield, production, and harvested area; reshapes the measures into one row
@@ -141,16 +149,24 @@ Rscript scripts/run-all.R
 `scripts/run-all.R` records the canonical execution order:
 
 1. `scripts/acquire-faostat-data.R`
-2. `scripts/validate-data.R`
-3. `scripts/prepare-maize-data.R`
-4. `scripts/explore-maize-data.R`
-5. `scripts/model-maize-yield.R`
-6. render the validation and analysis reports
+2. `scripts/acquire-modis-data.R`
+3. `scripts/validate-data.R`
+4. `scripts/prepare-maize-data.R`
+5. `scripts/integrate-data.R`
+6. `scripts/explore-maize-data.R`
+7. `scripts/model-maize-yield.R`
+8. render the validation, integration, and analysis reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
 of the preceding stages to exist.
 
-The acquisition step downloads a large FAOSTAT bulk archive, so it requires an internet connection and may take some time. FAOSTAT bulk-download URLs and schemas can change; verify the endpoint before a course run. If the download fails, the script can use the tracked course sample at `data-raw/faostat-maize-yield-sample.csv` and stops clearly when neither input is available.
+The FAOSTAT acquisition step downloads a large bulk archive, so it requires an internet connection and may take some time. FAOSTAT bulk-download URLs and schemas can change; verify the endpoint before a course run. If the download fails, the script can use the tracked course sample at `data-raw/faostat-maize-yield-sample.csv` and stops clearly when neither input is available.
+
+The MODIS acquisition step uses the tracked 2018–2022 teaching snapshot by
+default and therefore needs no network connection. Maintainers can pass
+`--refresh` to retrieve a new snapshot deliberately from the ORNL DAAC API.
+The satellite values describe one documented 500 m reference pixel per country,
+not a national average, cropland summary, or maize-specific measurement.
 
 Maintainers can regenerate the compact course sample from the downloaded bulk
 data. The script selects maize yield, production, and harvested area for the
@@ -180,6 +196,7 @@ Run the workflow while retaining data and generated outputs on the host:
 ```bash
 docker run --rm \
   -v "$(pwd)/data-raw:/work/data-raw" \
+  -v "$(pwd)/data-interim:/work/data-interim" \
   -v "$(pwd)/data-processed:/work/data-processed" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
@@ -193,22 +210,27 @@ See [Reproducible-environment implementation](docs/reproducible-environment.md) 
 After a successful run, the principal outputs are:
 
 - `data-processed/maize-yield-panel.csv`
+- `data-interim/maize-yield-with-npp.csv`
+- `data-processed/data-integration-audit.csv`
 - `data-processed/country-yield-summary.csv`
 - `data-processed/maize-yield-predictions.csv`
 - `data-processed/model-performance.csv`
 - `data-processed/country-model.rds`
 - `figures/maize-yield-over-time.png`
 - `reports/maize-yield-report.html`
+- `reports/data-integration.html`
 
 Full downloaded raw data, processed data, validation results, and rendered
 reports are excluded from version control because they are external or
 generated workflow artifacts.
 
-The compact teaching sample is the deliberate exception: it is tracked with a
-checksum, dictionary, provenance record, licence information, and validation
-rules so that the project remains inspectable and usable offline. See the
-[data-management implementation](docs/data-management.md) for the artifact
-policy and maintenance workflow.
+The compact FAOSTAT and MODIS teaching snapshots are deliberate exceptions:
+they are tracked with checksums, metadata, licence/citation information, and
+validation rules so that the project remains inspectable and usable offline.
+See the [data-management implementation](docs/data-management.md) for the
+artifact policy and the [data-acquisition-and-integration
+implementation](docs/data-acquisition-and-integration.md) for the multi-source
+workflow and its scientific boundary.
 
 ## Reproducibility and interpretation
 

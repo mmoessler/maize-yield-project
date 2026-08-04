@@ -10,9 +10,11 @@ lesson.
 | Evidence | Repository file | Purpose |
 | --- | --- | --- |
 | Preserved source snapshot | `data-raw/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
+| Preserved satellite snapshot | `data-raw/modis-npp-reference-sites.csv` | Fixed, offline multi-source integration input |
 | Variable dictionary | `metadata/data-dictionary.csv` | Defines fields, types, units, roles, and missing values |
 | Flag code list | `metadata/flag-code-list.csv` | Preserves provider meanings for quality flags |
 | Provenance record | `metadata/provenance.yml` | Records origin, checksum, licence, citation, and limitations |
+| Multi-source register | `metadata/source-register.yml` | Records acquisition and identity for both integration sources |
 | Validation code | `scripts/validate-data.R` | Tests justified structural and semantic expectations |
 | Validation report | `reports/data-validation.qmd` | Presents evidence, findings, and unresolved questions |
 
@@ -110,6 +112,7 @@ must be justified separately.
 | Artifact | Git policy | Reason |
 | --- | --- | --- |
 | Fixed teaching sample | Track | Small, licensed snapshot supports reliable offline teaching |
+| Fixed MODIS teaching snapshot | Track | Small, cited response supports reliable offline integration teaching |
 | Metadata and validation source | Track | Required to interpret and audit the data |
 | Full FAOSTAT download | Ignore | Large, externally retrievable, and subject to revision |
 | Processed data and validation results | Ignore | Recreated by project scripts |

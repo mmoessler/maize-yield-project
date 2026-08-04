@@ -152,7 +152,7 @@ The Dockerfile:
 Create host directories explicitly so their ownership and location are clear:
 
 ```bash
-mkdir -p data-raw data-processed figures reports
+mkdir -p data-raw data-interim data-processed figures reports
 ```
 
 Run:
@@ -160,6 +160,7 @@ Run:
 ```bash
 docker run --rm \
   -v "$(pwd)/data-raw:/work/data-raw" \
+  -v "$(pwd)/data-interim:/work/data-interim" \
   -v "$(pwd)/data-processed:/work/data-processed" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
@@ -173,6 +174,7 @@ For an interactive shell:
 ```bash
 docker run --rm -it \
   -v "$(pwd)/data-raw:/work/data-raw" \
+  -v "$(pwd)/data-interim:/work/data-interim" \
   -v "$(pwd)/data-processed:/work/data-processed" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
@@ -191,7 +193,7 @@ data-raw/faostat-maize-yield-sample.csv
 
 The sample is tracked so that the workflow remains available without a network connection. Maintainers can regenerate it from the bulk input with `Rscript scripts/create-teaching-sample.R`. When neither source is available, the acquisition script stops and reports both recovery options; it does not claim success after a failed fallback.
 
-External data are outside the guarantees of `renv` and Docker. A future data-management implementation should record the endpoint, access date, release, checksum, and license.
+External data are outside the guarantees of `renv` and Docker. The data-management and data-acquisition documentation records endpoints, access dates, releases, checksums, and licence/citation information for the tracked teaching snapshots.
 
 ## Troubleshooting
 
