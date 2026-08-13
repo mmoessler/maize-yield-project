@@ -37,7 +37,7 @@ yield_plot <- ggplot(maize, aes(year, yield_tonnes_per_hectare, group = country)
     subtitle = "Selected Southern African countries",
     x = NULL,
     y = "Yield (tonnes per hectare)",
-    caption = "Source: FAOSTAT or course-provided teaching sample"
+    caption = "Source: fixed FAOSTAT teaching sample; see metadata/provenance.yml"
   ) +
   theme_minimal()
 

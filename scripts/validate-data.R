@@ -14,8 +14,10 @@ library(tidyr)
 input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
 output_file <- here("data-processed", "data-validation-results.csv")
 provenance_file <- here("metadata", "provenance.yml")
+dictionary_file <- here("metadata", "data-dictionary.csv")
+flag_code_file <- here("metadata", "flag-code-list.csv")
+source_metadata_file <- here("metadata", "source-metadata.yml")
 
-expected_columns <- c("area", "item", "element", "year", "unit", "value", "flag")
 expected_countries <- c(
   "Botswana", "Eswatini", "Lesotho", "Malawi", "Mozambique",
   "Namibia", "South Africa", "Zambia", "Zimbabwe"
@@ -25,18 +27,34 @@ expected_pairs <- c(
   "Production|t",
   "Yield|kg/ha"
 )
-expected_flags <- c("A", "E", "I", "X")
 candidate_key <- c("area", "item", "element", "year", "unit")
 
 if (!file.exists(input_file)) {
   stop("Teaching input not found: ", input_file, call. = FALSE)
 }
 
-if (!file.exists(provenance_file)) {
-  stop("Provenance record not found: ", provenance_file, call. = FALSE)
+required_metadata_files <- c(
+  provenance_file,
+  dictionary_file,
+  flag_code_file,
+  source_metadata_file
+)
+missing_metadata_files <- required_metadata_files[!file.exists(required_metadata_files)]
+
+if (length(missing_metadata_files) > 0) {
+  stop(
+    "Required metadata file(s) not found: ",
+    paste(missing_metadata_files, collapse = ", "),
+    call. = FALSE
+  )
 }
 
 provenance <- yaml::read_yaml(provenance_file)
+source_metadata <- yaml::read_yaml(source_metadata_file)
+dictionary <- read_csv(dictionary_file, show_col_types = FALSE)
+flag_codes <- read_csv(flag_code_file, show_col_types = FALSE)
+expected_columns <- dictionary$variable
+expected_flags <- flag_codes$flag
 expected_checksum <- provenance$checksum_sha256
 expected_rows <- as.integer(provenance$rows_excluding_header)
 
@@ -52,15 +70,31 @@ results <- tibble(
   observed = character()
 )
 
-record_check <- function(check, dimension, passed, expectation, observed,
-                         failed_status = "failure") {
+record_status <- function(check, dimension, status, expectation, observed) {
+  allowed_statuses <- c("pass", "warning", "failure", "unknown")
+
+  if (!status %in% allowed_statuses) {
+    stop("Unsupported validation status: ", status, call. = FALSE)
+  }
+
   results <<- add_row(
     results,
     check = check,
     dimension = dimension,
-    status = if (isTRUE(passed)) "pass" else failed_status,
+    status = status,
     expectation = as.character(expectation),
     observed = as.character(observed)
+  )
+}
+
+record_check <- function(check, dimension, passed, expectation, observed,
+                         failed_status = "failure") {
+  record_status(
+    check,
+    dimension,
+    if (isTRUE(passed)) "pass" else failed_status,
+    expectation,
+    observed
   )
 }
 
@@ -74,14 +108,66 @@ record_check(
   "source-checksum", "provenance", identical(checksum, expected_checksum),
   expected_checksum, checksum
 )
+record_check(
+  "source-metadata-link", "metadata",
+  identical(provenance$source_metadata, "metadata/source-metadata.yml"),
+  "metadata/source-metadata.yml", provenance$source_metadata
+)
+record_check(
+  "source-yield-unit", "metadata",
+  identical(source_metadata$units$Yield, "kg/ha"),
+  "kg/ha", source_metadata$units$Yield
+)
 
 maize <- read_csv(input_file, show_col_types = FALSE)
 
+columns_match <- identical(names(maize), expected_columns)
 record_check(
   "required-columns", "validity",
-  setequal(names(maize), expected_columns),
+  columns_match,
   paste(expected_columns, collapse = ", "),
   paste(names(maize), collapse = ", ")
+)
+
+if (!columns_match) {
+  write_csv(results, output_file, na = "")
+  stop(
+    "Data validation failed: required-columns. Results written to: ",
+    output_file,
+    call. = FALSE
+  )
+}
+
+observed_types <- vapply(
+  maize,
+  function(column) {
+    if (is.character(column)) return("character")
+    if (is.integer(column)) return("integer")
+    if (is.numeric(column) && all(is.na(column) | column == floor(column))) {
+      return("integer")
+    }
+    if (is.numeric(column)) return("double")
+    class(column)[[1]]
+  },
+  FUN.VALUE = character(1)
+)
+expected_types <- setNames(dictionary$type, dictionary$variable)
+type_mismatches <- names(expected_types)[observed_types[names(expected_types)] != expected_types]
+record_check(
+  "dictionary-types", "validity", length(type_mismatches) == 0L,
+  paste(paste(names(expected_types), expected_types, sep = ": "), collapse = "; "),
+  if (length(type_mismatches) == 0L) {
+    "all imported types match the data dictionary"
+  } else {
+    paste(
+      paste(
+        type_mismatches,
+        observed_types[type_mismatches],
+        sep = ": "
+      ),
+      collapse = "; "
+    )
+  }
 )
 record_check(
   "row-count", "completeness", nrow(maize) == expected_rows,
@@ -140,6 +226,15 @@ record_check(
   "missing-core-values", "completeness", missing_core_values == 0L,
   "0 missing values in core fields", missing_core_values
 )
+
+incomplete_groups <- maize |>
+  count(area, year, name = "records") |>
+  filter(records != length(expected_pairs))
+record_check(
+  "country-year-completeness", "completeness", nrow(incomplete_groups) == 0L,
+  paste(length(expected_pairs), "element/unit records per country-year"),
+  paste(nrow(incomplete_groups), "incomplete country-year groups")
+)
 record_check(
   "non-negative-values", "plausibility",
   all(is.na(maize$value) | maize$value >= 0),
@@ -163,6 +258,17 @@ record_check(
   "reported yield is within 2% of production / harvested area where area is positive",
   paste(relationship_warnings, "rows exceed the diagnostic tolerance"),
   failed_status = "warning"
+)
+
+record_status(
+  "provider-accuracy", "fitness-for-purpose", "unknown",
+  "provider values accurately represent agricultural conditions",
+  "cannot be established from the teaching CSV; consult source methods and subject-matter evidence"
+)
+record_status(
+  "cross-country-comparability", "fitness-for-purpose", "unknown",
+  "definitions and reporting practices are comparable across countries and years",
+  "cannot be established from internal validation alone"
 )
 
 write_csv(results, output_file, na = "")

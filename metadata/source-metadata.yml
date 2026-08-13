@@ -1,0 +1,48 @@
+provider: Food and Agriculture Organization of the United Nations (FAO)
+database: FAOSTAT
+dataset: Crops and Livestock Products
+dataset_code: QCL
+metadata_scope: >-
+  Provider-level context required to interpret the variables retained in the
+  fixed maize-yield teaching sample. This record complements the project data
+  dictionary and the artifact provenance record.
+retrieved: "2026-08-03"
+references:
+  dataset: https://www.fao.org/faostat/en/#data/QCL
+  methods_and_standards: https://www.fao.org/faostat/en/#definitions
+observation: >-
+  The teaching sample retains annual observations for one item, one reporting
+  area, one element, and one unit. Consult current FAOSTAT metadata before
+  interpreting provider methods or regenerating the sample.
+coverage:
+  geographic: Nine selected Southern African reporting areas
+  temporal: "1990-2022"
+  frequency: Annual
+classifications:
+  item: Maize (corn)
+  elements:
+    - Area harvested
+    - Production
+    - Yield
+units:
+  Area harvested: ha
+  Production: t
+  Yield: kg/ha
+missing_values: A blank value is missing and must not be interpreted as zero.
+quality_flags:
+  reference: metadata/flag-code-list.csv
+  interpretation: >-
+    Flags describe the origin or treatment of reported values and must remain
+    available until an analysis-specific decision is justified.
+revision_policy: >-
+  FAOSTAT may revise historical observations. Regenerated extracts can
+  therefore differ from the fixed teaching snapshot even when the same code is
+  used.
+limitations:
+  - >-
+    Provider accuracy and cross-country comparability cannot be established
+    from the CSV alone.
+  - The teaching sample omits provider numeric area, item, and element codes.
+  - >-
+    Definitions and methods can change; recheck the linked provider metadata
+    before reuse.

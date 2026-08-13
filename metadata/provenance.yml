@@ -25,6 +25,7 @@ candidate_key:
 license: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
 terms: https://www.fao.org/contact-us/terms/db-terms-of-use/en
 metadata_reference: https://www.fao.org/faostat/en/#data/QCL
+source_metadata: metadata/source-metadata.yml
 citation: >-
   FAO. 2026. FAOSTAT: Crops and livestock products. Accessed 3 August 2026.
   https://www.fao.org/faostat/en/#data/QCL. Licence: CC BY 4.0.
@@ -42,3 +43,18 @@ known_limitations: >-
   FAOSTAT values can be official, estimated, imputed, or supplied by external
   organizations and historical series may be revised. The teaching extract
   omits provider numeric codes and notes and is not the complete source dataset.
+derived_artifacts:
+  - artifact: data-processed/data-validation-results.csv
+    created_by: scripts/validate-data.R
+    role: Machine-readable checks of the fixed teaching sample
+    information_loss: None; this is a validation summary, not a data extract
+  - artifact: data-processed/maize-yield-panel.csv
+    created_by: scripts/prepare-maize-data.R
+    role: Analysis-ready country-year panel
+    transformations:
+      - Reshape element observations to one row per country and year
+      - Convert yield from kilograms per hectare to tonnes per hectare
+      - Calculate natural-log yield for modeling
+    information_loss: >-
+      Item, element, unit, and flag columns are not retained in the panel;
+      their meanings and source values remain available in the fixed sample.

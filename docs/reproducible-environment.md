@@ -14,7 +14,7 @@ renv project library
   recorded R packages and versions
         ↓
 project scripts
-  acquisition, preparation, exploration, modeling, report
+  validation, preparation, exploration, modeling, report
 ```
 
 `renv` manages the R package library. Docker records a broader execution image. Neither records the current external FAOSTAT contents or guarantees scientifically valid results.
@@ -72,7 +72,6 @@ Rscript scripts/run-all.R
 Individual stages can be run in order:
 
 ```bash
-Rscript scripts/acquire-faostat-data.R
 Rscript scripts/validate-data.R
 Rscript scripts/prepare-maize-data.R
 Rscript scripts/explore-maize-data.R
@@ -179,19 +178,24 @@ docker run --rm -it \
   maize-yield-project bash
 ```
 
-## Acquisition behavior
+## Fixed data input
 
-The acquisition stage downloads a large external FAOSTAT archive. It writes to a `.part` file and only moves a completed download into place.
-
-If downloading or extraction fails, the script uses the course sample only when this file exists:
+The default workflow uses the tracked, checksummed teaching sample:
 
 ```text
 data-raw/faostat-maize-yield-sample.csv
 ```
 
-The sample is tracked so that the workflow remains available without a network connection. Maintainers can regenerate it from the bulk input with `Rscript scripts/create-teaching-sample.R`. When neither source is available, the acquisition script stops and reports both recovery options; it does not claim success after a failed fallback.
+It does not require network access and does not replace the input during a
+run. `scripts/acquire-faostat-data.R` and
+`scripts/create-teaching-sample.R` are separate maintainer utilities. Failed
+maintainer acquisition stops without copying the teaching sample to a bulk-data
+filename.
 
-External data are outside the guarantees of `renv` and Docker. A future data-management implementation should record the endpoint, access date, release, checksum, and license.
+External data are outside the guarantees of `renv` and Docker. The fixed
+teaching sample is therefore tracked and identified by checksum, while its
+endpoint, access date, release information, license, meaning, and limitations
+are recorded in `metadata/`. See `docs/data-management.md`.
 
 ## Troubleshooting
 

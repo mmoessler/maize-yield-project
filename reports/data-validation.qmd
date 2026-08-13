@@ -20,6 +20,7 @@ accurate or that the data are fit for every research question.
 library(dplyr)
 library(here)
 library(readr)
+library(yaml)
 
 input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
 results_file <- here("data-processed", "data-validation-results.csv")
@@ -30,6 +31,11 @@ if (!file.exists(results_file)) {
 
 maize <- read_csv(input_file, show_col_types = FALSE)
 validation <- read_csv(results_file, show_col_types = FALSE)
+provenance <- read_yaml(here("metadata", "provenance.yml"))
+dictionary <- read_csv(
+  here("metadata", "data-dictionary.csv"),
+  show_col_types = FALSE
+)
 ```
 
 ```{r}
@@ -42,20 +48,29 @@ validation
 
 `failure` means the input is not the expected teaching artifact and should not
 continue. `warning` preserves a finding that needs interpretation but does not
-silently remove or replace observations. `pass` means that the observed data
-match one documented expectation.
+silently remove or replace observations. `unknown` makes a question visible
+that code and the CSV cannot resolve. `pass` means that the observed data match
+one documented expectation.
 
 ## Source and provenance
 
-- Artifact: `data-raw/faostat-maize-yield-sample.csv`
-- Provider: Food and Agriculture Organization of the United Nations (FAO)
-- Dataset: FAOSTAT Crops and Livestock Products
-- Snapshot created: 3 August 2026
-- SHA-256: `fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be`
-- Licence: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
+- Artifact: `r provenance$artifact`
+- Provider: `r provenance$provider`
+- Dataset: `r paste(provenance$database, provenance$dataset, sep = " — ")`
+- Accessed: `r provenance$accessed`
+- SHA-256: `r provenance$checksum_sha256`
+- Licence: `r provenance$license`
 
-The complete retrieval history, citation, sharing conditions, and limitations
-are recorded in `metadata/provenance.yml`.
+The complete retrieval history, citation, sharing conditions, derived-artifact
+lineage, and limitations are recorded in `metadata/provenance.yml`. Selected
+provider definitions and methodological context are preserved in
+`metadata/source-metadata.yml`; variable-level meanings are in
+`metadata/data-dictionary.csv`.
+
+```{r}
+#| label: data-dictionary
+dictionary
+```
 
 ## Grain and candidate key
 
@@ -133,7 +148,9 @@ repair rule. Differences can arise through rounding, estimation, imputation,
 or provider methodology. Any warning remains visible for interpretation during
 data preparation.
 
-The following questions remain outside automated validation:
+The validation results explicitly classify provider accuracy and cross-country
+comparability as `unknown`. These and the following questions remain outside
+automated validation:
 
 - whether provider estimates accurately represent agricultural conditions;
 - whether national statistics are comparable across countries and years;

@@ -59,7 +59,7 @@ if (!file.exists(input_file)) {
 raw <- read_csv(input_file, show_col_types = FALSE) |>
   clean_names()
 
-required_columns <- c("area", "item", "element", "year", "unit", "value")
+required_columns <- c("area", "item", "element", "year", "unit", "value", "flag")
 missing_columns <- setdiff(required_columns, names(raw))
 
 if (length(missing_columns) > 0) {
@@ -88,10 +88,8 @@ sample <- raw |>
     year = as.integer(year),
     unit,
     value = as.numeric(value),
-    flag = if ("flag" %in% names(raw)) flag else NA_character_
-  ) |>
-  distinct(area, item, element, year, .keep_all = TRUE) |>
-  arrange(area, year, element)
+    flag
+  )
 
 if (nrow(sample) == 0) {
   stop("The filters produced an empty teaching sample.", call. = FALSE)
@@ -106,6 +104,23 @@ if (length(missing_countries) > 0) {
     call. = FALSE
   )
 }
+
+candidate_key <- c("area", "item", "element", "year", "unit")
+duplicate_keys <- sample |>
+  count(across(all_of(candidate_key)), name = "records") |>
+  filter(records > 1)
+
+if (nrow(duplicate_keys) > 0) {
+  stop(
+    "The filtered source contains ", nrow(duplicate_keys),
+    " duplicate candidate-key combination(s). Review them instead of ",
+    "selecting records silently.",
+    call. = FALSE
+  )
+}
+
+sample <- sample |>
+  arrange(area, year, element, unit)
 
 output_directory <- dirname(output_file)
 

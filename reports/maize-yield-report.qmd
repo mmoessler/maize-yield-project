@@ -18,7 +18,11 @@ How have maize yields changed across selected Southern African countries, and ho
 
 ## Data and provenance
 
-The intended source is FAOSTAT Crops and Livestock Products data. During offline use, the project may use a course-provided teaching sample. Confirm the active source before interpreting results.
+The analysis uses the fixed FAOSTAT Crops and Livestock Products teaching
+sample at `data-raw/faostat-maize-yield-sample.csv`. Its checksum, origin,
+license, scope, and known limitations are recorded in
+`metadata/provenance.yml`. The default workflow does not replace this snapshot
+with a current download.
 
 ```{r}
 #| label: setup
@@ -90,7 +94,11 @@ Provide two or three findings supported by the analysis. Avoid claims that go be
 
 ## Reproducibility statement
 
-This report was generated from version-controlled scripts using relative paths. Raw data were not edited manually. Package versions should be recorded with `renv`. The source, download date, transformation steps, and known limitations are documented in `metadata/`.
+This report was generated from the fixed, checksummed teaching sample using
+version-controlled scripts and relative paths. Raw data were not edited
+manually. Package versions are recorded with `renv`. Source context, variable
+meaning, provenance, transformation steps, and known limitations are
+documented in `metadata/`.
 
 ```{r}
 #| label: session-info
