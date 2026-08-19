@@ -21,6 +21,7 @@ responsible interpretation. It is not a crop-yield forecasting model.
 | FAOSTAT sample creation | `scripts/create-faostat-data-teaching-sample.R` | Reduce the bulk input to the fixed project scope |
 | Fixed FAOSTAT input | `data-raw/faostat-maize-yield-sample.csv` | Stable offline agricultural source |
 | Fixed CHIRPS input | `data-raw/chirps-growing-season-precipitation.csv` | Stable offline environmental source |
+| Boundary acquisition | `scripts/acquire-country-boundaries.R` | Recreate project polygons from a verified Natural Earth release |
 | CHIRPS acquisition | `scripts/acquire-chirps-data.R` | Deliberately refresh country zonal summaries |
 | Boundary reference | `metadata/project-country-boundaries.geojson` | Define the areas submitted to ClimateSERV |
 | Identifier crosswalk | `metadata/country-crosswalk.csv` | Map FAOSTAT labels to stable project IDs |
@@ -63,12 +64,21 @@ Rscript scripts/run-all.R
 ```
 
 Acquisition is a maintainer operation, not a hidden prerequisite. To refresh
-the precipitation snapshot deliberately:
+the spatial reference and then the precipitation snapshot deliberately:
 
 ```bash
+Rscript scripts/acquire-country-boundaries.R --refresh
+sha256sum metadata/project-country-boundaries.geojson
 Rscript scripts/acquire-chirps-data.R --refresh
 sha256sum data-raw/chirps-growing-season-precipitation.csv
 ```
+
+The boundary script downloads the version-pinned Natural Earth v5.1.1 Admin-0
+GeoJSON and refuses to continue unless the complete upstream file matches its
+expected SHA-256. It selects the nine `ADM0_A3` identifiers in the project
+crosswalk, retains only the project identifier, Natural Earth name, and polygon
+geometry, validates the result, and replaces the tracked file atomically. The
+CHIRPS script passes each resulting geometry to ClimateSERV.
 
 The CHIRPS script requests season years 1990–2022. Because ClimateSERV limits
 one request to 20 years, it submits the 1990–2005 and 2006–2022 batches for
@@ -76,7 +86,7 @@ each country, monitors the 18 jobs together, and combines them only after
 checking exact dates, daily completeness, and unique country-date keys.
 
 After refreshing, review row counts, dates, completeness, distributions, and
-source/API changes. Then update the corresponding checksum, date, size, and
+source/API changes. Then update the corresponding checksums, dates, sizes, and
 method in `metadata/provenance.yml` in the same commit. A refresh can change
 values because services and source products may be revised.
 

@@ -20,9 +20,14 @@ artifacts:
     artifact: metadata/project-country-boundaries.geojson
     source_id: natural_earth_admin0_110m
     created: "2026-08-18"
+    created_by: scripts/acquire-country-boundaries.R
     retrieval: >-
-      Nine ADM0_A3 features selected from Natural Earth's GeoJSON distribution;
-      properties reduced to the project identifier and display name.
+      scripts/acquire-country-boundaries.R downloaded the pinned Natural Earth
+      v5.1.1 GeoJSON after verifying its SHA-256. It selected nine ADM0_A3
+      features from metadata/country-crosswalk.csv and reduced the properties
+      to the project identifier and Natural Earth display name.
+    source_checksum_algorithm: SHA-256
+    source_checksum_sha256: 6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f
     checksum_algorithm: SHA-256
     checksum_sha256: 45debbd0d33ff2dd1515ce107dfde4469b0e8d88076e1e9519e000c599558456
     size_bytes: 34390

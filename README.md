@@ -65,6 +65,7 @@ The main scripts are:
 |---|---|
 | `scripts/setup.R` | Restore and verify the package environment |
 | `scripts/acquire-faostat-data.R` | Download and extract FAOSTAT data |
+| `scripts/acquire-country-boundaries.R` | Recreate the project-country polygons from pinned Natural Earth data |
 | `scripts/acquire-chirps-data.R` | Use or deliberately refresh the CHIRPS precipitation snapshot |
 | `scripts/validate-data.R` | Validate the fixed teaching extract |
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
@@ -160,8 +161,16 @@ of the preceding stages to exist.
 
 The normal workflow uses fixed FAOSTAT and CHIRPS snapshots and needs no
 network connection. Acquisition is a deliberate maintainer workflow because
-provider revisions and API changes can alter course inputs. To refresh CHIRPS,
-run `Rscript scripts/acquire-chirps-data.R --refresh`, review the resulting
+provider revisions and API changes can alter course inputs. The CHIRPS request
+uses the tracked country polygons. Recreate and verify them first when the
+spatial reference needs to be audited:
+
+```bash
+Rscript scripts/acquire-country-boundaries.R --refresh
+sha256sum metadata/project-country-boundaries.geojson
+```
+
+To refresh CHIRPS, run `Rscript scripts/acquire-chirps-data.R --refresh`, review the resulting
 country-area October-April totals for 1990–2022, and update
 `metadata/provenance.yml`. ClimateSERV limits requests to 20 years, so the
 script submits two historical batches for each country and combines them only
