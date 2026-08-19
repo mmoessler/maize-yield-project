@@ -191,7 +191,7 @@ If downloading or extraction fails, the script uses the course sample only when 
 data-raw/faostat-maize-yield-sample.csv
 ```
 
-The sample is tracked so that the workflow remains available without a network connection. Maintainers can regenerate it from the bulk input with `Rscript scripts/create-teaching-sample.R`. When neither source is available, the acquisition script stops and reports both recovery options; it does not claim success after a failed fallback.
+The sample is tracked so that the workflow remains available without a network connection. Maintainers can regenerate it from the bulk input with `Rscript scripts/create-faostat-data-teaching-sample.R`. When neither source is available, the acquisition script stops and reports both recovery options; it does not claim success after a failed fallback.
 
 External data are outside the guarantees of `renv` and Docker. The data-management and data-acquisition documentation records endpoints, access dates, releases, checksums, and licence/citation information for the tracked teaching snapshots.
 

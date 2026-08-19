@@ -75,7 +75,7 @@ if (anyDuplicated(precipitation[c("project_country_id", "year")])) {
 
 expected_keys <- tidyr::expand_grid(
   project_country_id = crosswalk$project_country_id,
-  year = 2018:2022
+  year = 1990:2022
 )
 missing_keys <- anti_join(
   expected_keys, precipitation |> distinct(project_country_id, year),
@@ -86,7 +86,7 @@ unexpected_keys <- anti_join(
   by = c("project_country_id", "year")
 )
 if (nrow(missing_keys) > 0 || nrow(unexpected_keys) > 0) {
-  stop("CHIRPS snapshot does not have the expected 2018-2022 coverage.")
+  stop("CHIRPS snapshot does not have the expected 1990-2022 coverage.")
 }
 if (any(precipitation$growing_season_precipitation_mm < 0, na.rm = TRUE) ||
     any(is.na(precipitation$growing_season_precipitation_mm))) {
@@ -134,18 +134,18 @@ if (nrow(integrated) != nrow(maize_with_id) ||
 audit <- tribble(
   ~check, ~expectation, ~observed, ~status,
   "maize-input-rows", "preserved by left join", as.character(nrow(maize_with_id)), "pass",
-  "precipitation-input-rows", "9 countries x 5 seasons", as.character(nrow(precipitation)),
-  if_else(nrow(precipitation) == 45L, "pass", "failure"),
+  "precipitation-input-rows", "9 countries x 33 seasons", as.character(nrow(precipitation)),
+  if_else(nrow(precipitation) == 297L, "pass", "failure"),
   "integrated-rows", as.character(nrow(maize_with_id)), as.character(nrow(integrated)), "pass",
   "duplicate-output-keys", "0", as.character(sum(duplicated(integrated[c("project_country_id", "year")]))), "pass",
-  "maize-keys-without-precipitation", "252 (years 1990-2017)",
+  "maize-keys-without-precipitation", "0",
   as.character(nrow(maize_without_precipitation)),
-  if_else(nrow(maize_without_precipitation) == 252L, "pass", "warning"),
+  if_else(nrow(maize_without_precipitation) == 0L, "pass", "failure"),
   "precipitation-keys-without-maize", "0", as.character(nrow(precipitation_without_maize)),
   if_else(nrow(precipitation_without_maize) == 0L, "pass", "failure"),
   "missing-precipitation-in-covered-years", "0",
-  as.character(sum(is.na(integrated$growing_season_precipitation_mm) & integrated$year >= 2018)),
-  if_else(sum(is.na(integrated$growing_season_precipitation_mm) & integrated$year >= 2018) == 0L,
+  as.character(sum(is.na(integrated$growing_season_precipitation_mm))),
+  if_else(sum(is.na(integrated$growing_season_precipitation_mm)) == 0L,
           "pass", "failure")
 )
 

@@ -38,7 +38,7 @@ sample manually. Maintainers regenerate it with:
 
 ```bash
 Rscript scripts/acquire-faostat-data.R
-Rscript scripts/create-teaching-sample.R
+Rscript scripts/create-faostat-data-teaching-sample.R
 Rscript scripts/validate-data.R
 ```
 

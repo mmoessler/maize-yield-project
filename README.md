@@ -71,8 +71,8 @@ The main scripts are:
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
 | `scripts/explore-maize-data.R` | Produce summaries and a trend figure |
 | `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
-| `scripts/create-teaching-sample.R` | Regenerate the fixed teaching extract |
-| `scripts/run-all.R` | Run the analysis from acquisition through reporting |
+| `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
+| `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
 
 ## Further documentation
@@ -162,7 +162,10 @@ The normal workflow uses fixed FAOSTAT and CHIRPS snapshots and needs no
 network connection. Acquisition is a deliberate maintainer workflow because
 provider revisions and API changes can alter course inputs. To refresh CHIRPS,
 run `Rscript scripts/acquire-chirps-data.R --refresh`, review the resulting
-country-area October-April totals, and update `metadata/provenance.yml`.
+country-area October-April totals for 1990–2022, and update
+`metadata/provenance.yml`. ClimateSERV limits requests to 20 years, so the
+script submits two historical batches for each country and combines them only
+after checking daily and seasonal completeness.
 
 Maintainers can regenerate the compact course sample from the downloaded bulk
 data. The script selects maize yield, production, and harvested area for the
@@ -170,7 +173,7 @@ nine project countries from 1990 through 2022:
 
 ```bash
 Rscript scripts/acquire-faostat-data.R
-Rscript scripts/create-teaching-sample.R
+Rscript scripts/create-faostat-data-teaching-sample.R
 ```
 
 To render only the report after the processed outputs have been created:

@@ -2,10 +2,10 @@
 #
 # Run this script after acquiring the full normalized FAOSTAT dataset:
 #   Rscript scripts/acquire-faostat-data.R
-#   Rscript scripts/create-teaching-sample.R
+#   Rscript scripts/create-faostat-data-teaching-sample.R
 #
 # Optional command-line arguments override the input and output paths:
-#   Rscript scripts/create-teaching-sample.R <input.csv> <output.csv>
+#   Rscript scripts/create-faostat-data-teaching-sample.R <input.csv> <output.csv>
 
 source("scripts/functions.R")
 
@@ -23,7 +23,10 @@ arguments <- commandArgs(trailingOnly = TRUE)
 
 if (length(arguments) > 2) {
   stop(
-    "Usage: Rscript scripts/create-teaching-sample.R [input.csv] [output.csv]",
+    paste0(
+      "Usage: Rscript scripts/create-faostat-data-teaching-sample.R ",
+      "[input.csv] [output.csv]"
+    ),
     call. = FALSE
   )
 }

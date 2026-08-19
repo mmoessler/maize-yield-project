@@ -5,7 +5,7 @@ artifacts:
     created: "2026-08-03"
     retrieval: >-
       Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
-      by scripts/create-teaching-sample.R to maize observations for nine countries,
+      by scripts/create-faostat-data-teaching-sample.R to maize observations for nine countries,
       three elements, and 1990-2022.
     checksum_algorithm: SHA-256
     checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
@@ -32,22 +32,24 @@ artifacts:
   - artifact_id: chirps_precipitation_snapshot
     artifact: data-raw/chirps-growing-season-precipitation.csv
     source_id: chirps_v2_climateserv
-    created: "2026-08-18"
+    created: "2026-08-19"
     retrieval: >-
       scripts/acquire-chirps-data.R submitted each Natural Earth country polygon
       to ClimateSERV, requested the spatial average of daily CHIRPS precipitation,
       and summed daily averages for October through April. A season is assigned
-      to the calendar year in which it ends.
+      to the calendar year in which it ends. Requests were divided into two
+      season-year batches per country to remain below the API's 20-year limit.
     parameters:
       climate_serv_datatype: 0
       spatial_operation: Average
       source_interval: Daily
       season_months: [10, 11, 12, 1, 2, 3, 4]
-      season_years: "2018-2022"
+      season_years: "1990-2022"
+      request_batches: ["1990-2005", "2006-2022"]
     checksum_algorithm: SHA-256
-    checksum_sha256: a092db1447dbf8796f0bf636cf474a0065381f7a31571d72de2a0cebd5d178b1
-    size_bytes: 2498
-    rows_excluding_header: 45
+    checksum_sha256: 61450924baa695cf725cccc3225f733228cefce5633344f27a265492cf694621
+    size_bytes: 15905
+    rows_excluding_header: 297
     grain: One project country and October-April growing season per row
     candidate_key: [project_country_id, year]
     dictionary: metadata/precipitation-data-dictionary.csv

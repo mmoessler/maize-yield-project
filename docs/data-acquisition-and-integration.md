@@ -17,6 +17,8 @@ responsible interpretation. It is not a crop-yield forecasting model.
 
 | Component | File | Role |
 |---|---|---|
+| FAOSTAT acquisition | `scripts/acquire-faostat-data.R` | Download the complete normalized bulk dataset |
+| FAOSTAT sample creation | `scripts/create-faostat-data-teaching-sample.R` | Reduce the bulk input to the fixed project scope |
 | Fixed FAOSTAT input | `data-raw/faostat-maize-yield-sample.csv` | Stable offline agricultural source |
 | Fixed CHIRPS input | `data-raw/chirps-growing-season-precipitation.csv` | Stable offline environmental source |
 | CHIRPS acquisition | `scripts/acquire-chirps-data.R` | Deliberately refresh country zonal summaries |
@@ -68,6 +70,11 @@ Rscript scripts/acquire-chirps-data.R --refresh
 sha256sum data-raw/chirps-growing-season-precipitation.csv
 ```
 
+The CHIRPS script requests season years 1990–2022. Because ClimateSERV limits
+one request to 20 years, it submits the 1990–2005 and 2006–2022 batches for
+each country, monitors the 18 jobs together, and combines them only after
+checking exact dates, daily completeness, and unique country-date keys.
+
 After refreshing, review row counts, dates, completeness, distributions, and
 source/API changes. Then update the corresponding checksum, date, size, and
 method in `metadata/provenance.yml` in the same commit. A refresh can change
@@ -83,12 +90,12 @@ on:
 project_country_id + year
 ```
 
-The FAOSTAT panel is the left table. All 297 maize country-year rows remain;
-precipitation is populated for the 45 rows from 2018 through 2022. Before
+The FAOSTAT panel is the left table. All 297 maize country-year rows remain and
+have precipitation for the corresponding 1990–2022 season. Before
 writing output, `scripts/integrate-data.R` verifies:
 
 - the CHIRPS file checksum;
-- required columns and the expected 9 x 5 key grid;
+- required columns and the expected 9 x 33 key grid;
 - non-negative precipitation and 212/213 daily observations per season;
 - crosswalk and source-key uniqueness;
 - no unknown project IDs; and

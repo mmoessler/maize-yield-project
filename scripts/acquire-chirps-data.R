@@ -57,15 +57,26 @@ if (file.exists(output_file) && !refresh) {
     fromJSON(content(response, as = "text", encoding = "UTF-8"), simplifyVector = FALSE)
   }
 
-  retrieve_daily_average <- function(feature) {
+  season_years <- 1990:2022
+  season_year_batches <- list(1990:2005, 2006:2022)
+
+  season_start <- function(year) as.Date(sprintf("%d-10-01", year - 1L))
+  season_end <- function(year) as.Date(sprintf("%d-04-30", year))
+
+  submit_daily_average <- function(feature, years) {
     country_id <- feature$properties$project_country_id
-    message("Submitting CHIRPS request for ", country_id, "...")
+    first_date <- season_start(min(years))
+    last_date <- season_end(max(years))
+    message(
+      "Submitting CHIRPS request for ", country_id, ", seasons ",
+      min(years), "-", max(years), "..."
+    )
     job <- request_json(
       "submitDataRequest",
       list(
         datatype = 0,
-        begintime = "10/01/2017",
-        endtime = "04/30/2022",
+        begintime = format(first_date, "%m/%d/%Y"),
+        endtime = format(last_date, "%m/%d/%Y"),
         intervaltype = 0,
         operationtype = 5,
         dateType_Category = "default",
@@ -73,28 +84,26 @@ if (file.exists(output_file) && !refresh) {
         geometry = toJSON(feature$geometry, auto_unbox = TRUE)
       )
     )
-    job_id <- unlist(job, use.names = FALSE)[[1]]
+    list(
+      job_id = unlist(job, use.names = FALSE)[[1]],
+      project_country_id = country_id,
+      first_season_year = min(years),
+      last_season_year = max(years)
+    )
+  }
 
-    for (attempt in seq_len(180)) {
-      progress <- unlist(
-        request_json("getDataRequestProgress", list(id = job_id)),
-        use.names = FALSE
-      )[[1]]
-      if (is.numeric(progress) && progress >= 100) break
-      if (identical(progress, -1)) stop("ClimateSERV job failed: ", job_id)
-      Sys.sleep(2)
-    }
-    if (!exists("progress") || progress < 100) {
-      stop("ClimateSERV job did not finish within six minutes: ", job_id)
-    }
-
-    result <- request_json("getDataFromRequest", list(id = job_id))
+  retrieve_completed_job <- function(job) {
+    result <- request_json("getDataFromRequest", list(id = job$job_id))
     if (is.null(result$data) || length(result$data) == 0) {
-      stop("ClimateSERV returned no daily data for ", country_id, ".")
+      stop(
+        "ClimateSERV returned no daily data for ",
+        job$project_country_id, ", seasons ", job$first_season_year,
+        "-", job$last_season_year, "."
+      )
     }
 
     tibble(
-      project_country_id = country_id,
+      project_country_id = job$project_country_id,
       date = as.Date(
         vapply(result$data, function(day) day$date, character(1)),
         tryFormats = c("%m/%d/%Y", "%d/%m/%Y")
@@ -107,14 +116,76 @@ if (file.exists(output_file) && !refresh) {
     )
   }
 
-  daily <- bind_rows(lapply(boundaries, retrieve_daily_average)) |>
+  request_tasks <- unlist(lapply(
+    boundaries,
+    function(feature) {
+      lapply(
+        season_year_batches,
+        function(years) list(feature = feature, years = years)
+      )
+    }
+  ), recursive = FALSE)
+
+  jobs <- lapply(
+    request_tasks,
+    function(task) submit_daily_average(task$feature, task$years)
+  )
+  results <- vector("list", length(jobs))
+  pending <- seq_along(jobs)
+
+  for (attempt in seq_len(300)) {
+    completed <- integer()
+
+    for (job_index in pending) {
+      progress <- unlist(
+        request_json(
+          "getDataRequestProgress",
+          list(id = jobs[[job_index]]$job_id)
+        ),
+        use.names = FALSE
+      )[[1]]
+
+      if (is.numeric(progress) && progress < 0) {
+        stop("ClimateSERV job failed: ", jobs[[job_index]]$job_id)
+      }
+      if (is.numeric(progress) && progress >= 100) {
+        results[[job_index]] <- retrieve_completed_job(jobs[[job_index]])
+        completed <- c(completed, job_index)
+        message(
+          "Completed ", jobs[[job_index]]$project_country_id, ", seasons ",
+          jobs[[job_index]]$first_season_year, "-",
+          jobs[[job_index]]$last_season_year, "."
+        )
+      }
+    }
+
+    pending <- setdiff(pending, completed)
+    if (length(pending) == 0) break
+    Sys.sleep(2)
+  }
+
+  if (length(pending) > 0) {
+    stop(
+      length(pending),
+      " ClimateSERV job(s) did not finish within ten minutes."
+    )
+  }
+
+  daily <- bind_rows(results)
+
+  if (any(is.na(daily$date)) ||
+      anyDuplicated(daily[c("project_country_id", "date")])) {
+    stop("CHIRPS responses contain missing dates or duplicate country-date keys.")
+  }
+
+  daily <- daily |>
     mutate(
       season_year = if_else(as.integer(format(date, "%m")) >= 10L,
                             as.integer(format(date, "%Y")) + 1L,
                             as.integer(format(date, "%Y")))
     ) |>
     filter(
-      season_year %in% 2018:2022,
+      season_year %in% season_years,
       as.integer(format(date, "%m")) %in% c(10:12, 1:4)
     )
 
@@ -128,16 +199,26 @@ if (file.exists(output_file) && !refresh) {
       .groups = "drop"
     ) |>
     rename(year = season_year) |>
+    mutate(
+      expected_start_date = season_start(year),
+      expected_end_date = season_end(year),
+      expected_days = as.integer(expected_end_date - expected_start_date) + 1L
+    ) |>
     arrange(project_country_id, year)
 
   expected_keys <- tidyr::expand_grid(
     project_country_id = expected_ids,
-    year = 2018:2022
+    year = season_years
   )
   if (nrow(anti_join(expected_keys, snapshot, by = c("project_country_id", "year"))) > 0 ||
-      any(snapshot$days_observed < 212 | snapshot$days_observed > 213)) {
+      any(snapshot$season_start_date != snapshot$expected_start_date) ||
+      any(snapshot$season_end_date != snapshot$expected_end_date) ||
+      any(snapshot$days_observed != snapshot$expected_days)) {
     stop("The retrieved CHIRPS snapshot has incomplete country-season coverage.")
   }
+
+  snapshot <- snapshot |>
+    select(-expected_start_date, -expected_end_date, -expected_days)
 
   temporary_file <- paste0(output_file, ".part")
   write_csv(snapshot, temporary_file, na = "")
