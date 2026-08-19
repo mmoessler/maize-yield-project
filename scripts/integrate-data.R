@@ -1,12 +1,10 @@
-# Integrate the maize country-year panel with MODIS reference-pixel NPP.
+# Integrate the maize country-year panel with CHIRPS growing-season rainfall.
 
 source("scripts/functions.R")
 
 assert_project_root()
 ensure_project_directories()
-check_required_packages(
-  c("digest", "dplyr", "here", "readr", "tibble", "tidyr", "yaml")
-)
+check_required_packages(c("digest", "dplyr", "here", "readr", "tibble", "tidyr", "yaml"))
 
 library(dplyr)
 library(here)
@@ -14,258 +12,147 @@ library(readr)
 library(tibble)
 
 maize_file <- here("data-processed", "maize-yield-panel.csv")
-satellite_file <- here("data-raw", "modis-npp-reference-sites.csv")
+precipitation_file <- here("data-raw", "chirps-growing-season-precipitation.csv")
 crosswalk_file <- here("metadata", "country-crosswalk.csv")
-source_register_file <- here("metadata", "source-register.yml")
-output_file <- here("data-interim", "maize-yield-with-npp.csv")
+provenance_file <- here("metadata", "provenance.yml")
+output_file <- here("data-interim", "maize-yield-with-precipitation.csv")
 audit_file <- here("data-processed", "data-integration-audit.csv")
 
-required_files <- c(
-  maize_file,
-  satellite_file,
-  crosswalk_file,
-  source_register_file
-)
+required_files <- c(maize_file, precipitation_file, crosswalk_file, provenance_file)
 missing_files <- required_files[!file.exists(required_files)]
-
 if (length(missing_files) > 0) {
-  stop(
-    "Integration input(s) not found: ",
-    paste(missing_files, collapse = ", "),
-    call. = FALSE
-  )
+  stop("Integration input(s) not found: ", paste(missing_files, collapse = ", "), call. = FALSE)
 }
 
 maize <- read_csv(maize_file, show_col_types = FALSE)
-satellite_raw <- read_csv(satellite_file, show_col_types = FALSE)
+precipitation <- read_csv(precipitation_file, show_col_types = FALSE)
 crosswalk <- read_csv(crosswalk_file, show_col_types = FALSE)
-source_register <- yaml::read_yaml(source_register_file)
+provenance <- yaml::read_yaml(provenance_file)
 
-satellite_source <- Filter(
-  function(source) identical(source$source_id, "modis_reference_site_npp"),
-  source_register$sources
+precipitation_record <- Filter(
+  function(record) identical(record$artifact_id, "chirps_precipitation_snapshot"),
+  provenance$artifacts
 )
-
-if (length(satellite_source) != 1L) {
-  stop("Source register must contain exactly one MODIS NPP source record.")
+if (length(precipitation_record) != 1L) {
+  stop("Provenance must contain exactly one CHIRPS snapshot record.")
 }
 
-expected_satellite_checksum <- satellite_source[[1]]$checksum_sha256
-observed_satellite_checksum <- digest::digest(
-  satellite_file,
-  algo = "sha256",
-  serialize = FALSE,
-  file = TRUE
+observed_checksum <- digest::digest(
+  precipitation_file, algo = "sha256", serialize = FALSE, file = TRUE
 )
-
-if (!identical(observed_satellite_checksum, expected_satellite_checksum)) {
-  stop(
-    "MODIS snapshot checksum does not match metadata/source-register.yml.",
-    call. = FALSE
-  )
+if (!identical(observed_checksum, precipitation_record[[1]]$checksum_sha256)) {
+  stop("CHIRPS snapshot checksum does not match metadata/provenance.yml.", call. = FALSE)
 }
 
-required_satellite_columns <- c(
-  "project_country_id", "year", "npp_raw", "npp_qc_percent",
-  "reference_latitude", "reference_longitude", "modis_date", "tile"
+required_precipitation_columns <- c(
+  "project_country_id", "year", "season_start_date", "season_end_date",
+  "growing_season_precipitation_mm", "days_observed"
 )
-missing_satellite_columns <- setdiff(
-  required_satellite_columns,
-  names(satellite_raw)
-)
-
-if (length(missing_satellite_columns) > 0) {
-  stop(
-    "MODIS snapshot is missing column(s): ",
-    paste(missing_satellite_columns, collapse = ", "),
-    call. = FALSE
-  )
+missing_columns <- setdiff(required_precipitation_columns, names(precipitation))
+if (length(missing_columns) > 0) {
+  stop("CHIRPS snapshot is missing column(s): ", paste(missing_columns, collapse = ", "))
 }
 
-if (anyDuplicated(crosswalk$faostat_area_label)) {
-  stop("FAOSTAT labels must be unique in the country crosswalk.")
-}
-
-if (anyDuplicated(crosswalk$project_country_id)) {
-  stop("Project country identifiers must be unique in the crosswalk.")
+if (anyDuplicated(crosswalk$faostat_area_label) ||
+    anyDuplicated(crosswalk$project_country_id)) {
+  stop("Crosswalk source labels and project identifiers must each be unique.")
 }
 
 maize_with_id <- maize |>
   left_join(
-    crosswalk |>
-      select(
-        project_country_id,
-        project_country_name,
-        faostat_area_label
-      ),
-    by = c("country" = "faostat_area_label"),
-    relationship = "many-to-one"
+    crosswalk |> select(project_country_id, project_country_name, faostat_area_label),
+    by = c("country" = "faostat_area_label"), relationship = "many-to-one"
   )
-
-unmapped_maize_countries <- maize_with_id |>
-  filter(is.na(project_country_id)) |>
-  distinct(country)
-
-if (nrow(unmapped_maize_countries) > 0) {
-  stop(
-    "Unmapped FAOSTAT country label(s): ",
-    paste(unmapped_maize_countries$country, collapse = ", "),
-    call. = FALSE
-  )
+if (any(is.na(maize_with_id$project_country_id))) {
+  stop("At least one FAOSTAT country label is not mapped in the crosswalk.")
 }
-
 if (anyDuplicated(maize_with_id[c("project_country_id", "year")])) {
   stop("Maize panel is not unique by project country identifier and year.")
 }
-
-if (anyDuplicated(satellite_raw[c("project_country_id", "year")])) {
-  stop("MODIS snapshot is not unique by project country identifier and year.")
+if (anyDuplicated(precipitation[c("project_country_id", "year")])) {
+  stop("CHIRPS snapshot is not unique by project country identifier and year.")
 }
 
-expected_satellite_keys <- tidyr::expand_grid(
+expected_keys <- tidyr::expand_grid(
   project_country_id = crosswalk$project_country_id,
   year = 2018:2022
 )
-missing_satellite_keys <- anti_join(
-  expected_satellite_keys,
-  satellite_raw |> distinct(project_country_id, year),
+missing_keys <- anti_join(
+  expected_keys, precipitation |> distinct(project_country_id, year),
   by = c("project_country_id", "year")
 )
-unexpected_satellite_keys <- anti_join(
-  satellite_raw |> distinct(project_country_id, year),
-  expected_satellite_keys,
+unexpected_keys <- anti_join(
+  precipitation |> distinct(project_country_id, year), expected_keys,
   by = c("project_country_id", "year")
 )
-
-if (nrow(missing_satellite_keys) > 0 || nrow(unexpected_satellite_keys) > 0) {
-  stop("MODIS snapshot does not have the expected 2018-2022 coverage.")
+if (nrow(missing_keys) > 0 || nrow(unexpected_keys) > 0) {
+  stop("CHIRPS snapshot does not have the expected 2018-2022 coverage.")
+}
+if (any(precipitation$growing_season_precipitation_mm < 0, na.rm = TRUE) ||
+    any(is.na(precipitation$growing_season_precipitation_mm))) {
+  stop("CHIRPS seasonal precipitation must be complete and non-negative.")
+}
+if (any(!precipitation$days_observed %in% c(212L, 213L))) {
+  stop("CHIRPS seasonal totals must contain 212 or 213 daily observations.")
 }
 
-if (any(is.na(satellite_raw$npp_raw)) ||
-    any(satellite_raw$npp_raw < -30000 | satellite_raw$npp_raw > 32767)) {
-  stop("MODIS NPP raw values fall outside the documented product range.")
-}
-
-if (any(is.na(satellite_raw$npp_qc_percent)) ||
-    any(satellite_raw$npp_qc_percent < 0 | satellite_raw$npp_qc_percent > 100)) {
-  stop("MODIS NPP quality percentages must be between 0 and 100.")
-}
-
-coordinate_mismatches <- satellite_raw |>
-  distinct(
-    project_country_id,
-    reference_latitude,
-    reference_longitude
-  ) |>
-  inner_join(
-    crosswalk |>
-      select(
-        project_country_id,
-        modis_reference_latitude,
-        modis_reference_longitude
-      ),
-    by = "project_country_id",
-    relationship = "one-to-one"
-  ) |>
-  filter(
-    reference_latitude != modis_reference_latitude |
-      reference_longitude != modis_reference_longitude
-  )
-
-if (nrow(coordinate_mismatches) > 0) {
-  stop("MODIS snapshot coordinates do not match the reviewed crosswalk.")
-}
-
-unknown_satellite_ids <- anti_join(
-  satellite_raw |> distinct(project_country_id),
-  crosswalk |> distinct(project_country_id),
-  by = "project_country_id"
+unknown_precipitation_ids <- anti_join(
+  precipitation |> distinct(project_country_id),
+  crosswalk |> distinct(project_country_id), by = "project_country_id"
 )
-
-if (nrow(unknown_satellite_ids) > 0) {
-  stop(
-    "Unknown MODIS project identifier(s): ",
-    paste(unknown_satellite_ids$project_country_id, collapse = ", "),
-    call. = FALSE
-  )
+if (nrow(unknown_precipitation_ids) > 0) {
+  stop("CHIRPS snapshot contains an unknown project country identifier.")
 }
 
-satellite <- satellite_raw |>
-  mutate(
-    reference_site_npp_kg_c_m2_year = case_when(
-      npp_raw >= 32761 ~ NA_real_,
-      TRUE ~ npp_raw * 0.0001
-    )
-  ) |>
-  select(
-    project_country_id,
-    year,
-    reference_site_npp_kg_c_m2_year,
-    npp_qc_percent,
-    reference_latitude,
-    reference_longitude,
-    modis_date,
-    tile,
-    processing_timestamp
-  )
+precipitation_for_join <- precipitation |>
+  rename(precipitation_days_observed = days_observed)
 
-maize_without_satellite <- anti_join(
+maize_without_precipitation <- anti_join(
   maize_with_id |> distinct(project_country_id, year),
-  satellite |> distinct(project_country_id, year),
+  precipitation_for_join |> distinct(project_country_id, year),
   by = c("project_country_id", "year")
 )
-satellite_without_maize <- anti_join(
-  satellite |> distinct(project_country_id, year),
+precipitation_without_maize <- anti_join(
+  precipitation_for_join |> distinct(project_country_id, year),
   maize_with_id |> distinct(project_country_id, year),
   by = c("project_country_id", "year")
 )
 
 integrated <- maize_with_id |>
   left_join(
-    satellite,
-    by = c("project_country_id", "year"),
-    relationship = "one-to-one"
+    precipitation_for_join,
+    by = c("project_country_id", "year"), relationship = "one-to-one"
   ) |>
   relocate(project_country_id, project_country_name, country, year) |>
   arrange(project_country_id, year)
 
-if (nrow(integrated) != nrow(maize_with_id)) {
-  stop("The left join unexpectedly changed the maize row count.")
-}
-
-if (anyDuplicated(integrated[c("project_country_id", "year")])) {
-  stop("Integrated output has duplicate project-country/year keys.")
+if (nrow(integrated) != nrow(maize_with_id) ||
+    anyDuplicated(integrated[c("project_country_id", "year")])) {
+  stop("The integration changed row count or introduced duplicate keys.")
 }
 
 audit <- tribble(
   ~check, ~expectation, ~observed, ~status,
-  "maize-input-rows", "preserved by left join",
-  as.character(nrow(maize_with_id)), "pass",
-  "satellite-input-rows", "9 countries x 5 years",
-  as.character(nrow(satellite)),
-  if_else(nrow(satellite) == 45L, "pass", "failure"),
-  "integrated-rows", as.character(nrow(maize_with_id)),
-  as.character(nrow(integrated)),
-  if_else(nrow(integrated) == nrow(maize_with_id), "pass", "failure"),
-  "duplicate-output-keys", "0",
-  as.character(sum(duplicated(integrated[c("project_country_id", "year")]))),
-  "pass",
-  "maize-keys-without-satellite", "expected before 2018",
-  as.character(nrow(maize_without_satellite)),
-  "information",
-  "satellite-keys-without-maize", "0",
-  as.character(nrow(satellite_without_maize)),
-  if_else(nrow(satellite_without_maize) == 0L, "pass", "warning"),
-  "missing-scaled-npp", "reported, not silently removed",
-  as.character(sum(is.na(integrated$reference_site_npp_kg_c_m2_year))),
-  "information"
+  "maize-input-rows", "preserved by left join", as.character(nrow(maize_with_id)), "pass",
+  "precipitation-input-rows", "9 countries x 5 seasons", as.character(nrow(precipitation)),
+  if_else(nrow(precipitation) == 45L, "pass", "failure"),
+  "integrated-rows", as.character(nrow(maize_with_id)), as.character(nrow(integrated)), "pass",
+  "duplicate-output-keys", "0", as.character(sum(duplicated(integrated[c("project_country_id", "year")]))), "pass",
+  "maize-keys-without-precipitation", "252 (years 1990-2017)",
+  as.character(nrow(maize_without_precipitation)),
+  if_else(nrow(maize_without_precipitation) == 252L, "pass", "warning"),
+  "precipitation-keys-without-maize", "0", as.character(nrow(precipitation_without_maize)),
+  if_else(nrow(precipitation_without_maize) == 0L, "pass", "failure"),
+  "missing-precipitation-in-covered-years", "0",
+  as.character(sum(is.na(integrated$growing_season_precipitation_mm) & integrated$year >= 2018)),
+  if_else(sum(is.na(integrated$growing_season_precipitation_mm) & integrated$year >= 2018) == 0L,
+          "pass", "failure")
 )
 
 write_csv(integrated, output_file, na = "")
 write_csv(audit, audit_file, na = "")
-
 message(
   "Integrated data written to: ", output_file, "\n",
   "Integration audit written to: ", audit_file, "\n",
-  "Reminder: reference-pixel NPP is not a country or maize-field average."
+  "Interpret rainfall as a country-area seasonal estimate, not maize-field exposure."
 )

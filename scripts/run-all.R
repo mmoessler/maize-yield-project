@@ -7,8 +7,6 @@ ensure_project_directories()
 check_required_packages()
 
 scripts <- c(
-  "scripts/acquire-faostat-data.R",
-  "scripts/acquire-modis-data.R",
   "scripts/validate-data.R",
   "scripts/prepare-maize-data.R",
   "scripts/integrate-data.R",

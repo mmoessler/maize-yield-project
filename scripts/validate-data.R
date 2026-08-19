@@ -37,10 +37,20 @@ if (!file.exists(provenance_file)) {
 }
 
 provenance <- yaml::read_yaml(provenance_file)
-expected_checksum <- provenance$checksum_sha256
-expected_rows <- as.integer(provenance$rows_excluding_header)
+faostat_records <- Filter(
+  function(record) identical(record$artifact_id, "faostat_maize_snapshot"),
+  provenance$artifacts
+)
 
-if (!identical(provenance$artifact, "data-raw/faostat-maize-yield-sample.csv")) {
+if (length(faostat_records) != 1L) {
+  stop("Provenance must contain exactly one FAOSTAT snapshot record.", call. = FALSE)
+}
+
+faostat_record <- faostat_records[[1]]
+expected_checksum <- faostat_record$checksum_sha256
+expected_rows <- as.integer(faostat_record$rows_excluding_header)
+
+if (!identical(faostat_record$artifact, "data-raw/faostat-maize-yield-sample.csv")) {
   stop("The provenance record identifies an unexpected artifact.", call. = FALSE)
 }
 

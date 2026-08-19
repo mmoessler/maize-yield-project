@@ -9,7 +9,7 @@
 # Data
 data-raw/*
 !data-raw/faostat-maize-yield-sample.csv
-!data-raw/modis-npp-reference-sites.csv
+!data-raw/chirps-growing-season-precipitation.csv
 data-interim/
 data-processed/
 

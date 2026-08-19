@@ -1,10 +1,10 @@
-project_country_id,project_country_name,faostat_area_label,modis_reference_latitude,modis_reference_longitude,valid_from,valid_to,note
-BWA,Botswana,Botswana,-22.5,24.0,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-SWZ,Eswatini,Eswatini,-26.5,31.5,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-LSO,Lesotho,Lesotho,-29.5,28.5,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-MWI,Malawi,Malawi,-13.5,34.0,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-MOZ,Mozambique,Mozambique,-18.5,35.0,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-NAM,Namibia,Namibia,-22.0,17.0,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-ZAF,South Africa,South Africa,-30.0,25.0,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-ZMB,Zambia,Zambia,-13.5,27.8,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
-ZWE,Zimbabwe,Zimbabwe,-19.0,29.5,2018,2022,"Teaching reference pixel near the geographic center; not a country average or maize-field location."
+project_country_id,project_country_name,faostat_area_label,valid_from,valid_to,note
+BWA,Botswana,Botswana,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+SWZ,Eswatini,Eswatini,1990,2022,ISO code retained as SWZ although FAOSTAT uses the current name Eswatini.
+LSO,Lesotho,Lesotho,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+MWI,Malawi,Malawi,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+MOZ,Mozambique,Mozambique,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+NAM,Namibia,Namibia,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+ZAF,South Africa,South Africa,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+ZMB,Zambia,Zambia,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+ZWE,Zimbabwe,Zimbabwe,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.

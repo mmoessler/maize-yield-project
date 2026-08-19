@@ -1,44 +1,68 @@
-artifact: data-raw/faostat-maize-yield-sample.csv
-provider: Food and Agriculture Organization of the United Nations (FAO)
-database: FAOSTAT
-dataset: Crops and Livestock Products
-release: "Not encoded in the bulk archive filename; teaching snapshot created 2026-08-03"
-accessed: "2026-08-03"
-source: https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip
-retrieval: >-
-  Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
-  by scripts/create-teaching-sample.R to maize observations for nine Southern
-  African countries, three elements, and 1990-2022.
-checksum_algorithm: SHA-256
-checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
-size_bytes: 44803
-rows_excluding_header: 891
-grain: >-
-  One row represents one maize element for one reporting area and calendar
-  year, expressed in one unit.
-candidate_key:
-  - area
-  - item
-  - element
-  - year
-  - unit
-license: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
-terms: https://www.fao.org/contact-us/terms/db-terms-of-use/en
-metadata_reference: https://www.fao.org/faostat/en/#data/QCL
-citation: >-
-  FAO. 2026. FAOSTAT: Crops and livestock products. Accessed 3 August 2026.
-  https://www.fao.org/faostat/en/#data/QCL. Licence: CC BY 4.0.
-sensitivity: >-
-  Aggregated national statistics; no personal, confidential, or
-  location-sensitive microdata are present in this teaching extract.
-redistribution: >-
-  Included for teaching under the stated licence and terms. Attribution must
-  be retained, no FAO endorsement may be implied, and dataset metadata must be
-  checked for third-party exceptions before reuse.
-retention: >-
-  Preserve the tracked teaching snapshot with its metadata. Downloaded bulk
-  files and derived outputs are reproducible working artifacts and are ignored.
-known_limitations: >-
-  FAOSTAT values can be official, estimated, imputed, or supplied by external
-  organizations and historical series may be revised. The teaching extract
-  omits provider numeric codes and notes and is not the complete source dataset.
+artifacts:
+  - artifact_id: faostat_maize_snapshot
+    artifact: data-raw/faostat-maize-yield-sample.csv
+    source_id: faostat_qcl
+    created: "2026-08-03"
+    retrieval: >-
+      Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
+      by scripts/create-teaching-sample.R to maize observations for nine countries,
+      three elements, and 1990-2022.
+    checksum_algorithm: SHA-256
+    checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
+    size_bytes: 44803
+    rows_excluding_header: 891
+    grain: One maize element, reporting area, calendar year, and unit per row
+    candidate_key: [area, item, element, year, unit]
+    dictionary: metadata/data-dictionary.csv
+    sensitivity: Aggregated national statistics; no personal or confidential data
+
+  - artifact_id: project_country_boundaries
+    artifact: metadata/project-country-boundaries.geojson
+    source_id: natural_earth_admin0_110m
+    created: "2026-08-18"
+    retrieval: >-
+      Nine ADM0_A3 features selected from Natural Earth's GeoJSON distribution;
+      properties reduced to the project identifier and display name.
+    checksum_algorithm: SHA-256
+    checksum_sha256: 45debbd0d33ff2dd1515ce107dfde4469b0e8d88076e1e9519e000c599558456
+    size_bytes: 34390
+    features: 9
+    candidate_key: [properties.project_country_id]
+
+  - artifact_id: chirps_precipitation_snapshot
+    artifact: data-raw/chirps-growing-season-precipitation.csv
+    source_id: chirps_v2_climateserv
+    created: "2026-08-18"
+    retrieval: >-
+      scripts/acquire-chirps-data.R submitted each Natural Earth country polygon
+      to ClimateSERV, requested the spatial average of daily CHIRPS precipitation,
+      and summed daily averages for October through April. A season is assigned
+      to the calendar year in which it ends.
+    parameters:
+      climate_serv_datatype: 0
+      spatial_operation: Average
+      source_interval: Daily
+      season_months: [10, 11, 12, 1, 2, 3, 4]
+      season_years: "2018-2022"
+    checksum_algorithm: SHA-256
+    checksum_sha256: a092db1447dbf8796f0bf636cf474a0065381f7a31571d72de2a0cebd5d178b1
+    size_bytes: 2498
+    rows_excluding_header: 45
+    grain: One project country and October-April growing season per row
+    candidate_key: [project_country_id, year]
+    dictionary: metadata/precipitation-data-dictionary.csv
+    sensitivity: Aggregated environmental data; no personal or confidential data
+
+derived_artifacts:
+  - artifact: data-processed/data-validation-results.csv
+    created_by: scripts/validate-data.R
+    role: Machine-readable checks of the fixed FAOSTAT teaching sample
+  - artifact: data-processed/maize-yield-panel.csv
+    created_by: scripts/prepare-maize-data.R
+    role: Analysis-ready country-year maize panel
+  - artifact: data-interim/maize-yield-with-precipitation.csv
+    created_by: scripts/integrate-data.R
+    role: FAOSTAT panel left-joined to the CHIRPS teaching snapshot
+  - artifact: data-processed/data-integration-audit.csv
+    created_by: scripts/integrate-data.R
+    role: Machine-readable checks of source keys and the left join

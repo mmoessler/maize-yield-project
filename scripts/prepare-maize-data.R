@@ -1,108 +1,76 @@
-# Prepare maize yield data for selected Southern African countries.
+# Prepare the fixed FAOSTAT maize teaching sample.
 
 source("scripts/functions.R")
 
 assert_project_root()
 ensure_project_directories()
-check_required_packages(
-  c("dplyr", "here", "janitor", "readr", "stringr", "tidyr")
-)
+check_required_packages(c("dplyr", "here", "janitor", "readr", "tidyr"))
 
 library(dplyr)
 library(here)
 library(janitor)
 library(readr)
-library(stringr)
 library(tidyr)
 
-input_file <- here("data-raw", "faostat-crops-livestock-products.csv")
+input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
 output_file <- here("data-processed", "maize-yield-panel.csv")
 
 if (!file.exists(input_file)) {
-  stop("Raw data not found. Run scripts/acquire-faostat-data.R first.")
+  stop("Fixed teaching sample not found: ", input_file, call. = FALSE)
 }
-
-countries <- c(
-  "Botswana", "Eswatini", "Lesotho", "Malawi", "Mozambique",
-  "Namibia", "South Africa", "Zambia", "Zimbabwe"
-)
 
 raw <- read_csv(input_file, show_col_types = FALSE) |> clean_names()
-
-# Support either the FAOSTAT normalized bulk schema or the bundled sample schema.
-if (all(c("area", "item", "element", "year", "unit", "value") %in% names(raw))) {
-  tidy <- raw |>
-    filter(
-      area %in% countries,
-      item == "Maize (corn)",
-      year >= 1990,
-      year <= 2022
-    ) |>
-    transmute(
-      country = area,
-      year = as.integer(year),
-      measure = case_when(
-        str_detect(element, regex("yield", ignore_case = TRUE)) ~ "yield",
-        str_detect(element, regex("area harvested", ignore_case = TRUE)) ~ "harvested-area",
-        str_detect(element, regex("production", ignore_case = TRUE)) ~ "production",
-        TRUE ~ NA_character_
-      ),
-      unit,
-      value = as.numeric(value),
-      flag = if ("flag" %in% names(raw)) flag else NA_character_
-    ) |>
-    filter(!is.na(measure))
-} else {
-  stop("Unexpected input schema. Inspect names(raw) and update the mapping.")
+required_columns <- c("area", "item", "element", "year", "unit", "value", "flag")
+missing_columns <- setdiff(required_columns, names(raw))
+if (length(missing_columns) > 0) {
+  stop("Teaching sample is missing column(s): ", paste(missing_columns, collapse = ", "))
 }
 
-expected_measure_units <- c(
-  "yield|kg/ha",
-  "yield|100 mg/ha",
-  "harvested-area|ha",
-  "production|t"
-)
-observed_measure_units <- tidy |>
-  distinct(measure, unit) |>
-  transmute(pair = paste(measure, unit, sep = "|")) |>
+expected_element_units <- c("Area harvested|ha", "Production|t", "Yield|kg/ha")
+observed_element_units <- raw |>
+  distinct(element, unit) |>
+  transmute(pair = paste(element, unit, sep = "|")) |>
   pull(pair)
-unexpected_measure_units <- setdiff(
-  observed_measure_units,
-  expected_measure_units
-)
-
-if (length(unexpected_measure_units) > 0) {
-  stop(
-    "Unexpected measure/unit combination(s): ",
-    paste(unexpected_measure_units, collapse = ", "),
-    call. = FALSE
-  )
+if (!setequal(observed_element_units, expected_element_units)) {
+  stop("Unexpected element/unit combinations; run validation and review the dictionary.")
 }
 
-tidy <- tidy |>
-  mutate(
-    value = case_when(
-      measure == "yield" & unit == "kg/ha" ~ value / 1000,
-      measure == "yield" & unit == "100 mg/ha" ~ value / 10000,
-      TRUE ~ value
-    )
+candidate_key <- c("area", "item", "element", "year", "unit")
+if (nrow(raw |> count(across(all_of(candidate_key))) |> filter(n > 1)) > 0) {
+  stop("Teaching sample contains duplicate candidate keys.")
+}
+
+tidy <- raw |>
+  filter(item == "Maize (corn)") |>
+  transmute(
+    country = area,
+    year = as.integer(year),
+    measure = case_when(
+      element == "Yield" & unit == "kg/ha" ~ "yield_kg_per_hectare",
+      element == "Area harvested" & unit == "ha" ~ "harvested_area_hectares",
+      element == "Production" & unit == "t" ~ "production_tonnes",
+      TRUE ~ NA_character_
+    ),
+    value = as.numeric(value)
   )
+if (any(is.na(tidy$measure))) stop("An element/unit combination was not mapped.")
 
 panel <- tidy |>
-  distinct(country, year, measure, .keep_all = TRUE) |>
-  select(country, year, measure, value) |>
   pivot_wider(names_from = measure, values_from = value) |>
   arrange(country, year) |>
   mutate(
-    yield_tonnes_per_hectare = yield,
-    production_tonnes = production,
-    harvested_area_hectares = `harvested-area`,
+    yield_tonnes_per_hectare = yield_kg_per_hectare / 1000,
     log_yield = safe_log(yield_tonnes_per_hectare)
   ) |>
   select(
     country, year, yield_tonnes_per_hectare, production_tonnes,
     harvested_area_hectares, log_yield
   )
+
+expected_rows <- n_distinct(raw$area) * n_distinct(raw$year)
+if (nrow(panel) != expected_rows) {
+  stop("Prepared panel is incomplete: expected ", expected_rows, " rows; created ", nrow(panel), ".")
+}
 
 write_csv(panel, output_file, na = "")
 message("Prepared data written to: ", output_file)

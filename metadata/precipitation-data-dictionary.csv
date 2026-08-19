@@ -1,0 +1,7 @@
+variable,label,definition,type,unit,source,notes
+project_country_id,Project country identifier,ISO 3166-1 alpha-3 identifier used across project sources,character,,Natural Earth ADM0_A3,Validated against metadata/country-crosswalk.csv.
+year,Season year,Calendar year in which the October-April season ends,integer,year,Derived,For example 2022 represents 2021-10-01 through 2022-04-30.
+season_start_date,Season start date,First included daily CHIRPS observation,date,ISO 8601 date,Derived,Always 1 October of the preceding calendar year.
+season_end_date,Season end date,Last included daily CHIRPS observation,date,ISO 8601 date,Derived,Always 30 April of the season year.
+growing_season_precipitation_mm,Growing-season precipitation,Sum of country-area mean daily precipitation over October-April,double,mm,CHIRPS v2 via ClimateSERV,Country-area summary; not maize-area weighted and not a gauge-only measurement.
+days_observed,Observed days,Number of daily country summaries included in the seasonal total,integer,days,ClimateSERV response,Expected value is 212 or 213 depending on leap-year coverage.
