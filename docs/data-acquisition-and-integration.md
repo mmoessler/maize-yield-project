@@ -21,6 +21,7 @@ responsible interpretation. It is not a crop-yield forecasting model.
 | FAOSTAT sample creation | `scripts/create-faostat-data-teaching-sample.R` | Reduce the bulk input to the fixed project scope |
 | Fixed FAOSTAT input | `data/input/faostat-maize-yield-sample.csv` | Stable offline agricultural input |
 | Fixed CHIRPS input | `data/input/chirps-growing-season-precipitation.csv` | Stable offline environmental input |
+| Dataset documentation | `docs/data/` | Explain each input, spatial reference, and integrated artifact for readers |
 | Boundary acquisition | `scripts/acquire-country-boundaries.R` | Recreate project polygons from a verified Natural Earth release |
 | CHIRPS acquisition | `scripts/acquire-chirps-data.R` | Deliberately refresh country zonal summaries |
 | Boundary reference | `metadata/project-country-boundaries.geojson` | Define the areas submitted to ClimateSERV |

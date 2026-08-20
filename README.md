@@ -90,6 +90,14 @@ This repository keeps one implementation note per topic so students and contribu
 - [Data-management implementation](docs/data-management.md) — source identity, metadata, provenance, validation, and governance decisions.
 - [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, spatial and temporal alignment, crosswalks, join audits, and lineage.
 
+Human-readable documentation for individual data artifacts is available under
+`docs/data/`:
+
+- [FAOSTAT maize-yield teaching data](docs/data/faostat-maize-yield.md)
+- [CHIRPS growing-season precipitation](docs/data/chirps-growing-season-precipitation.md)
+- [Project-country boundaries](docs/data/project-country-boundaries.md)
+- [Maize yield augmented with precipitation](docs/data/maize-yield-with-precipitation.md)
+
 ## Analysis workflow
 
 ```text

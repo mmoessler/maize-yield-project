@@ -11,6 +11,7 @@ lesson.
 | --- | --- | --- |
 | Preserved FAOSTAT input | `data/input/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
 | Preserved CHIRPS input | `data/input/chirps-growing-season-precipitation.csv` | Fixed, offline multi-source integration input |
+| Human-readable dataset documentation | `docs/data/` | Explains meaning, construction, use, and limitations of individual artifacts |
 | FAOSTAT maize-yield dictionary | `metadata/faostat-maize-yield-data-dictionary.csv` | Defines fields, types, units, roles, and missing values for the fixed FAOSTAT input |
 | FAOSTAT flag code list | `metadata/faostat-flag-code-list.csv` | Preserves provider meanings for FAOSTAT quality flags |
 | CHIRPS precipitation dictionary | `metadata/chirps-growing-season-precipitation-data-dictionary.csv` | Defines the project-specific seasonal precipitation fields |
@@ -25,6 +26,10 @@ Generated validation results are written to
 `results/tables/data-validation-results.csv`; rendered HTML is written beside
 the Quarto source. Both follow the generated-output policy and are ignored by
 Git.
+
+The Markdown pages in `docs/data/` are the human-readable entry points for the
+individual datasets. They link to, but do not duplicate, the authoritative
+column definitions in CSV and artifact records in YAML.
 
 ## Artifact roles and storage
 
