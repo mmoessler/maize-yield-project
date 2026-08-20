@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 provider: Food and Agriculture Organization of the United Nations (FAO)
 database: FAOSTAT
 dataset: Crops and Livestock Products
@@ -46,3 +47,68 @@ limitations:
   - >-
     Definitions and methods can change; recheck the linked provider metadata
     before reuse.
+=======
+sources:
+  - source_id: faostat_qcl
+    provider: Food and Agriculture Organization of the United Nations (FAO)
+    dataset: FAOSTAT Crops and Livestock Products
+    dataset_code: QCL
+    observation: Annual country-level agricultural statistics
+    coverage:
+      geographic: Nine selected Southern African reporting areas
+      temporal: "1990-2022"
+      frequency: Annual
+    classifications:
+      item: Maize (corn)
+      elements: [Area harvested, Production, Yield]
+    units:
+      Area harvested: ha
+      Production: t
+      Yield: kg/ha
+    references:
+      dataset: https://www.fao.org/faostat/en/#data/QCL
+      definitions: https://www.fao.org/faostat/en/#definitions
+      terms: https://www.fao.org/contact-us/terms/db-terms-of-use/en
+    license: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
+    revision_policy: Historical observations may be revised by FAOSTAT.
+    limitations:
+      - Provider flags must be retained and interpreted with the code list.
+      - The teaching extract omits provider numeric codes and notes.
+
+  - source_id: chirps_v2_climateserv
+    provider: Climate Hazards Center, UC Santa Barbara; served by SERVIR ClimateSERV
+    dataset: Climate Hazards group InfraRed Precipitation with Stations (CHIRPS)
+    version: "2.0"
+    observation: Daily 0.05-degree gridded land precipitation estimates
+    coverage:
+      geographic: Quasi-global land area, 50 degrees south to 50 degrees north
+      temporal: 1981 to near-present
+      frequency: Daily
+    measurement:
+      variable: Precipitation depth
+      unit: mm/day
+      method: Satellite-derived infrared rainfall estimates blended with rain-gauge observations
+    references:
+      dataset: https://www.chc.ucsb.edu/data/chirps
+      api: https://climateserv.servirglobal.net/develop-api
+      paper: https://doi.org/10.1038/sdata.2015.66
+    license: Public domain; attribution and citation requested
+    limitations:
+      - CHIRPS is an estimate, not a direct measurement at every grid cell.
+      - Country averages hide subnational rainfall and maize-growing-area differences.
+      - ClimateSERV currently exposes CHIRPS v2; do not describe this snapshot as CHIRPS v3.
+
+  - source_id: natural_earth_admin0_110m
+    provider: Natural Earth
+    dataset: Admin 0 - Countries, version 5.1.1, 1:110 million
+    version: "5.1.1"
+    observation: Generalized country polygons used only for API zonal summaries
+    references:
+      dataset: https://www.naturalearthdata.com/downloads/110m-cultural-vectors/110m-admin-0-countries/
+      repository: https://github.com/nvkelso/natural-earth-vector
+      pinned_geojson: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.1/geojson/ne_110m_admin_0_countries.geojson
+    license: Public domain
+    limitations:
+      - Generalized teaching geometries are unsuitable for precise boundary analysis.
+      - Boundary representation does not imply a project position on disputed territories.
+>>>>>>> codex-work-branch

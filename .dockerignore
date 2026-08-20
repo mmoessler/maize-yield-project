@@ -4,9 +4,12 @@
 .RData
 .env
 
-data-raw/*
-!data-raw/faostat-maize-yield-sample.csv
-data-processed
+data/source
+data/input/*
+!data/input/faostat-maize-yield-sample.csv
+!data/input/chirps-growing-season-precipitation.csv
+data/derived
+results
 figures/*.png
 reports/*.html
 reports/*_files

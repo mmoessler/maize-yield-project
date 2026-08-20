@@ -3,12 +3,8 @@
 This repository contains a small, instructional data science project for the **Introduction to Data Science** course in a Data Science and Food Systems
 certificate.
 
-The project uses a fixed maize production sample to demonstrate a complete and
-reproducible analysis workflow: validating data, preparing a tidy analytical
-dataset, exploring trends, fitting simple models, evaluating predictions, and
-communicating results in a report. It is intended as a teaching example rather
-than a production forecasting system or a definitive analysis of maize
-production.
+The project uses maize production data to demonstrate a complete and reproducible analysis workflow: acquiring data, preparing a tidy analytical
+dataset, integrating satellite-informed growing-season precipitation, exploring trends, fitting simple models, evaluating predictions, and communicating results in reports. It is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
 
 ## Research question
 
@@ -36,7 +32,8 @@ limitations in `metadata/`.
 The project introduces:
 
 - reproducible project organization and project-relative file paths;
-- data validation and provenance;
+- data acquisition and provenance;
+- identifier crosswalks, satellite-informed precipitation integration, and join audits;
 - cleaning, filtering, reshaping, and unit conversion;
 - exploratory summaries and visualization;
 - train/test splits for predictive evaluation;
@@ -51,14 +48,19 @@ The models describe associations and provide simple predictive benchmarks. They 
 
 ```text
 maize-yield-project/
-├── data-raw/          # Fixed teaching input; maintainer downloads are ignored
-├── data-processed/    # Analysis-ready data and outputs (generated; not tracked)
+├── data/
+│   ├── source/        # Complete external downloads (ignored)
+│   ├── input/         # Fixed, tracked teaching inputs
+│   └── derived/       # Generated analytical datasets (ignored)
 ├── docs/              # Supplementary setup documentation
 ├── figures/           # Generated plots
-├── metadata/          # Source metadata, dictionary, code lists, and provenance
+├── metadata/          # Dictionaries, crosswalks, source metadata, and provenance
 ├── reports/           # Quarto report source and rendered output
+├── results/
+│   ├── tables/        # Generated audits, summaries, and metrics
+│   └── models/        # Generated fitted model objects
 ├── renv/              # renv bootstrap and settings
-├── scripts/           # Analysis scripts, maintainer utilities, and functions
+├── scripts/           # Workflow scripts and shared functions
 ├── Dockerfile         # Reproducible container definition
 ├── renv.lock          # Pinned R package versions
 └── maize-yield-project.Rproj
@@ -69,13 +71,16 @@ The main scripts are:
 | Script | Purpose |
 |---|---|
 | `scripts/setup.R` | Restore and verify the package environment |
+| `scripts/acquire-faostat-data.R` | Download and extract FAOSTAT data |
+| `scripts/acquire-country-boundaries.R` | Recreate the project-country polygons from pinned Natural Earth data |
+| `scripts/acquire-chirps-data.R` | Use or deliberately refresh the CHIRPS precipitation snapshot |
 | `scripts/validate-data.R` | Validate the fixed teaching extract |
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
+| `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
 | `scripts/explore-maize-data.R` | Produce summaries and a trend figure |
 | `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
-| `scripts/create-teaching-sample.R` | Regenerate the fixed teaching extract |
-| `scripts/acquire-faostat-data.R` | Maintainer utility to download the FAOSTAT bulk source |
-| `scripts/run-all.R` | Run validation, analysis, and reporting from the fixed sample |
+| `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
+| `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
 
 ## Further documentation
@@ -86,11 +91,23 @@ This repository keeps one implementation note per topic so students and contribu
 - [Reproducible-environment implementation](docs/reproducible-environment.md) — `renv`, Docker, setup checks, persistent outputs, and troubleshooting.
 - [Remote-computing implementation](docs/remote-computing.md) — running the project on a remote Linux server and the current infrastructure boundary.
 - [Data-management implementation](docs/data-management.md) — source identity, metadata, provenance, validation, and governance decisions.
+- [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, spatial and temporal alignment, crosswalks, join audits, and lineage.
+
+Human-readable documentation for individual data artifacts is available under
+`docs/data/`:
+
+- [FAOSTAT maize-yield teaching data](docs/data/faostat-maize-yield.md)
+- [CHIRPS growing-season precipitation](docs/data/chirps-growing-season-precipitation.md)
+- [Project-country boundaries](docs/data/project-country-boundaries.md)
+- [Maize yield augmented with precipitation](docs/data/maize-yield-with-precipitation.md)
 
 ## Analysis workflow
 
 ```text
-fixed, checksummed teaching sample
+FAOSTAT bulk data
+        │
+        ▼
+acquisition, validation and preparation
         │
         ├──► metadata and validation report
         │
@@ -100,18 +117,19 @@ validated preparation
         ▼
 analysis-ready country-year panel
         │
+        ├──── CHIRPS October-April precipitation
+        │              │
+        │              ▼
+        ├──► integrated derived dataset and join audit
         ├──► descriptive summaries and visualization
-        │
         └──► model fitting and test-period evaluation
                          │
                          ▼
-                   Quarto report
+                    Quarto reports
 ```
 
-The preparation script reads only the fixed sample. It checks its expected
-element/unit combinations and candidate key, reshapes the measures to one row
-per country and year, converts yield from kilograms per hectare to tonnes per
-hectare by dividing by 1,000, and calculates log yield.
+The preparation script supports the normalized FAOSTAT schema. It selects maize yield, production, and harvested area; reshapes the measures into one row
+per country and year; converts yield from kilograms per hectare to tonnes per hectare; and calculates log yield.
 
 The modeling script trains on observations through 2017 and evaluates predictions from 2018 onward. It compares:
 
@@ -151,16 +169,30 @@ Rscript scripts/run-all.R
 
 1. `scripts/validate-data.R`
 2. `scripts/prepare-maize-data.R`
-3. `scripts/explore-maize-data.R`
-4. `scripts/model-maize-yield.R`
-5. render the validation and analysis reports
+3. `scripts/integrate-data.R`
+4. `scripts/explore-maize-data.R`
+5. `scripts/model-maize-yield.R`
+6. render the validation, integration, and analysis reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
 of the preceding stages to exist.
 
-The default workflow is offline and does not download or replace data. It
-always validates and analyzes
-`data-raw/faostat-maize-yield-sample.csv`.
+The normal workflow uses fixed FAOSTAT and CHIRPS snapshots and needs no
+network connection. Acquisition is a deliberate maintainer workflow because
+provider revisions and API changes can alter course inputs. The CHIRPS request
+uses the tracked country polygons. Recreate and verify them first when the
+spatial reference needs to be audited:
+
+```bash
+Rscript scripts/acquire-country-boundaries.R --refresh
+sha256sum metadata/project-country-boundaries.geojson
+```
+
+To refresh CHIRPS, run `Rscript scripts/acquire-chirps-data.R --refresh`, review the resulting
+country-area October-April totals for 1990–2022, and update
+`metadata/provenance.yml`. ClimateSERV limits requests to 20 years, so the
+script submits two historical batches for each country and combines them only
+after checking daily and seasonal completeness.
 
 Maintainers can regenerate the compact course sample from the downloaded bulk
 data. The script selects maize yield, production, and harvested area for the
@@ -168,7 +200,7 @@ nine project countries from 1990 through 2022:
 
 ```bash
 Rscript scripts/acquire-faostat-data.R
-Rscript scripts/create-teaching-sample.R
+Rscript scripts/create-faostat-data-teaching-sample.R
 ```
 
 These are maintenance commands, not learner prerequisites. A regenerated
@@ -192,9 +224,10 @@ docker build -t maize-yield-project .
 Run the workflow while retaining data and generated outputs on the host:
 
 ```bash
+mkdir -p data/source data/derived results/tables results/models figures reports
 docker run --rm \
-  -v "$(pwd)/data-raw:/work/data-raw" \
-  -v "$(pwd)/data-processed:/work/data-processed" \
+  -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
   maize-yield-project
@@ -206,23 +239,28 @@ See [Reproducible-environment implementation](docs/reproducible-environment.md) 
 
 After a successful run, the principal outputs are:
 
-- `data-processed/maize-yield-panel.csv`
-- `data-processed/country-yield-summary.csv`
-- `data-processed/maize-yield-predictions.csv`
-- `data-processed/model-performance.csv`
-- `data-processed/country-model.rds`
+- `data/derived/maize-yield-panel.csv`
+- `data/derived/maize-yield-with-precipitation.csv`
+- `results/tables/data-integration-audit.csv`
+- `results/tables/country-yield-summary.csv`
+- `results/tables/maize-yield-predictions.csv`
+- `results/tables/model-performance.csv`
+- `results/models/country-model.rds`
 - `figures/maize-yield-over-time.png`
 - `reports/maize-yield-report.html`
+- `reports/data-integration.html`
 
-Full downloaded bulk data, processed data, validation results, and rendered
+Complete source downloads, derived datasets, analysis results, and rendered
 reports are excluded from version control because they are external or
 generated workflow artifacts.
 
-The compact teaching sample is the deliberate exception: it is tracked with a
-checksum, dictionary, provenance record, licence information, and validation
-rules so that the project remains inspectable and usable offline. See the
-[data-management implementation](docs/data-management.md) for the artifact
-policy and maintenance workflow.
+The compact FAOSTAT and CHIRPS teaching snapshots are deliberate exceptions:
+they are tracked with checksums, metadata, licence/citation information, and
+validation rules so that the project remains inspectable and usable offline.
+See the [data-management implementation](docs/data-management.md) for the
+artifact policy and the [data-acquisition-and-integration
+implementation](docs/data-acquisition-and-integration.md) for the multi-source
+workflow and its scientific boundary.
 
 The project deliberately has no `data-interim/` directory. The fixed input is
 validated and converted directly into one analysis-ready panel, so no

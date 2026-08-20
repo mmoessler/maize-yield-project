@@ -1,8 +1,11 @@
 # Reusable helper functions.
 
 project_directories <- c(
-  "data-raw",
-  "data-processed",
+  "data/source",
+  "data/input",
+  "data/derived",
+  "results/tables",
+  "results/models",
   "figures",
   "reports"
 )
@@ -13,6 +16,7 @@ required_project_packages <- c(
   "ggplot2",
   "here",
   "janitor",
+  "jsonlite",
   "readr",
   "stringr",
   "tibble",

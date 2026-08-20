@@ -2,10 +2,10 @@
 #
 # Run this script after acquiring the full normalized FAOSTAT dataset:
 #   Rscript scripts/acquire-faostat-data.R
-#   Rscript scripts/create-teaching-sample.R
+#   Rscript scripts/create-faostat-data-teaching-sample.R
 #
 # Optional command-line arguments override the input and output paths:
-#   Rscript scripts/create-teaching-sample.R <input.csv> <output.csv>
+#   Rscript scripts/create-faostat-data-teaching-sample.R <input.csv> <output.csv>
 
 source("scripts/functions.R")
 
@@ -23,7 +23,10 @@ arguments <- commandArgs(trailingOnly = TRUE)
 
 if (length(arguments) > 2) {
   stop(
-    "Usage: Rscript scripts/create-teaching-sample.R [input.csv] [output.csv]",
+    paste0(
+      "Usage: Rscript scripts/create-faostat-data-teaching-sample.R ",
+      "[input.csv] [output.csv]"
+    ),
     call. = FALSE
   )
 }
@@ -31,13 +34,13 @@ if (length(arguments) > 2) {
 input_file <- if (length(arguments) >= 1) {
   arguments[[1]]
 } else {
-  here("data-raw", "faostat-crops-livestock-products.csv")
+  here("data", "source", "faostat-crops-livestock-products.csv")
 }
 
 output_file <- if (length(arguments) == 2) {
   arguments[[2]]
 } else {
-  here("data-raw", "faostat-maize-yield-sample.csv")
+  here("data", "input", "faostat-maize-yield-sample.csv")
 }
 
 countries <- c(

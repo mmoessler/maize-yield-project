@@ -1,0 +1,10 @@
+project_country_id,project_country_name,faostat_area_label,valid_from,valid_to,note
+BWA,Botswana,Botswana,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+SWZ,Eswatini,Eswatini,1990,2022,ISO code retained as SWZ although FAOSTAT uses the current name Eswatini.
+LSO,Lesotho,Lesotho,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+MWI,Malawi,Malawi,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+MOZ,Mozambique,Mozambique,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+NAM,Namibia,Namibia,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+ZAF,South Africa,South Africa,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+ZMB,Zambia,Zambia,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.
+ZWE,Zimbabwe,Zimbabwe,1990,2022,Stable ISO 3166-1 alpha-3 integration identifier.

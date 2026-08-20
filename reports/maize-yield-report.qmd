@@ -32,7 +32,7 @@ library(here)
 library(readr)
 
 maize <- read_csv(
-  here("data-processed", "maize-yield-panel.csv"),
+  here("data", "derived", "maize-yield-panel.csv"),
   show_col_types = FALSE
 )
 ```
@@ -76,7 +76,7 @@ Address:
 ```{r}
 #| label: model-results
 performance <- read_csv(
-  here("data-processed", "model-performance.csv"),
+  here("results", "tables", "model-performance.csv"),
   show_col_types = FALSE
 )
 performance

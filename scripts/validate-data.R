@@ -11,8 +11,8 @@ library(here)
 library(readr)
 library(tidyr)
 
-input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
-output_file <- here("data-processed", "data-validation-results.csv")
+input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
+output_file <- here("results", "tables", "data-validation-results.csv")
 provenance_file <- here("metadata", "provenance.yml")
 dictionary_file <- here("metadata", "data-dictionary.csv")
 flag_code_file <- here("metadata", "flag-code-list.csv")
@@ -50,15 +50,20 @@ if (length(missing_metadata_files) > 0) {
 }
 
 provenance <- yaml::read_yaml(provenance_file)
-source_metadata <- yaml::read_yaml(source_metadata_file)
-dictionary <- read_csv(dictionary_file, show_col_types = FALSE)
-flag_codes <- read_csv(flag_code_file, show_col_types = FALSE)
-expected_columns <- dictionary$variable
-expected_flags <- flag_codes$flag
-expected_checksum <- provenance$checksum_sha256
-expected_rows <- as.integer(provenance$rows_excluding_header)
+faostat_records <- Filter(
+  function(record) identical(record$artifact_id, "faostat_maize_snapshot"),
+  provenance$artifacts
+)
 
-if (!identical(provenance$artifact, "data-raw/faostat-maize-yield-sample.csv")) {
+if (length(faostat_records) != 1L) {
+  stop("Provenance must contain exactly one FAOSTAT snapshot record.", call. = FALSE)
+}
+
+faostat_record <- faostat_records[[1]]
+expected_checksum <- faostat_record$checksum_sha256
+expected_rows <- as.integer(faostat_record$rows_excluding_header)
+
+if (!identical(faostat_record$artifact, "data/input/faostat-maize-yield-sample.csv")) {
   stop("The provenance record identifies an unexpected artifact.", call. = FALSE)
 }
 

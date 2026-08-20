@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 artifact: data-raw/faostat-maize-yield-sample.csv
 provider: Food and Agriculture Organization of the United Nations (FAO)
 database: FAOSTAT
@@ -58,3 +59,81 @@ derived_artifacts:
     information_loss: >-
       Item, element, unit, and flag columns are not retained in the panel;
       their meanings and source values remain available in the fixed sample.
+=======
+artifacts:
+  - artifact_id: faostat_maize_snapshot
+    artifact: data/input/faostat-maize-yield-sample.csv
+    source_id: faostat_qcl
+    created: "2026-08-03"
+    retrieval: >-
+      Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
+      by scripts/create-faostat-data-teaching-sample.R to maize observations for nine countries,
+      three elements, and 1990-2022.
+    checksum_algorithm: SHA-256
+    checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
+    size_bytes: 44803
+    rows_excluding_header: 891
+    grain: One maize element, reporting area, calendar year, and unit per row
+    candidate_key: [area, item, element, year, unit]
+    dictionary: metadata/faostat-maize-yield-data-dictionary.csv
+    sensitivity: Aggregated national statistics; no personal or confidential data
+
+  - artifact_id: project_country_boundaries
+    artifact: metadata/project-country-boundaries.geojson
+    source_id: natural_earth_admin0_110m
+    created: "2026-08-18"
+    created_by: scripts/acquire-country-boundaries.R
+    retrieval: >-
+      scripts/acquire-country-boundaries.R downloaded the pinned Natural Earth
+      v5.1.1 GeoJSON after verifying its SHA-256. It selected nine ADM0_A3
+      features from metadata/project-country-crosswalk.csv and reduced the properties
+      to the project identifier and Natural Earth display name.
+    source_checksum_algorithm: SHA-256
+    source_checksum_sha256: 6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f
+    checksum_algorithm: SHA-256
+    checksum_sha256: 45debbd0d33ff2dd1515ce107dfde4469b0e8d88076e1e9519e000c599558456
+    size_bytes: 34390
+    features: 9
+    candidate_key: [properties.project_country_id]
+
+  - artifact_id: chirps_precipitation_snapshot
+    artifact: data/input/chirps-growing-season-precipitation.csv
+    source_id: chirps_v2_climateserv
+    created: "2026-08-19"
+    retrieval: >-
+      scripts/acquire-chirps-data.R submitted each Natural Earth country polygon
+      to ClimateSERV, requested the spatial average of daily CHIRPS precipitation,
+      and summed daily averages for October through April. A season is assigned
+      to the calendar year in which it ends. Requests were divided into two
+      season-year batches per country to remain below the API's 20-year limit.
+    parameters:
+      climate_serv_datatype: 0
+      spatial_operation: Average
+      source_interval: Daily
+      season_months: [10, 11, 12, 1, 2, 3, 4]
+      season_years: "1990-2022"
+      request_batches: ["1990-2005", "2006-2022"]
+    checksum_algorithm: SHA-256
+    checksum_sha256: 61450924baa695cf725cccc3225f733228cefce5633344f27a265492cf694621
+    size_bytes: 15905
+    rows_excluding_header: 297
+    grain: One project country and October-April growing season per row
+    candidate_key: [project_country_id, year]
+    dictionary: metadata/chirps-growing-season-precipitation-data-dictionary.csv
+    sensitivity: Aggregated environmental data; no personal or confidential data
+
+derived_artifacts:
+  - artifact: results/tables/data-validation-results.csv
+    created_by: scripts/validate-data.R
+    role: Machine-readable checks of the fixed FAOSTAT teaching sample
+  - artifact: data/derived/maize-yield-panel.csv
+    created_by: scripts/prepare-maize-data.R
+    role: Analysis-ready country-year maize panel
+  - artifact: data/derived/maize-yield-with-precipitation.csv
+    created_by: scripts/integrate-data.R
+    role: FAOSTAT panel left-joined to the CHIRPS teaching snapshot
+    dictionary: metadata/maize-yield-with-precipitation-data-dictionary.csv
+  - artifact: results/tables/data-integration-audit.csv
+    created_by: scripts/integrate-data.R
+    role: Machine-readable checks of source keys and the left join
+>>>>>>> codex-work-branch

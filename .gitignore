@@ -6,10 +6,13 @@
 .Ruserdata
 .Rproj.user/
 
-# Data
-data-raw/*
-!data-raw/faostat-maize-yield-sample.csv
-data-processed/
+# Data and results
+data/source/
+data/input/*
+!data/input/faostat-maize-yield-sample.csv
+!data/input/chirps-growing-season-precipitation.csv
+data/derived/
+results/
 
 # Quarto
 .quarto/

@@ -1,0 +1,96 @@
+---
+title: "FAOSTAT–CHIRPS data-integration report"
+format: html
+execute:
+  echo: true
+  warning: false
+---
+
+This report audits the integration of annual FAOSTAT maize statistics with
+country-area CHIRPS precipitation totals for the October-April season ending in
+each yield year.
+
+```{r}
+source("../scripts/functions.R")
+check_required_packages(c("dplyr", "ggplot2", "here", "readr"))
+library(dplyr)
+library(ggplot2)
+library(here)
+library(readr)
+
+integrated <- read_csv(
+  here("data", "derived", "maize-yield-with-precipitation.csv"),
+  show_col_types = FALSE
+)
+audit <- read_csv(
+  here("results", "tables", "data-integration-audit.csv"),
+  show_col_types = FALSE
+)
+```
+
+## Source grains and lineage
+
+- FAOSTAT grain: one project country and calendar year in the prepared panel.
+- CHIRPS teaching grain: one project country and October-April season.
+- Join key: `project_country_id + year`, where the precipitation year is the
+  year in which the season ends.
+
+Provider context is recorded in `metadata/source-metadata.yml`; exact file
+checksums and transformations are recorded in `metadata/provenance.yml`.
+
+## Integration audit
+
+```{r}
+audit
+```
+
+## Coverage
+
+```{r}
+integrated |>
+  summarise(
+    maize_rows = n(),
+    precipitation_rows = sum(!is.na(growing_season_precipitation_mm)),
+    precipitation_start = min(year[!is.na(growing_season_precipitation_mm)]),
+    precipitation_end = max(year[!is.na(growing_season_precipitation_mm)])
+  )
+```
+
+## Yield and precipitation
+
+```{r}
+covered <- integrated |>
+  filter(!is.na(growing_season_precipitation_mm))
+
+ggplot(
+  covered,
+  aes(growing_season_precipitation_mm, yield_tonnes_per_hectare, colour = project_country_name)
+) +
+  geom_point(size = 2, alpha = 0.8) +
+  labs(
+    x = "October-April country-area precipitation (mm)",
+    y = "Reported maize yield (t/ha)",
+    colour = "Country"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+covered |>
+  group_by(project_country_name) |>
+  summarise(
+    seasons = n(),
+    precipitation_min_mm = min(growing_season_precipitation_mm),
+    precipitation_max_mm = max(growing_season_precipitation_mm),
+    .groups = "drop"
+  )
+```
+
+## Interpretation
+
+CHIRPS is satellite-informed and gauge-blended, not a direct rainfall
+measurement at every location. Country averages mask subnational conditions
+and are not weighted to maize-growing areas. The common October-April season is
+a transparent teaching convention rather than a country-specific crop
+calendar. A plotted association is descriptive and cannot establish a causal
+effect of precipitation on yield.

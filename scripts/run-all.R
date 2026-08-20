@@ -9,6 +9,7 @@ check_required_packages()
 scripts <- c(
   "scripts/validate-data.R",
   "scripts/prepare-maize-data.R",
+  "scripts/integrate-data.R",
   "scripts/explore-maize-data.R",
   "scripts/model-maize-yield.R"
 )
@@ -21,6 +22,7 @@ for (script in scripts) {
 if (nzchar(Sys.which("quarto"))) {
   reports <- c(
     "reports/data-validation.qmd",
+    "reports/data-integration.qmd",
     "reports/maize-yield-report.qmd"
   )
 

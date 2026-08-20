@@ -22,8 +22,8 @@ library(here)
 library(readr)
 library(yaml)
 
-input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
-results_file <- here("data-processed", "data-validation-results.csv")
+input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
+results_file <- here("results", "tables", "data-validation-results.csv")
 
 if (!file.exists(results_file)) {
   stop("Run Rscript scripts/validate-data.R before rendering this report.")
@@ -54,12 +54,21 @@ one documented expectation.
 
 ## Source and provenance
 
+<<<<<<< HEAD
 - Artifact: `r provenance$artifact`
 - Provider: `r provenance$provider`
 - Dataset: `r paste(provenance$database, provenance$dataset, sep = " — ")`
 - Accessed: `r provenance$accessed`
 - SHA-256: `r provenance$checksum_sha256`
 - Licence: `r provenance$license`
+=======
+- Artifact: `data/input/faostat-maize-yield-sample.csv`
+- Provider: Food and Agriculture Organization of the United Nations (FAO)
+- Dataset: FAOSTAT Crops and Livestock Products
+- Snapshot created: 3 August 2026
+- SHA-256: `fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be`
+- Licence: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
+>>>>>>> codex-work-branch
 
 The complete retrieval history, citation, sharing conditions, derived-artifact
 lineage, and limitations are recorded in `metadata/provenance.yml`. Selected
@@ -114,7 +123,7 @@ maize |>
   count(flag, name = "observations", sort = TRUE)
 ```
 
-Flag definitions are recorded in `metadata/flag-code-list.csv`. Flags qualify
+Flag definitions are recorded in `metadata/faostat-flag-code-list.csv`. Flags qualify
 the source of a value and must not be discarded without a justified preparation
 decision.
 

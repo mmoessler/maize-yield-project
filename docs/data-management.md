@@ -6,17 +6,46 @@ This document describes how the standalone `maize-yield-project` makes its teach
 
 | Evidence | Repository file | Purpose |
 | --- | --- | --- |
-| Preserved source snapshot | `data-raw/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
-| Source metadata | `metadata/source-metadata.yml` | Records provider concepts, scope, units, flags, revisions, and references |
-| Variable dictionary | `metadata/data-dictionary.csv` | Defines fields, types, units, roles, and missing values |
-| Flag code list | `metadata/flag-code-list.csv` | Preserves provider meanings for quality flags |
-| Provenance record | `metadata/provenance.yml` | Records origin, checksum, licence, lineage, citation, and limitations |
+| Preserved FAOSTAT input | `data/input/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
+| Preserved CHIRPS input | `data/input/chirps-growing-season-precipitation.csv` | Fixed, offline multi-source integration input |
+| Human-readable dataset documentation | `docs/data/` | Explains meaning, construction, use, and limitations of individual artifacts |
+| FAOSTAT maize-yield dictionary | `metadata/faostat-maize-yield-data-dictionary.csv` | Defines fields, types, units, roles, and missing values for the fixed FAOSTAT input |
+| FAOSTAT flag code list | `metadata/faostat-flag-code-list.csv` | Preserves provider meanings for FAOSTAT quality flags |
+| CHIRPS precipitation dictionary | `metadata/chirps-growing-season-precipitation-data-dictionary.csv` | Defines the project-specific seasonal precipitation fields |
+| Integrated-data dictionary | `metadata/maize-yield-with-precipitation-data-dictionary.csv` | Defines the augmented analysis table |
+| Project country crosswalk | `metadata/project-country-crosswalk.csv` | Maps stable project identifiers to source-specific country labels |
+| Source metadata | `metadata/source-metadata.yml` | Describes FAOSTAT, CHIRPS, and Natural Earth sources without duplicating artifact history |
+| Multi-artifact provenance | `metadata/provenance.yml` | Records exact snapshots, checksums, parameters, and derived artifacts |
 | Validation code | `scripts/validate-data.R` | Tests justified structural and semantic expectations |
 | Validation report | `reports/data-validation.qmd` | Presents evidence, findings, and unresolved questions |
 
-Generated validation results are written to `data-processed/data-validation-results.csv`; rendered HTML is written beside the Quarto source. Both follow the generated-output policy and are ignored by Git.
+Generated validation results are written to
+`results/tables/data-validation-results.csv`; rendered HTML is written beside
+the Quarto source. Both follow the generated-output policy and are ignored by
+Git.
 
-## Raw-data boundary
+The Markdown pages in `docs/data/` are the human-readable entry points for the
+individual datasets. They link to, but do not duplicate, the authoritative
+column definitions in CSV and artifact records in YAML.
+
+## Artifact roles and storage
+
+The project organizes artifacts by stable role rather than an ambiguous degree
+of processing:
+
+| Directory | Role | Git policy |
+| --- | --- | --- |
+| `data/source/` | Complete provider downloads used by maintainers | Ignore |
+| `data/input/` | Fixed, checksummed teaching inputs used by students | Track |
+| `data/derived/` | Reproducibly generated analytical datasets | Ignore |
+| `results/tables/` | Generated audits, summaries, predictions, and metrics | Ignore |
+| `results/models/` | Generated fitted model objects | Ignore |
+
+The word `input` does not imply that a file is an unchanged provider artifact.
+The FAOSTAT input is a project extract and the CHIRPS input is a spatially and
+temporally aggregated snapshot. Their provenance records those transformations.
+
+## Fixed-input boundary
 
 The tracked teaching sample is an unchanged, compact extract derived from the FAOSTAT normalized bulk download. Its SHA-256 checksum is:
 
@@ -24,11 +53,13 @@ The tracked teaching sample is an unchanged, compact extract derived from the FA
 fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
 ```
 
-The full archive, extracted bulk tables, and partial downloads are maintainer working artifacts and remain ignored. They are not inputs to the default analysis. Do not edit or resave the teaching sample manually. Maintainers regenerate it with:
+The full archive, extracted bulk tables, normalized working copy, and partial downloads
+are working artifacts and remain ignored. Do not edit or resave the teaching
+sample manually. Maintainers regenerate it with:
 
 ```bash
 Rscript scripts/acquire-faostat-data.R
-Rscript scripts/create-teaching-sample.R
+Rscript scripts/create-faostat-data-teaching-sample.R
 Rscript scripts/validate-data.R
 ```
 
@@ -72,7 +103,7 @@ Rscript scripts/validate-data.R
 quarto render reports/data-validation.qmd
 ```
 
-The complete workflow validates the fixed sample before preparation:
+The complete offline workflow runs validation before preparation:
 
 ```bash
 Rscript scripts/run-all.R
@@ -96,29 +127,19 @@ Statuses have distinct meanings:
 - `failure`: the file is not the expected input and the workflow stops;
 - `unknown`: the report documents a question that code alone cannot answer.
 
-Validation never rewrites the raw input or silently removes observations. Data cleaning and analytical exclusions belong in derived preparation steps and must be justified separately.
-
-Preparation repeats the candidate-key and element/unit checks before reshaping. It stops on ambiguity rather than selecting a duplicate record. Yield is converted from `kg/ha` to `t/ha` by dividing by 1,000.
-
-## Deliberately simple data directories
-
-The project uses only two persistent data roles:
-
-```text
-data-raw/        fixed, unchanged teaching input
-data-processed/  reproducibly generated analysis and validation outputs
-```
-
-There is no `data-interim/` directory because preparation does not persist an intermediate hand-off: it converts the validated sample directly into the analysis-ready panel. An empty directory would add structure without adding evidence. If a future workflow needs a filtered or normalized artifact that is created by one step and consumed by another, add `data-interim/`, generate its contents with code, ignore those generated contents, and document its lineage.
+Validation never rewrites the fixed input or silently removes observations. Data
+cleaning and analytical exclusions belong in derived preparation steps and
+must be justified separately.
 
 ## Storage and version-control decisions
 
 | Artifact | Git policy | Reason |
 | --- | --- | --- |
 | Fixed teaching sample | Track | Small, licensed snapshot supports reliable offline teaching |
+| Fixed CHIRPS teaching snapshot | Track | Small, cited country-season summary supports reliable offline integration teaching |
 | Metadata and validation source | Track | Required to interpret and audit the data |
 | Full FAOSTAT download | Ignore | Large, externally retrievable, and subject to revision |
-| Processed data and validation results | Ignore | Recreated by project scripts |
+| Derived data and analysis results | Ignore | Recreated by project scripts |
 | Rendered HTML | Ignore | Recreated from Quarto source and generated results |
 | Generated trend figure | Track | Allows immediate inspection in the teaching repository; regenerate it through `scripts/explore-maize-data.R` when its input or code changes |
 | Secrets and local configuration | Ignore | Must not enter source control or container images |

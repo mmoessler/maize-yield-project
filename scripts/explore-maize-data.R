@@ -11,7 +11,7 @@ library(ggplot2)
 library(here)
 library(readr)
 
-data_file <- here("data-processed", "maize-yield-panel.csv")
+data_file <- here("data", "derived", "maize-yield-panel.csv")
 if (!file.exists(data_file)) stop("Run scripts/prepare-maize-data.R first.")
 
 maize <- read_csv(data_file, show_col_types = FALSE)
@@ -27,7 +27,7 @@ summary_table <- maize |>
   ) |>
   arrange(desc(mean_yield))
 
-write_csv(summary_table, here("data-processed", "country-yield-summary.csv"))
+write_csv(summary_table, here("results", "tables", "country-yield-summary.csv"))
 
 yield_plot <- ggplot(maize, aes(year, yield_tonnes_per_hectare, group = country)) +
   geom_line(na.rm = TRUE) +
