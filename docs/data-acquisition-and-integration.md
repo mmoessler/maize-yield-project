@@ -24,10 +24,12 @@ responsible interpretation. It is not a crop-yield forecasting model.
 | Boundary acquisition | `scripts/acquire-country-boundaries.R` | Recreate project polygons from a verified Natural Earth release |
 | CHIRPS acquisition | `scripts/acquire-chirps-data.R` | Deliberately refresh country zonal summaries |
 | Boundary reference | `metadata/project-country-boundaries.geojson` | Define the areas submitted to ClimateSERV |
-| Identifier crosswalk | `metadata/country-crosswalk.csv` | Map FAOSTAT labels to stable project IDs |
+| Identifier crosswalk | `metadata/project-country-crosswalk.csv` | Map FAOSTAT labels to stable project IDs |
 | Source metadata | `metadata/source-metadata.yml` | Describe source products and interpretation |
 | Provenance | `metadata/provenance.yml` | Identify exact artifacts, checksums, and transformations |
-| Dictionaries | `metadata/*data-dictionary.csv` | Define raw and integrated columns |
+| FAOSTAT dictionary | `metadata/faostat-maize-yield-data-dictionary.csv` | Define the fixed FAOSTAT input columns |
+| CHIRPS dictionary | `metadata/chirps-growing-season-precipitation-data-dictionary.csv` | Define the growing-season precipitation input columns |
+| Integrated dictionary | `metadata/maize-yield-with-precipitation-data-dictionary.csv` | Define the augmented analysis table columns |
 | Integration | `scripts/integrate-data.R` | Validate and left-join the two sources |
 | Join audit | `results/tables/data-integration-audit.csv` | Record coverage and key checks |
 | Report | `reports/data-integration.qmd` | Communicate results and limitations |

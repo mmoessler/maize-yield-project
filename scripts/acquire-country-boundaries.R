@@ -7,7 +7,7 @@ source("scripts/functions.R")
 
 assert_project_root()
 ensure_project_directories()
-check_required_packages(c("digest", "here", "jsonlite", "readr"))
+check_required_packages(c("digest", "here", "jsonlite", "readr", "yaml"))
 
 library(here)
 library(jsonlite)
@@ -23,7 +23,8 @@ if (length(setdiff(arguments, "--refresh")) > 0) {
 
 refresh <- "--refresh" %in% arguments
 output_file <- here("metadata", "project-country-boundaries.geojson")
-crosswalk_file <- here("metadata", "country-crosswalk.csv")
+crosswalk_file <- here("metadata", "project-country-crosswalk.csv")
+provenance_file <- here("metadata", "provenance.yml")
 
 natural_earth_version <- "5.1.1"
 source_url <- paste0(
@@ -31,9 +32,15 @@ source_url <- paste0(
   natural_earth_version,
   "/geojson/ne_110m_admin_0_countries.geojson"
 )
-expected_source_checksum <- paste0(
-  "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f"
+provenance <- yaml::read_yaml(provenance_file)
+boundary_record <- Filter(
+  function(record) identical(record$artifact_id, "project_country_boundaries"),
+  provenance$artifacts
 )
+if (length(boundary_record) != 1L) {
+  stop("Provenance must contain exactly one boundary artifact record.", call. = FALSE)
+}
+expected_source_checksum <- boundary_record[[1]]$source_checksum_sha256
 
 if (file.exists(output_file) && !refresh) {
   message(

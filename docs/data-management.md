@@ -11,8 +11,11 @@ lesson.
 | --- | --- | --- |
 | Preserved FAOSTAT input | `data/input/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
 | Preserved CHIRPS input | `data/input/chirps-growing-season-precipitation.csv` | Fixed, offline multi-source integration input |
-| Variable dictionary | `metadata/data-dictionary.csv` | Defines fields, types, units, roles, and missing values |
-| Flag code list | `metadata/flag-code-list.csv` | Preserves provider meanings for quality flags |
+| FAOSTAT maize-yield dictionary | `metadata/faostat-maize-yield-data-dictionary.csv` | Defines fields, types, units, roles, and missing values for the fixed FAOSTAT input |
+| FAOSTAT flag code list | `metadata/faostat-flag-code-list.csv` | Preserves provider meanings for FAOSTAT quality flags |
+| CHIRPS precipitation dictionary | `metadata/chirps-growing-season-precipitation-data-dictionary.csv` | Defines the project-specific seasonal precipitation fields |
+| Integrated-data dictionary | `metadata/maize-yield-with-precipitation-data-dictionary.csv` | Defines the augmented analysis table |
+| Project country crosswalk | `metadata/project-country-crosswalk.csv` | Maps stable project identifiers to source-specific country labels |
 | Source metadata | `metadata/source-metadata.yml` | Describes FAOSTAT, CHIRPS, and Natural Earth sources without duplicating artifact history |
 | Multi-artifact provenance | `metadata/provenance.yml` | Records exact snapshots, checksums, parameters, and derived artifacts |
 | Validation code | `scripts/validate-data.R` | Tests justified structural and semantic expectations |

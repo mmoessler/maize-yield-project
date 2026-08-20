@@ -13,7 +13,7 @@ artifacts:
     rows_excluding_header: 891
     grain: One maize element, reporting area, calendar year, and unit per row
     candidate_key: [area, item, element, year, unit]
-    dictionary: metadata/data-dictionary.csv
+    dictionary: metadata/faostat-maize-yield-data-dictionary.csv
     sensitivity: Aggregated national statistics; no personal or confidential data
 
   - artifact_id: project_country_boundaries
@@ -24,7 +24,7 @@ artifacts:
     retrieval: >-
       scripts/acquire-country-boundaries.R downloaded the pinned Natural Earth
       v5.1.1 GeoJSON after verifying its SHA-256. It selected nine ADM0_A3
-      features from metadata/country-crosswalk.csv and reduced the properties
+      features from metadata/project-country-crosswalk.csv and reduced the properties
       to the project identifier and Natural Earth display name.
     source_checksum_algorithm: SHA-256
     source_checksum_sha256: 6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f
@@ -57,7 +57,7 @@ artifacts:
     rows_excluding_header: 297
     grain: One project country and October-April growing season per row
     candidate_key: [project_country_id, year]
-    dictionary: metadata/precipitation-data-dictionary.csv
+    dictionary: metadata/chirps-growing-season-precipitation-data-dictionary.csv
     sensitivity: Aggregated environmental data; no personal or confidential data
 
 derived_artifacts:
@@ -70,6 +70,7 @@ derived_artifacts:
   - artifact: data/derived/maize-yield-with-precipitation.csv
     created_by: scripts/integrate-data.R
     role: FAOSTAT panel left-joined to the CHIRPS teaching snapshot
+    dictionary: metadata/maize-yield-with-precipitation-data-dictionary.csv
   - artifact: results/tables/data-integration-audit.csv
     created_by: scripts/integrate-data.R
     role: Machine-readable checks of source keys and the left join

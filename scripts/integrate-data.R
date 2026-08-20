@@ -13,7 +13,7 @@ library(tibble)
 
 maize_file <- here("data", "derived", "maize-yield-panel.csv")
 precipitation_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
-crosswalk_file <- here("metadata", "country-crosswalk.csv")
+crosswalk_file <- here("metadata", "project-country-crosswalk.csv")
 provenance_file <- here("metadata", "provenance.yml")
 output_file <- here("data", "derived", "maize-yield-with-precipitation.csv")
 audit_file <- here("results", "tables", "data-integration-audit.csv")

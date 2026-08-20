@@ -99,7 +99,7 @@ maize |>
   count(flag, name = "observations", sort = TRUE)
 ```
 
-Flag definitions are recorded in `metadata/flag-code-list.csv`. Flags qualify
+Flag definitions are recorded in `metadata/faostat-flag-code-list.csv`. Flags qualify
 the source of a value and must not be discarded without a justified preparation
 decision.
 
