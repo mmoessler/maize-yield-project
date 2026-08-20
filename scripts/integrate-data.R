@@ -11,12 +11,12 @@ library(here)
 library(readr)
 library(tibble)
 
-maize_file <- here("data-processed", "maize-yield-panel.csv")
-precipitation_file <- here("data-raw", "chirps-growing-season-precipitation.csv")
+maize_file <- here("data", "derived", "maize-yield-panel.csv")
+precipitation_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
 crosswalk_file <- here("metadata", "country-crosswalk.csv")
 provenance_file <- here("metadata", "provenance.yml")
-output_file <- here("data-interim", "maize-yield-with-precipitation.csv")
-audit_file <- here("data-processed", "data-integration-audit.csv")
+output_file <- here("data", "derived", "maize-yield-with-precipitation.csv")
+audit_file <- here("results", "tables", "data-integration-audit.csv")
 
 required_files <- c(maize_file, precipitation_file, crosswalk_file, provenance_file)
 missing_files <- required_files[!file.exists(required_files)]

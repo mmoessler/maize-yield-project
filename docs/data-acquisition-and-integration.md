@@ -19,8 +19,8 @@ responsible interpretation. It is not a crop-yield forecasting model.
 |---|---|---|
 | FAOSTAT acquisition | `scripts/acquire-faostat-data.R` | Download the complete normalized bulk dataset |
 | FAOSTAT sample creation | `scripts/create-faostat-data-teaching-sample.R` | Reduce the bulk input to the fixed project scope |
-| Fixed FAOSTAT input | `data-raw/faostat-maize-yield-sample.csv` | Stable offline agricultural source |
-| Fixed CHIRPS input | `data-raw/chirps-growing-season-precipitation.csv` | Stable offline environmental source |
+| Fixed FAOSTAT input | `data/input/faostat-maize-yield-sample.csv` | Stable offline agricultural input |
+| Fixed CHIRPS input | `data/input/chirps-growing-season-precipitation.csv` | Stable offline environmental input |
 | Boundary acquisition | `scripts/acquire-country-boundaries.R` | Recreate project polygons from a verified Natural Earth release |
 | CHIRPS acquisition | `scripts/acquire-chirps-data.R` | Deliberately refresh country zonal summaries |
 | Boundary reference | `metadata/project-country-boundaries.geojson` | Define the areas submitted to ClimateSERV |
@@ -29,7 +29,7 @@ responsible interpretation. It is not a crop-yield forecasting model.
 | Provenance | `metadata/provenance.yml` | Identify exact artifacts, checksums, and transformations |
 | Dictionaries | `metadata/*data-dictionary.csv` | Define raw and integrated columns |
 | Integration | `scripts/integrate-data.R` | Validate and left-join the two sources |
-| Join audit | `data-processed/data-integration-audit.csv` | Record coverage and key checks |
+| Join audit | `results/tables/data-integration-audit.csv` | Record coverage and key checks |
 | Report | `reports/data-integration.qmd` | Communicate results and limitations |
 
 Source metadata and provenance are deliberately separate. Source metadata
@@ -70,7 +70,7 @@ the spatial reference and then the precipitation snapshot deliberately:
 Rscript scripts/acquire-country-boundaries.R --refresh
 sha256sum metadata/project-country-boundaries.geojson
 Rscript scripts/acquire-chirps-data.R --refresh
-sha256sum data-raw/chirps-growing-season-precipitation.csv
+sha256sum data/input/chirps-growing-season-precipitation.csv
 ```
 
 The boundary script downloads the version-pinned Natural Earth v5.1.1 Admin-0

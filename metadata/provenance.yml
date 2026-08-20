@@ -1,6 +1,6 @@
 artifacts:
   - artifact_id: faostat_maize_snapshot
-    artifact: data-raw/faostat-maize-yield-sample.csv
+    artifact: data/input/faostat-maize-yield-sample.csv
     source_id: faostat_qcl
     created: "2026-08-03"
     retrieval: >-
@@ -35,7 +35,7 @@ artifacts:
     candidate_key: [properties.project_country_id]
 
   - artifact_id: chirps_precipitation_snapshot
-    artifact: data-raw/chirps-growing-season-precipitation.csv
+    artifact: data/input/chirps-growing-season-precipitation.csv
     source_id: chirps_v2_climateserv
     created: "2026-08-19"
     retrieval: >-
@@ -61,15 +61,15 @@ artifacts:
     sensitivity: Aggregated environmental data; no personal or confidential data
 
 derived_artifacts:
-  - artifact: data-processed/data-validation-results.csv
+  - artifact: results/tables/data-validation-results.csv
     created_by: scripts/validate-data.R
     role: Machine-readable checks of the fixed FAOSTAT teaching sample
-  - artifact: data-processed/maize-yield-panel.csv
+  - artifact: data/derived/maize-yield-panel.csv
     created_by: scripts/prepare-maize-data.R
     role: Analysis-ready country-year maize panel
-  - artifact: data-interim/maize-yield-with-precipitation.csv
+  - artifact: data/derived/maize-yield-with-precipitation.csv
     created_by: scripts/integrate-data.R
     role: FAOSTAT panel left-joined to the CHIRPS teaching snapshot
-  - artifact: data-processed/data-integration-audit.csv
+  - artifact: results/tables/data-integration-audit.csv
     created_by: scripts/integrate-data.R
     role: Machine-readable checks of source keys and the left join

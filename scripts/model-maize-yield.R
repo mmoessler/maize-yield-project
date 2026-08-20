@@ -12,7 +12,7 @@ library(readr)
 library(tibble)
 
 maize <- read_csv(
-  here("data-processed", "maize-yield-panel.csv"),
+  here("data", "derived", "maize-yield-panel.csv"),
   show_col_types = FALSE
 ) |>
   filter(!is.na(log_yield))
@@ -49,8 +49,8 @@ metrics <- tibble(
   )
 )
 
-write_csv(predictions, here("data-processed", "maize-yield-predictions.csv"))
-write_csv(metrics, here("data-processed", "model-performance.csv"))
-saveRDS(country_model, here("data-processed", "country-model.rds"))
+write_csv(predictions, here("results", "tables", "maize-yield-predictions.csv"))
+write_csv(metrics, here("results", "tables", "model-performance.csv"))
+saveRDS(country_model, here("results", "models", "country-model.rds"))
 
 message("Model outputs created.")

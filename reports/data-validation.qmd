@@ -21,8 +21,8 @@ library(dplyr)
 library(here)
 library(readr)
 
-input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
-results_file <- here("data-processed", "data-validation-results.csv")
+input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
+results_file <- here("results", "tables", "data-validation-results.csv")
 
 if (!file.exists(results_file)) {
   stop("Run Rscript scripts/validate-data.R before rendering this report.")
@@ -47,7 +47,7 @@ match one documented expectation.
 
 ## Source and provenance
 
-- Artifact: `data-raw/faostat-maize-yield-sample.csv`
+- Artifact: `data/input/faostat-maize-yield-sample.csv`
 - Provider: Food and Agriculture Organization of the United Nations (FAO)
 - Dataset: FAOSTAT Crops and Livestock Products
 - Snapshot created: 3 August 2026

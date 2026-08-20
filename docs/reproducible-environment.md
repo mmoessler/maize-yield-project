@@ -51,7 +51,7 @@ Rscript scripts/setup.R
 The setup script:
 
 1. checks that the command is running in the project root;
-2. creates `data-raw/`, `data-processed/`, `figures/`, and `reports/` when absent;
+2. creates the `data/`, `results/`, `figures/`, and `reports/` directories when absent;
 3. installs `renv` when it is not already available;
 4. restores the versions in `renv.lock`;
 5. checks that the project is synchronized with the lockfile;
@@ -72,9 +72,9 @@ Rscript scripts/run-all.R
 Individual stages can be run in order:
 
 ```bash
-Rscript scripts/acquire-faostat-data.R
 Rscript scripts/validate-data.R
 Rscript scripts/prepare-maize-data.R
+Rscript scripts/integrate-data.R
 Rscript scripts/explore-maize-data.R
 Rscript scripts/model-maize-yield.R
 ```
@@ -145,23 +145,22 @@ The Dockerfile:
 7. parses all R scripts during the build;
 8. uses `Rscript scripts/run-all.R` as the default command.
 
-`.dockerignore` prevents `.env`, Git state, local R state, raw/processed data, rendered outputs, partial downloads, and the local `renv` library from entering the image.
+`.dockerignore` prevents `.env`, Git state, local R state, complete source downloads, derived data, generated results, rendered outputs, partial downloads, and the local `renv` library from entering the image. The two fixed files in `data/input/` remain in the image for offline execution.
 
 ## Docker run and persistence
 
 Create host directories explicitly so their ownership and location are clear:
 
 ```bash
-mkdir -p data-raw data-interim data-processed figures reports
+mkdir -p data/source data/input data/derived results/tables results/models figures reports
 ```
 
 Run:
 
 ```bash
 docker run --rm \
-  -v "$(pwd)/data-raw:/work/data-raw" \
-  -v "$(pwd)/data-interim:/work/data-interim" \
-  -v "$(pwd)/data-processed:/work/data-processed" \
+  -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
   maize-yield-project
@@ -173,9 +172,8 @@ For an interactive shell:
 
 ```bash
 docker run --rm -it \
-  -v "$(pwd)/data-raw:/work/data-raw" \
-  -v "$(pwd)/data-interim:/work/data-interim" \
-  -v "$(pwd)/data-processed:/work/data-processed" \
+  -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
   maize-yield-project bash
@@ -188,7 +186,7 @@ The acquisition stage downloads a large external FAOSTAT archive. It writes to a
 If downloading or extraction fails, the script uses the course sample only when this file exists:
 
 ```text
-data-raw/faostat-maize-yield-sample.csv
+data/input/faostat-maize-yield-sample.csv
 ```
 
 The sample is tracked so that the workflow remains available without a network connection. Maintainers can regenerate it from the bulk input with `Rscript scripts/create-faostat-data-teaching-sample.R`. When neither source is available, the acquisition script stops and reports both recovery options; it does not claim success after a failed fallback.

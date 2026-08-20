@@ -34,13 +34,13 @@ if (length(arguments) > 2) {
 input_file <- if (length(arguments) >= 1) {
   arguments[[1]]
 } else {
-  here("data-raw", "faostat-crops-livestock-products.csv")
+  here("data", "source", "faostat-crops-livestock-products.csv")
 }
 
 output_file <- if (length(arguments) == 2) {
   arguments[[2]]
 } else {
-  here("data-raw", "faostat-maize-yield-sample.csv")
+  here("data", "input", "faostat-maize-yield-sample.csv")
 }
 
 countries <- c(

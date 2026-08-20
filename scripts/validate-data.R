@@ -11,8 +11,8 @@ library(here)
 library(readr)
 library(tidyr)
 
-input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
-output_file <- here("data-processed", "data-validation-results.csv")
+input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
+output_file <- here("results", "tables", "data-validation-results.csv")
 provenance_file <- here("metadata", "provenance.yml")
 
 expected_columns <- c("area", "item", "element", "year", "unit", "value", "flag")
@@ -50,7 +50,7 @@ faostat_record <- faostat_records[[1]]
 expected_checksum <- faostat_record$checksum_sha256
 expected_rows <- as.integer(faostat_record$rows_excluding_header)
 
-if (!identical(faostat_record$artifact, "data-raw/faostat-maize-yield-sample.csv")) {
+if (!identical(faostat_record$artifact, "data/input/faostat-maize-yield-sample.csv")) {
   stop("The provenance record identifies an unexpected artifact.", call. = FALSE)
 }
 

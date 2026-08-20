@@ -21,7 +21,7 @@ if (length(setdiff(arguments, "--refresh")) > 0) {
   stop("Usage: Rscript scripts/acquire-chirps-data.R [--refresh]", call. = FALSE)
 }
 
-output_file <- here("data-raw", "chirps-growing-season-precipitation.csv")
+output_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
 boundaries_file <- here("metadata", "project-country-boundaries.geojson")
 refresh <- "--refresh" %in% arguments
 

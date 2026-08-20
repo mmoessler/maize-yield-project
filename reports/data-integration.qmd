@@ -19,11 +19,11 @@ library(here)
 library(readr)
 
 integrated <- read_csv(
-  here("data-interim", "maize-yield-with-precipitation.csv"),
+  here("data", "derived", "maize-yield-with-precipitation.csv"),
   show_col_types = FALSE
 )
 audit <- read_csv(
-  here("data-processed", "data-integration-audit.csv"),
+  here("results", "tables", "data-integration-audit.csv"),
   show_col_types = FALSE
 )
 ```

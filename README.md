@@ -45,13 +45,17 @@ The models describe associations and provide simple predictive benchmarks. They 
 
 ```text
 maize-yield-project/
-├── data-raw/          # Tracked teaching sample and ignored bulk source data
-├── data-interim/      # Integrated multi-source data (generated; not tracked)
-├── data-processed/    # Clean data and model outputs (generated; not tracked)
+├── data/
+│   ├── source/        # Complete external downloads (ignored)
+│   ├── input/         # Fixed, tracked teaching inputs
+│   └── derived/       # Generated analytical datasets (ignored)
 ├── docs/              # Supplementary setup documentation
 ├── figures/           # Generated plots
 ├── metadata/          # Dictionaries, crosswalks, source metadata, and provenance
 ├── reports/           # Quarto report source and rendered output
+├── results/
+│   ├── tables/        # Generated audits, summaries, and metrics
+│   └── models/        # Generated fitted model objects
 ├── renv/              # renv bootstrap and settings
 ├── scripts/           # Workflow scripts and shared functions
 ├── Dockerfile         # Reproducible container definition
@@ -102,7 +106,7 @@ country-year maize yield panel
         ├──── CHIRPS October-April precipitation
         │              │
         │              ▼
-        ├──► integrated interim dataset and join audit
+        ├──► integrated derived dataset and join audit
         ├──► descriptive summaries and visualization
         └──► model fitting and test-period evaluation
                          │
@@ -202,10 +206,10 @@ docker build -t maize-yield-project .
 Run the workflow while retaining data and generated outputs on the host:
 
 ```bash
+mkdir -p data/source data/derived results/tables results/models figures reports
 docker run --rm \
-  -v "$(pwd)/data-raw:/work/data-raw" \
-  -v "$(pwd)/data-interim:/work/data-interim" \
-  -v "$(pwd)/data-processed:/work/data-processed" \
+  -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
   maize-yield-project
@@ -217,18 +221,18 @@ See [Reproducible-environment implementation](docs/reproducible-environment.md) 
 
 After a successful run, the principal outputs are:
 
-- `data-processed/maize-yield-panel.csv`
-- `data-interim/maize-yield-with-precipitation.csv`
-- `data-processed/data-integration-audit.csv`
-- `data-processed/country-yield-summary.csv`
-- `data-processed/maize-yield-predictions.csv`
-- `data-processed/model-performance.csv`
-- `data-processed/country-model.rds`
+- `data/derived/maize-yield-panel.csv`
+- `data/derived/maize-yield-with-precipitation.csv`
+- `results/tables/data-integration-audit.csv`
+- `results/tables/country-yield-summary.csv`
+- `results/tables/maize-yield-predictions.csv`
+- `results/tables/model-performance.csv`
+- `results/models/country-model.rds`
 - `figures/maize-yield-over-time.png`
 - `reports/maize-yield-report.html`
 - `reports/data-integration.html`
 
-Full downloaded raw data, processed data, validation results, and rendered
+Complete source downloads, derived datasets, analysis results, and rendered
 reports are excluded from version control because they are external or
 generated workflow artifacts.
 

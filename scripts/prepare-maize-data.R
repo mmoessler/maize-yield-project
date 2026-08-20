@@ -12,8 +12,8 @@ library(janitor)
 library(readr)
 library(tidyr)
 
-input_file <- here("data-raw", "faostat-maize-yield-sample.csv")
-output_file <- here("data-processed", "maize-yield-panel.csv")
+input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
+output_file <- here("data", "derived", "maize-yield-panel.csv")
 
 if (!file.exists(input_file)) {
   stop("Fixed teaching sample not found: ", input_file, call. = FALSE)

@@ -9,8 +9,8 @@ lesson.
 
 | Evidence | Repository file | Purpose |
 | --- | --- | --- |
-| Preserved source snapshot | `data-raw/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
-| Preserved precipitation snapshot | `data-raw/chirps-growing-season-precipitation.csv` | Fixed, offline multi-source integration input |
+| Preserved FAOSTAT input | `data/input/faostat-maize-yield-sample.csv` | Fixed, offline teaching input |
+| Preserved CHIRPS input | `data/input/chirps-growing-season-precipitation.csv` | Fixed, offline multi-source integration input |
 | Variable dictionary | `metadata/data-dictionary.csv` | Defines fields, types, units, roles, and missing values |
 | Flag code list | `metadata/flag-code-list.csv` | Preserves provider meanings for quality flags |
 | Source metadata | `metadata/source-metadata.yml` | Describes FAOSTAT, CHIRPS, and Natural Earth sources without duplicating artifact history |
@@ -19,11 +19,28 @@ lesson.
 | Validation report | `reports/data-validation.qmd` | Presents evidence, findings, and unresolved questions |
 
 Generated validation results are written to
-`data-processed/data-validation-results.csv`; rendered HTML is written beside
+`results/tables/data-validation-results.csv`; rendered HTML is written beside
 the Quarto source. Both follow the generated-output policy and are ignored by
 Git.
 
-## Raw-data boundary
+## Artifact roles and storage
+
+The project organizes artifacts by stable role rather than an ambiguous degree
+of processing:
+
+| Directory | Role | Git policy |
+| --- | --- | --- |
+| `data/source/` | Complete provider downloads used by maintainers | Ignore |
+| `data/input/` | Fixed, checksummed teaching inputs used by students | Track |
+| `data/derived/` | Reproducibly generated analytical datasets | Ignore |
+| `results/tables/` | Generated audits, summaries, predictions, and metrics | Ignore |
+| `results/models/` | Generated fitted model objects | Ignore |
+
+The word `input` does not imply that a file is an unchanged provider artifact.
+The FAOSTAT input is a project extract and the CHIRPS input is a spatially and
+temporally aggregated snapshot. Their provenance records those transformations.
+
+## Fixed-input boundary
 
 The tracked teaching sample is an unchanged, compact extract derived from the
 FAOSTAT normalized bulk download. Its SHA-256 checksum is:
@@ -32,7 +49,7 @@ FAOSTAT normalized bulk download. Its SHA-256 checksum is:
 fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
 ```
 
-The full archive, extracted bulk tables, active raw input, and partial downloads
+The full archive, extracted bulk tables, normalized working copy, and partial downloads
 are working artifacts and remain ignored. Do not edit or resave the teaching
 sample manually. Maintainers regenerate it with:
 
@@ -102,7 +119,7 @@ Statuses have distinct meanings:
 - `failure`: the file is not the expected input and the workflow stops;
 - `unknown`: the report documents a question that code alone cannot answer.
 
-Validation never rewrites the raw input or silently removes observations. Data
+Validation never rewrites the fixed input or silently removes observations. Data
 cleaning and analytical exclusions belong in derived preparation steps and
 must be justified separately.
 
@@ -114,7 +131,7 @@ must be justified separately.
 | Fixed CHIRPS teaching snapshot | Track | Small, cited country-season summary supports reliable offline integration teaching |
 | Metadata and validation source | Track | Required to interpret and audit the data |
 | Full FAOSTAT download | Ignore | Large, externally retrievable, and subject to revision |
-| Processed data and validation results | Ignore | Recreated by project scripts |
+| Derived data and analysis results | Ignore | Recreated by project scripts |
 | Rendered HTML | Ignore | Recreated from Quarto source and generated results |
 | Secrets and local configuration | Ignore | Must not enter source control or container images |
 

@@ -1,5 +1,5 @@
 # Acquire FAOSTAT Crops and Livestock Products data.
-# Downloaded data are placed in data-raw and are not committed to Git.
+# Complete downloads are placed in data/source and are not committed to Git.
 
 source("scripts/functions.R")
 
@@ -12,9 +12,9 @@ library(here)
 library(readr)
 library(stringr)
 
-raw_zip <- here("data-raw", "faostat-crops-livestock-products.csv.zip")
-raw_csv <- here("data-raw", "faostat-crops-livestock-products.csv")
-sample_csv <- here("data-raw", "faostat-maize-yield-sample.csv")
+raw_zip <- here("data", "source", "faostat-crops-livestock-products.csv.zip")
+raw_csv <- here("data", "source", "faostat-crops-livestock-products.csv")
+sample_csv <- here("data", "input", "faostat-maize-yield-sample.csv")
 
 # FAOSTAT bulk-download URLs can change. Confirm the current endpoint before a course run.
 faostat_url <- paste0(
@@ -51,7 +51,7 @@ tryCatch({
     stop("Could not move the completed download into place.")
   }
 
-  extracted <- unzip(raw_zip, exdir = here("data-raw"))
+  extracted <- unzip(raw_zip, exdir = here("data", "source"))
   normalized_file <- extracted[str_detect(basename(extracted), "Normalized.*\\.csv$")][1]
   if (is.na(normalized_file)) stop("Normalized CSV not found in archive.")
 
