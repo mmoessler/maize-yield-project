@@ -14,6 +14,12 @@ data/input/*
 data/derived/
 results/
 
+# Reproducible exploratory figures; retain the selected communication figure
+figures/maize-yield-distribution.png
+figures/maize-yield-trends.png
+figures/growing-season-precipitation.png
+figures/yield-versus-precipitation.png
+
 # Quarto
 .quarto/
 reports/*_files/

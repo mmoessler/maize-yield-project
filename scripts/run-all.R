@@ -10,7 +10,7 @@ scripts <- c(
   "scripts/validate-data.R",
   "scripts/prepare-maize-data.R",
   "scripts/integrate-data.R",
-  "scripts/explore-maize-data.R",
+  "scripts/visualize-maize-data.R",
   "scripts/model-maize-yield.R"
 )
 
@@ -23,6 +23,7 @@ if (nzchar(Sys.which("quarto"))) {
   reports <- c(
     "reports/data-validation.qmd",
     "reports/data-integration.qmd",
+    "reports/data-visualization.qmd",
     "reports/maize-yield-report.qmd"
   )
 

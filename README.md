@@ -35,7 +35,7 @@ The project introduces:
 - data acquisition and provenance;
 - identifier crosswalks, satellite-informed precipitation integration, and join audits;
 - cleaning, filtering, reshaping, and unit conversion;
-- exploratory summaries and visualization;
+- question-driven exploratory and communication visualization;
 - train/test splits for predictive evaluation;
 - simple baseline and linear regression models;
 - MAE and RMSE as prediction-error measures;
@@ -77,7 +77,7 @@ The main scripts are:
 | `scripts/validate-data.R` | Validate the fixed teaching extract |
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
-| `scripts/explore-maize-data.R` | Produce summaries and a trend figure |
+| `scripts/visualize-maize-data.R` | Create the exploratory figure set, communication figure, and manifest |
 | `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
 | `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
@@ -93,6 +93,7 @@ This repository keeps one implementation note per topic so students and contribu
 - [Data-management implementation](docs/data-management.md) — source identity, metadata, provenance, validation, and governance decisions.
 - [Data-preparation implementation](docs/data-preparation.md) — preparation contract, explicit transformations, audit evidence, and lineage.
 - [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, spatial and temporal alignment, crosswalks, join audits, and lineage.
+- [Data-visualization implementation](docs/data-visualization.md) — visual questions, encodings, figure contracts, output policy, and interpretation boundaries.
 
 Human-readable documentation for individual data artifacts is available under
 `docs/data/`:
@@ -123,7 +124,8 @@ analysis-ready country-year panel
         │              │
         │              ▼
         ├──► integrated derived dataset and join audit
-        ├──► descriptive summaries and visualization
+        ├──► exploratory and communication figures
+        │         └──► figure manifest and visualization report
         └──► model fitting and test-period evaluation
                          │
                          ▼
@@ -174,9 +176,9 @@ Rscript scripts/run-all.R
 1. `scripts/validate-data.R`
 2. `scripts/prepare-maize-data.R`
 3. `scripts/integrate-data.R`
-4. `scripts/explore-maize-data.R`
+4. `scripts/visualize-maize-data.R`
 5. `scripts/model-maize-yield.R`
-6. render the validation, integration, and analysis reports
+6. render the validation, integration, visualization, and analysis reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
 of the preceding stages to exist.
@@ -247,17 +249,27 @@ After a successful run, the principal outputs are:
 - `data/derived/maize-yield-with-precipitation.csv`
 - `results/tables/data-preparation-audit.csv`
 - `results/tables/data-integration-audit.csv`
-- `results/tables/country-yield-summary.csv`
+- `results/tables/data-visualization-manifest.csv`
 - `results/tables/maize-yield-predictions.csv`
 - `results/tables/model-performance.csv`
 - `results/models/country-model.rds`
-- `figures/maize-yield-over-time.png`
+- `figures/maize-yield-distribution.png`
+- `figures/maize-yield-trends.png`
+- `figures/growing-season-precipitation.png`
+- `figures/yield-versus-precipitation.png`
+- `figures/maize-yield-communication.png`
 - `reports/maize-yield-report.html`
 - `reports/data-integration.html`
+- `reports/data-visualization.html`
 
 Complete source downloads, derived datasets, analysis results, and rendered
 reports are excluded from version control because they are external or
 generated workflow artifacts.
+
+The exploratory visualization PNG files are generated and ignored. The
+communication figure is tracked as the immediately inspectable teaching
+artifact. See the [data-visualization implementation](docs/data-visualization.md)
+for its figure contracts and review policy.
 
 The compact FAOSTAT and CHIRPS teaching snapshots are deliberate exceptions:
 they are tracked with checksums, metadata, licence/citation information, and

@@ -14,7 +14,7 @@ renv project library
   recorded R packages and versions
         ↓
 project scripts
-  validation, preparation, exploration, modeling, report
+  validation, preparation, integration, visualization, modeling, report
 ```
 
 `renv` manages the R package library. Docker records a broader execution image. Neither records the current external FAOSTAT contents or guarantees scientifically valid results.
@@ -75,7 +75,7 @@ Individual stages can be run in order:
 Rscript scripts/validate-data.R
 Rscript scripts/prepare-maize-data.R
 Rscript scripts/integrate-data.R
-Rscript scripts/explore-maize-data.R
+Rscript scripts/visualize-maize-data.R
 Rscript scripts/model-maize-yield.R
 ```
 

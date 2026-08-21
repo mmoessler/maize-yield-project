@@ -27,8 +27,8 @@ with a current download.
 ```{r}
 #| label: setup
 library(dplyr)
-library(ggplot2)
 library(here)
+library(knitr)
 library(readr)
 
 maize <- read_csv(
@@ -58,11 +58,12 @@ maize |>
 ```{r}
 #| label: fig-yield-trends
 #| fig-cap: "Maize yield trends by country."
-ggplot(maize, aes(year, yield_tonnes_per_hectare)) +
-  geom_line() +
-  facet_wrap(vars(country), scales = "free_y") +
-  labs(x = NULL, y = "Yield (tonnes per hectare)") +
-  theme_minimal()
+#| fig-alt: "Nine common-scale country panels showing annual maize-yield observations from 1990 to 2022."
+communication_figure <- here("figures", "maize-yield-communication.png")
+if (!file.exists(communication_figure)) {
+  stop("Run Rscript scripts/visualize-maize-data.R before rendering.")
+}
+include_graphics(communication_figure)
 ```
 
 Address:

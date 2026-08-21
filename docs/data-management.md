@@ -141,7 +141,8 @@ must be justified separately.
 | Full FAOSTAT download | Ignore | Large, externally retrievable, and subject to revision |
 | Derived data and analysis results | Ignore | Recreated by project scripts |
 | Rendered HTML | Ignore | Recreated from Quarto source and generated results |
-| Generated trend figure | Track | Allows immediate inspection in the teaching repository; regenerate it through `scripts/explore-maize-data.R` when its input or code changes |
+| Communication figure | Track | Allows immediate inspection in the teaching repository; regenerate it through `scripts/visualize-maize-data.R` when its input or code changes |
+| Exploratory figures | Ignore | Recreated through the visualization script and reviewed through their contracts and report |
 | Secrets and local configuration | Ignore | Must not enter source control or container images |
 
 The sample contains aggregated national statistics and no personal microdata. This does not remove the need to reassess sensitivity, access, and retention if different data are introduced.

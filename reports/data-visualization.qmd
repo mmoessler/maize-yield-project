@@ -1,0 +1,136 @@
+---
+title: "Maize-yield data-visualization report"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This report presents the reproducible figure set created by
+`scripts/visualize-maize-data.R`. The graphics examine distributions, trends,
+and paired observations and prepare questions for later descriptive analysis.
+They do not establish causal effects.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(here)
+library(knitr)
+library(readr)
+
+manifest_file <- here(
+  "results", "tables", "data-visualization-manifest.csv"
+)
+if (!file.exists(manifest_file)) {
+  stop("Run Rscript scripts/visualize-maize-data.R before rendering.")
+}
+
+manifest <- read_csv(manifest_file, show_col_types = FALSE)
+if (any(manifest$status != "pass")) {
+  stop("The visualization manifest contains a failed artifact status.")
+}
+```
+
+## Figure manifest
+
+The manifest records figure contracts and verifies that each expected output
+was created and is non-empty. Visual quality and interpretation still require
+human review.
+
+```{r}
+#| label: figure-manifest
+manifest |>
+  select(figure, role, question, grain, width_in, height_in, status)
+```
+
+## Maize-yield distribution
+
+```{r}
+#| label: fig-yield-distribution
+#| echo: false
+#| fig-cap: "Distribution of annual maize-yield observations."
+#| fig-alt: "Histogram of maize yield in tonnes per hectare for country-year observations from nine selected countries between 1990 and 2022."
+include_graphics(here("figures", "maize-yield-distribution.png"))
+```
+
+The visible shape combines observations from countries with different yield
+levels and trajectories. It depends on the documented 0.25 t/ha bin width and
+should not be interpreted as one homogeneous population distribution.
+
+## Maize-yield trends
+
+```{r}
+#| label: fig-yield-trends
+#| echo: false
+#| fig-cap: "Maize-yield observations over time using common-scale country panels."
+#| fig-alt: "Nine faceted line charts showing annual maize yield from 1990 to 2022, with one panel for each selected country and a shared vertical scale."
+include_graphics(here("figures", "maize-yield-trends.png"))
+```
+
+Common vertical scales support comparison of absolute yield levels. The lines
+connect ordered annual observations within each country; they do not imply
+measurements between years or explain why trajectories differ.
+
+## Growing-season precipitation
+
+```{r}
+#| label: fig-precipitation-distribution
+#| echo: false
+#| fig-cap: "Distributions of October-April country-area precipitation estimates."
+#| fig-alt: "Nine faceted histograms showing distributions of growing-season precipitation totals for selected countries."
+include_graphics(here("figures", "growing-season-precipitation.png"))
+```
+
+CHIRPS values are seasonal totals of country-area mean daily estimates. They
+do not measure exposure specifically over maize-growing land and conceal
+within-country rainfall variation.
+
+## Yield and precipitation
+
+```{r}
+#| label: fig-yield-precipitation
+#| echo: false
+#| fig-cap: "Maize yield and growing-season precipitation by country."
+#| fig-alt: "Nine faceted scatterplots of maize yield against growing-season precipitation, where each point represents one country-year."
+include_graphics(here("figures", "yield-versus-precipitation.png"))
+```
+
+Each point represents one country-year. The graphic can reveal possible
+within-country patterns and unusual observations, but it does not control for
+time trends, measurement error, temperature, inputs, irrigation, or other
+factors. It describes association, not causation.
+
+## Communication figure
+
+```{r}
+#| label: fig-communication
+#| echo: false
+#| fig-cap: "Selected communication figure: country maize-yield trajectories."
+#| fig-alt: "Nine common-scale country panels showing that maize-yield levels and trajectories differ across selected countries from 1990 to 2022."
+include_graphics(here("figures", "maize-yield-communication.png"))
+```
+
+The retained communication figure focuses on one comparison: maize-yield
+levels and trajectories differ across the selected countries. National annual
+observations do not show subnational variation and cannot identify the causes
+of those differences.
+
+## Review questions
+
+1. Which distribution features remain stable under reasonable bin widths?
+2. How would free facet scales change the interpretation of country trends?
+3. Where does overplotting affect the yield-precipitation figure?
+4. Which visible patterns should be quantified in Descriptive Data Analysis?
+5. Which additional evidence would be needed for an explanatory claim?
+
+## Reproducibility statement
+
+The figures were generated through a version-controlled script from the
+validated, prepared, and integrated project artifacts. Package versions are
+recorded in `renv.lock`; output paths and dimensions are explicit; and the
+manifest records the intended question and grain of every figure.
