@@ -19,7 +19,7 @@ How have maize yields changed across selected Southern African countries, and ho
 ## Data and provenance
 
 The analysis uses the fixed FAOSTAT Crops and Livestock Products teaching
-sample at `data-raw/faostat-maize-yield-sample.csv`. Its checksum, origin,
+sample at `data/input/faostat-maize-yield-sample.csv`. Its checksum, origin,
 license, scope, and known limitations are recorded in
 `metadata/provenance.yml`. The default workflow does not replace this snapshot
 with a current download.

@@ -1,0 +1,7 @@
+variable,label,definition,type,unit,role,allowed_values,missing_values,source,transformation
+country,Country,FAOSTAT reporting-area label retained for the selected country,character,,identifier,Botswana; Eswatini; Lesotho; Malawi; Mozambique; Namibia; South Africa; Zambia; Zimbabwe,blank values are not expected,FAOSTAT QCL area,Rename area to country
+year,Calendar year,Calendar year of the FAOSTAT maize observations,integer,year,time,1990-2022,blank values are not expected,FAOSTAT QCL year,Parse as integer and retain
+yield_tonnes_per_hectare,Maize yield,Reported maize yield converted to tonnes per hectare,double,t/ha,measure,non-negative numeric values,blank represents missing or unavailable yield,FAOSTAT QCL Yield value in kg/ha,Divide yield_kg_per_hectare by 1000
+production_tonnes,Maize production,Reported annual maize production,double,t,measure,non-negative numeric values,blank represents missing or unavailable production,FAOSTAT QCL Production value in t,Reshape the Production element from rows to a column
+harvested_area_hectares,Maize harvested area,Reported annual area harvested for maize,double,ha,measure,non-negative numeric values,blank represents missing or unavailable area,FAOSTAT QCL Area harvested value in ha,Reshape the Area harvested element from rows to a column
+log_yield,Log maize yield,Natural logarithm of positive maize yield in tonnes per hectare,double,log(t/ha),derived measure,numeric values,blank when yield is missing or non-positive,Derived from yield_tonnes_per_hectare,Apply the natural logarithm only to positive yield

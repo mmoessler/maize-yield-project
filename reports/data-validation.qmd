@@ -33,9 +33,13 @@ maize <- read_csv(input_file, show_col_types = FALSE)
 validation <- read_csv(results_file, show_col_types = FALSE)
 provenance <- read_yaml(here("metadata", "provenance.yml"))
 dictionary <- read_csv(
-  here("metadata", "data-dictionary.csv"),
+  here("metadata", "faostat-maize-yield-data-dictionary.csv"),
   show_col_types = FALSE
 )
+faostat_record <- Filter(
+  function(record) identical(record$artifact_id, "faostat_maize_snapshot"),
+  provenance$artifacts
+)[[1]]
 ```
 
 ```{r}
@@ -54,27 +58,18 @@ one documented expectation.
 
 ## Source and provenance
 
-<<<<<<< HEAD
-- Artifact: `r provenance$artifact`
-- Provider: `r provenance$provider`
-- Dataset: `r paste(provenance$database, provenance$dataset, sep = " — ")`
-- Accessed: `r provenance$accessed`
-- SHA-256: `r provenance$checksum_sha256`
-- Licence: `r provenance$license`
-=======
-- Artifact: `data/input/faostat-maize-yield-sample.csv`
+- Artifact: `r faostat_record$artifact`
 - Provider: Food and Agriculture Organization of the United Nations (FAO)
 - Dataset: FAOSTAT Crops and Livestock Products
-- Snapshot created: 3 August 2026
-- SHA-256: `fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be`
+- Snapshot created: `r faostat_record$created`
+- SHA-256: `r faostat_record$checksum_sha256`
 - Licence: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
->>>>>>> codex-work-branch
 
 The complete retrieval history, citation, sharing conditions, derived-artifact
 lineage, and limitations are recorded in `metadata/provenance.yml`. Selected
 provider definitions and methodological context are preserved in
 `metadata/source-metadata.yml`; variable-level meanings are in
-`metadata/data-dictionary.csv`.
+`metadata/faostat-maize-yield-data-dictionary.csv`.
 
 ```{r}
 #| label: data-dictionary

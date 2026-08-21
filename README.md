@@ -91,12 +91,14 @@ This repository keeps one implementation note per topic so students and contribu
 - [Reproducible-environment implementation](docs/reproducible-environment.md) — `renv`, Docker, setup checks, persistent outputs, and troubleshooting.
 - [Remote-computing implementation](docs/remote-computing.md) — running the project on a remote Linux server and the current infrastructure boundary.
 - [Data-management implementation](docs/data-management.md) — source identity, metadata, provenance, validation, and governance decisions.
+- [Data-preparation implementation](docs/data-preparation.md) — preparation contract, explicit transformations, audit evidence, and lineage.
 - [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, spatial and temporal alignment, crosswalks, join audits, and lineage.
 
 Human-readable documentation for individual data artifacts is available under
 `docs/data/`:
 
 - [FAOSTAT maize-yield teaching data](docs/data/faostat-maize-yield.md)
+- [Prepared maize-yield panel](docs/data/maize-yield-panel.md)
 - [CHIRPS growing-season precipitation](docs/data/chirps-growing-season-precipitation.md)
 - [Project-country boundaries](docs/data/project-country-boundaries.md)
 - [Maize yield augmented with precipitation](docs/data/maize-yield-with-precipitation.md)
@@ -109,10 +111,10 @@ FAOSTAT bulk data
         ▼
 acquisition, validation and preparation
         │
-        ├──► metadata and validation report
+        ├──► metadata and validation evidence
         │
-        ▼
-validated preparation
+        ▼ prepare with a stated grain and mappings
+        ├──► preparation dictionary and audit
         │
         ▼
 analysis-ready country-year panel
@@ -130,6 +132,8 @@ analysis-ready country-year panel
 
 The preparation script supports the normalized FAOSTAT schema. It selects maize yield, production, and harvested area; reshapes the measures into one row
 per country and year; converts yield from kilograms per hectare to tonnes per hectare; and calculates log yield.
+It verifies the input checksum and writes a machine-readable preparation audit
+before treating the panel as ready for downstream integration and analysis.
 
 The modeling script trains on observations through 2017 and evaluates predictions from 2018 onward. It compares:
 
@@ -241,6 +245,7 @@ After a successful run, the principal outputs are:
 
 - `data/derived/maize-yield-panel.csv`
 - `data/derived/maize-yield-with-precipitation.csv`
+- `results/tables/data-preparation-audit.csv`
 - `results/tables/data-integration-audit.csv`
 - `results/tables/country-yield-summary.csv`
 - `results/tables/maize-yield-predictions.csv`

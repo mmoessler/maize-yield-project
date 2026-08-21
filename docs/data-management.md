@@ -88,10 +88,10 @@ The compact sample omits FAOSTAT numeric area, item, and element codes. Labels a
 The project keeps three complementary forms of documentation:
 
 - `metadata/source-metadata.yml` records provider-level concepts, coverage, units, flags, revision context, and references;
-- `metadata/data-dictionary.csv` defines each retained project variable; and
+- `metadata/faostat-maize-yield-data-dictionary.csv` defines each retained FAOSTAT input variable; and
 - `metadata/provenance.yml` identifies the exact source artifact and records its history, governance, and derived-artifact lineage.
 
-The flag code list is separated into `metadata/flag-code-list.csv` so that both people and validation code can use the same allowed codes and meanings.
+The flag code list is separated into `metadata/faostat-flag-code-list.csv` so that both people and validation code can use the same allowed codes and meanings.
 
 ## Run validation
 

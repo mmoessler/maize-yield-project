@@ -14,8 +14,8 @@ library(tidyr)
 input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
 output_file <- here("results", "tables", "data-validation-results.csv")
 provenance_file <- here("metadata", "provenance.yml")
-dictionary_file <- here("metadata", "data-dictionary.csv")
-flag_code_file <- here("metadata", "flag-code-list.csv")
+dictionary_file <- here("metadata", "faostat-maize-yield-data-dictionary.csv")
+flag_code_file <- here("metadata", "faostat-flag-code-list.csv")
 source_metadata_file <- here("metadata", "source-metadata.yml")
 
 expected_countries <- c(
@@ -50,6 +50,11 @@ if (length(missing_metadata_files) > 0) {
 }
 
 provenance <- yaml::read_yaml(provenance_file)
+source_metadata <- yaml::read_yaml(source_metadata_file)
+dictionary <- read_csv(dictionary_file, show_col_types = FALSE)
+flag_codes <- read_csv(flag_code_file, show_col_types = FALSE)
+expected_columns <- dictionary$variable
+expected_flags <- flag_codes$flag
 faostat_records <- Filter(
   function(record) identical(record$artifact_id, "faostat_maize_snapshot"),
   provenance$artifacts
@@ -60,6 +65,14 @@ if (length(faostat_records) != 1L) {
 }
 
 faostat_record <- faostat_records[[1]]
+faostat_sources <- Filter(
+  function(source) identical(source$source_id, faostat_record$source_id),
+  source_metadata$sources
+)
+if (length(faostat_sources) != 1L) {
+  stop("Source metadata must contain exactly one linked FAOSTAT source.", call. = FALSE)
+}
+faostat_source <- faostat_sources[[1]]
 expected_checksum <- faostat_record$checksum_sha256
 expected_rows <- as.integer(faostat_record$rows_excluding_header)
 
@@ -115,13 +128,13 @@ record_check(
 )
 record_check(
   "source-metadata-link", "metadata",
-  identical(provenance$source_metadata, "metadata/source-metadata.yml"),
-  "metadata/source-metadata.yml", provenance$source_metadata
+  identical(faostat_record$source_id, faostat_source$source_id),
+  faostat_record$source_id, faostat_source$source_id
 )
 record_check(
   "source-yield-unit", "metadata",
-  identical(source_metadata$units$Yield, "kg/ha"),
-  "kg/ha", source_metadata$units$Yield
+  identical(faostat_source$units$Yield, "kg/ha"),
+  "kg/ha", faostat_source$units$Yield
 )
 
 maize <- read_csv(input_file, show_col_types = FALSE)

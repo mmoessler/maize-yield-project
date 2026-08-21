@@ -1,65 +1,3 @@
-<<<<<<< HEAD
-artifact: data-raw/faostat-maize-yield-sample.csv
-provider: Food and Agriculture Organization of the United Nations (FAO)
-database: FAOSTAT
-dataset: Crops and Livestock Products
-release: "Not encoded in the bulk archive filename; teaching snapshot created 2026-08-03"
-accessed: "2026-08-03"
-source: https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip
-retrieval: >-
-  Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
-  by scripts/create-teaching-sample.R to maize observations for nine Southern
-  African countries, three elements, and 1990-2022.
-checksum_algorithm: SHA-256
-checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
-size_bytes: 44803
-rows_excluding_header: 891
-grain: >-
-  One row represents one maize element for one reporting area and calendar
-  year, expressed in one unit.
-candidate_key:
-  - area
-  - item
-  - element
-  - year
-  - unit
-license: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
-terms: https://www.fao.org/contact-us/terms/db-terms-of-use/en
-metadata_reference: https://www.fao.org/faostat/en/#data/QCL
-source_metadata: metadata/source-metadata.yml
-citation: >-
-  FAO. 2026. FAOSTAT: Crops and livestock products. Accessed 3 August 2026.
-  https://www.fao.org/faostat/en/#data/QCL. Licence: CC BY 4.0.
-sensitivity: >-
-  Aggregated national statistics; no personal, confidential, or
-  location-sensitive microdata are present in this teaching extract.
-redistribution: >-
-  Included for teaching under the stated licence and terms. Attribution must
-  be retained, no FAO endorsement may be implied, and dataset metadata must be
-  checked for third-party exceptions before reuse.
-retention: >-
-  Preserve the tracked teaching snapshot with its metadata. Downloaded bulk
-  files and derived outputs are reproducible working artifacts and are ignored.
-known_limitations: >-
-  FAOSTAT values can be official, estimated, imputed, or supplied by external
-  organizations and historical series may be revised. The teaching extract
-  omits provider numeric codes and notes and is not the complete source dataset.
-derived_artifacts:
-  - artifact: data-processed/data-validation-results.csv
-    created_by: scripts/validate-data.R
-    role: Machine-readable checks of the fixed teaching sample
-    information_loss: None; this is a validation summary, not a data extract
-  - artifact: data-processed/maize-yield-panel.csv
-    created_by: scripts/prepare-maize-data.R
-    role: Analysis-ready country-year panel
-    transformations:
-      - Reshape element observations to one row per country and year
-      - Convert yield from kilograms per hectare to tonnes per hectare
-      - Calculate natural-log yield for modeling
-    information_loss: >-
-      Item, element, unit, and flag columns are not retained in the panel;
-      their meanings and source values remain available in the fixed sample.
-=======
 artifacts:
   - artifact_id: faostat_maize_snapshot
     artifact: data/input/faostat-maize-yield-sample.csv
@@ -67,8 +5,8 @@ artifacts:
     created: "2026-08-03"
     retrieval: >-
       Downloaded by scripts/acquire-faostat-data.R and reduced deterministically
-      by scripts/create-faostat-data-teaching-sample.R to maize observations for nine countries,
-      three elements, and 1990-2022.
+      by scripts/create-faostat-data-teaching-sample.R to maize observations for
+      nine countries, three elements, and 1990-2022.
     checksum_algorithm: SHA-256
     checksum_sha256: fd2c78cae5a5cf2f82d6b6bdc2b3637ce03b597f74e561099f9666af449605be
     size_bytes: 44803
@@ -76,6 +14,7 @@ artifacts:
     grain: One maize element, reporting area, calendar year, and unit per row
     candidate_key: [area, item, element, year, unit]
     dictionary: metadata/faostat-maize-yield-data-dictionary.csv
+    documentation: docs/data/faostat-maize-yield.md
     sensitivity: Aggregated national statistics; no personal or confidential data
 
   - artifact_id: project_country_boundaries
@@ -86,8 +25,8 @@ artifacts:
     retrieval: >-
       scripts/acquire-country-boundaries.R downloaded the pinned Natural Earth
       v5.1.1 GeoJSON after verifying its SHA-256. It selected nine ADM0_A3
-      features from metadata/project-country-crosswalk.csv and reduced the properties
-      to the project identifier and Natural Earth display name.
+      features from metadata/project-country-crosswalk.csv and reduced the
+      properties to the project identifier and Natural Earth display name.
     source_checksum_algorithm: SHA-256
     source_checksum_sha256: 6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f
     checksum_algorithm: SHA-256
@@ -95,6 +34,7 @@ artifacts:
     size_bytes: 34390
     features: 9
     candidate_key: [properties.project_country_id]
+    documentation: docs/data/project-country-boundaries.md
 
   - artifact_id: chirps_precipitation_snapshot
     artifact: data/input/chirps-growing-season-precipitation.csv
@@ -120,20 +60,44 @@ artifacts:
     grain: One project country and October-April growing season per row
     candidate_key: [project_country_id, year]
     dictionary: metadata/chirps-growing-season-precipitation-data-dictionary.csv
+    documentation: docs/data/chirps-growing-season-precipitation.md
     sensitivity: Aggregated environmental data; no personal or confidential data
 
 derived_artifacts:
-  - artifact: results/tables/data-validation-results.csv
+  - artifact_id: faostat_validation_results
+    artifact: results/tables/data-validation-results.csv
     created_by: scripts/validate-data.R
     role: Machine-readable checks of the fixed FAOSTAT teaching sample
-  - artifact: data/derived/maize-yield-panel.csv
+
+  - artifact_id: maize_yield_panel
+    artifact: data/derived/maize-yield-panel.csv
+    input_artifacts: [faostat_maize_snapshot]
     created_by: scripts/prepare-maize-data.R
     role: Analysis-ready country-year maize panel
-  - artifact: data/derived/maize-yield-with-precipitation.csv
+    grain: One selected country and calendar year per row
+    candidate_key: [country, year]
+    transformations:
+      - Select maize yield, production, and harvested-area observations
+      - Map provider element-unit pairs to project variable names
+      - Reshape element observations from long to wide form
+      - Convert yield from kilograms per hectare to tonnes per hectare
+      - Calculate natural-log yield only for positive yield values
+    information_loss: >-
+      Item, element, unit, and flag columns are not retained in the panel. Their
+      meanings and source values remain available in the fixed FAOSTAT snapshot.
+    dictionary: metadata/maize-yield-panel-data-dictionary.csv
+    documentation: docs/data/maize-yield-panel.md
+    audit: results/tables/data-preparation-audit.csv
+
+  - artifact_id: maize_yield_with_precipitation
+    artifact: data/derived/maize-yield-with-precipitation.csv
+    input_artifacts: [maize_yield_panel, chirps_precipitation_snapshot]
     created_by: scripts/integrate-data.R
     role: FAOSTAT panel left-joined to the CHIRPS teaching snapshot
     dictionary: metadata/maize-yield-with-precipitation-data-dictionary.csv
-  - artifact: results/tables/data-integration-audit.csv
+    documentation: docs/data/maize-yield-with-precipitation.md
+
+  - artifact_id: data_integration_audit
+    artifact: results/tables/data-integration-audit.csv
     created_by: scripts/integrate-data.R
     role: Machine-readable checks of source keys and the left join
->>>>>>> codex-work-branch
