@@ -19,6 +19,7 @@ figures/maize-yield-distribution.png
 figures/maize-yield-trends.png
 figures/growing-season-precipitation.png
 figures/yield-versus-precipitation.png
+figures/predictive-observed-versus-predicted.png
 
 # Quarto
 .quarto/

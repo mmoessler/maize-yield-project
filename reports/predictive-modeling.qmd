@@ -1,0 +1,189 @@
+---
+title: "Maize-yield predictive-modeling report"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This report evaluates three predefined benchmark procedures on held-out later
+maize-yield observations. It separates training from testing, preserves
+row-level predictions, reports complementary errors, and states the limits of
+the evidence. It is a teaching benchmark rather than an operational forecast.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(ggplot2)
+library(here)
+library(knitr)
+library(readr)
+library(tidyr)
+
+read_result <- function(file_name) {
+  path <- here("results", "tables", file_name)
+  if (!file.exists(path)) {
+    stop(
+      "Missing predictive result: ", path,
+      ". Run Rscript scripts/model-maize-yield.R first."
+    )
+  }
+  read_csv(path, show_col_types = FALSE)
+}
+
+split_audit <- read_result("predictive-split-audit.csv")
+predictions <- read_result("maize-yield-predictions.csv")
+performance <- read_result("model-performance.csv")
+country_performance <- read_result(
+  "predictive-performance-by-country.csv"
+)
+```
+
+## Prediction contract
+
+| Component | Project decision |
+| --- | --- |
+| Target | Annual national log maize yield |
+| Prediction unit | One country-year |
+| Population | Nine project countries represented during training |
+| Training period | 1990–2017 |
+| Test period | 2018–2022 |
+| Information | Country identity and calendar year |
+| Use | Reproducible later-period teaching benchmark |
+
+The task has no operational issue date or decision-specific loss. It does not
+validate a pre-season forecast, unseen-country prediction, or high-stakes use.
+
+## Temporal split audit
+
+```{r}
+#| label: split-summary
+split_audit |>
+  group_by(partition) |>
+  summarise(
+    countries = n(),
+    rows = sum(rows),
+    first_year = min(first_year),
+    last_year = max(last_year),
+    missing_target = sum(missing_target),
+    duplicate_country_years = sum(duplicate_country_years),
+    .groups = "drop"
+  ) |>
+  kable()
+```
+
+The split learns from earlier years and evaluates later observations. Because
+all test countries occur in training, it measures temporal transfer for known
+countries rather than geographic transfer to new countries.
+
+## Candidate procedures
+
+| Candidate | Prediction rule | Structure tested |
+| --- | --- | --- |
+| `historical-mean` | One training-period mean | Constant baseline |
+| `linear-trend` | Pooled linear extrapolation | Common temporal change |
+| `country-model` | Country indicators and common trend | Persistent country differences plus time |
+
+Every mean and coefficient is estimated from 1990–2017 only. No realized
+precipitation is used because the task does not define an issue time at which
+that information would be available.
+
+## Overall held-out performance
+
+```{r}
+#| label: overall-performance
+performance |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+Mean error uses `observed - predicted`; positive values indicate
+underprediction. MAE and RMSE remain in log-yield units. RMSE gives larger
+errors more influence than MAE.
+
+## Performance by country
+
+```{r}
+#| label: country-performance
+country_performance |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+Each country contributes only five held-out observations. These values reveal
+heterogeneity and possible failures but are not precise estimates of future
+country performance.
+
+## Observed and predicted test outcomes
+
+```{r}
+#| label: fig-predictive-comparison
+#| fig-cap: "Observed and predicted log maize yield for held-out years."
+#| fig-alt: "Faceted time plots for nine countries comparing observed log maize yield with historical mean, linear trend and country plus time predictions from 2018 through 2022."
+#| fig-width: 10
+#| fig-height: 8
+prediction_long <- predictions |>
+  pivot_longer(
+    cols = c(historical_mean, linear_trend, country_model),
+    names_to = "model",
+    values_to = "estimate"
+  ) |>
+  mutate(
+    model = recode(
+      model,
+      historical_mean = "historical-mean",
+      linear_trend = "linear-trend",
+      country_model = "country-model"
+    )
+  )
+
+ggplot(prediction_long, aes(x = year)) +
+  geom_line(
+    aes(y = estimate, colour = model, group = model),
+    linewidth = 0.7
+  ) +
+  geom_point(aes(y = estimate, colour = model), size = 1.5) +
+  geom_line(aes(y = log_yield, group = 1), linewidth = 0.8) +
+  geom_point(aes(y = log_yield), size = 1.8) +
+  facet_wrap(~ country, scales = "free_y", ncol = 3) +
+  scale_x_continuous(breaks = c(2018, 2020, 2022)) +
+  labs(
+    x = "Year",
+    y = "Log yield",
+    colour = "Model"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+The figure exposes timing, direction, and subgroup patterns hidden by an
+overall average. It should be interpreted together with both error metrics.
+
+## Bounded conclusion
+
+```{r}
+#| label: bounded-conclusion
+#| results: asis
+conclusion_file <- here("results", "predictive-modeling-conclusion.md")
+if (!file.exists(conclusion_file)) {
+  stop("Run Rscript scripts/model-maize-yield.R before rendering.")
+}
+cat(paste(readLines(conclusion_file, warn = FALSE), collapse = "\n"))
+```
+
+## Reproducibility statement
+
+The tracked script checks the input grain and coverage, enforces a fixed
+temporal split, fits candidates on training observations only, preserves
+row-level held-out predictions, and generates all metrics, figures, model
+objects, and conclusions. Generated artifacts and rendered HTML are ignored
+because fixed inputs, the pinned environment, code, report source, and
+documentation recreate them.

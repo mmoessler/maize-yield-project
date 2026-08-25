@@ -28,6 +28,7 @@ if (nzchar(Sys.which("quarto"))) {
     "reports/data-visualization.qmd",
     "reports/descriptive-data-analysis.qmd",
     "reports/explanatory-modeling.qmd",
+    "reports/predictive-modeling.qmd",
     "reports/maize-yield-report.qmd"
   )
 

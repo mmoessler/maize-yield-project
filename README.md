@@ -41,9 +41,10 @@ The project introduces:
 - question-driven exploratory and communication visualization;
 - descriptive summaries of distributions, periods, associations, and temporal stability;
 - causal questions, diagrams, identification assumptions, and bounded explanatory claims;
-- train/test splits for predictive evaluation;
-- simple baseline and linear regression models;
-- MAE and RMSE as prediction-error measures;
+- prediction contracts and time-aware train/test splits;
+- training-only baseline and linear-regression benchmarks;
+- row-level, overall, and country-level predictive evaluation;
+- MAE, RMSE, bias, leakage controls, and bounded predictive claims;
 - communicating methods, findings, and limitations with Quarto; and
 - dependency management with `renv` and portable execution with Docker.
 
@@ -105,6 +106,7 @@ This repository keeps one implementation note per topic so students and contribu
 - [Data-visualization implementation](docs/data-visualization.md) — visual questions, encodings, figure contracts, output policy, and interpretation boundaries.
 - [Descriptive-data-analysis implementation](docs/descriptive-data-analysis.md) — summary contracts, period comparisons, association scopes, stationarity diagnostics, and the modeling handoff.
 - [Explanatory-modeling implementation](docs/explanatory-modeling.md) — causal estimand, diagram, identification boundary, regression sequence, diagnostics, and bounded conclusion.
+- [Predictive-modeling implementation](docs/predictive-modeling.md) — prediction contract, temporal holdout, leakage controls, benchmark models, errors, and bounded use.
 
 Human-readable documentation for individual data artifacts is available under
 `docs/data/`:
@@ -141,10 +143,11 @@ analysis-ready country-year panel
         │         └──► modeling handoff and descriptive report
         ├──► causal design and explanatory association models
         │         └──► identification assessment and bounded conclusion
-        └──► predictive model fitting and test-period evaluation
-                         │
-                         ▼
-                    Quarto reports
+        └──► prediction contract and training-only benchmarks
+                  └──► held-out errors, diagnostics and bounded conclusion
+                                      │
+                                      ▼
+                                 Quarto reports
 ```
 
 The preparation script supports the normalized FAOSTAT schema. It selects maize yield, production, and harvested area; reshapes the measures into one row
@@ -152,11 +155,17 @@ per country and year; converts yield from kilograms per hectare to tonnes per he
 It verifies the input checksum and writes a machine-readable preparation audit
 before treating the panel as ready for downstream integration and analysis.
 
-The modeling script trains on observations through 2017 and evaluates predictions from 2018 onward. It compares:
+The predictive script trains on observations through 2017 and evaluates
+predictions from 2018 through 2022. It compares:
 
 1. a historical-mean baseline;
 2. a common linear time trend; and
 3. a linear time trend with country effects.
+
+The stage preserves a deterministic split audit, row-level predictions,
+overall and country-level MAE and RMSE, an observed-versus-predicted figure,
+and a generated bounded conclusion. It is a teaching benchmark for known
+countries, not an operational forecast or causal analysis.
 
 ## Requirements
 
@@ -195,7 +204,8 @@ Rscript scripts/run-all.R
 5. `scripts/describe-maize-data.R`
 6. `scripts/explain-maize-yield.R`
 7. `scripts/model-maize-yield.R`
-8. render the validation, integration, visualization, descriptive-analysis, explanatory-modeling, and predictive reports
+8. render the validation, integration, visualization, descriptive-analysis,
+   explanatory-modeling, predictive-modeling, and overview reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
 of the preceding stages to exist.
@@ -280,19 +290,24 @@ After a successful run, the principal outputs are:
 - `results/tables/explanatory-residual-dependence.csv`
 - `results/models/explanatory-country-time-model.rds`
 - `results/explanatory-modeling-conclusion.md`
+- `results/tables/predictive-split-audit.csv`
 - `results/tables/maize-yield-predictions.csv`
 - `results/tables/model-performance.csv`
-- `results/models/country-model.rds`
+- `results/tables/predictive-performance-by-country.csv`
+- `results/models/predictive-benchmark-models.rds`
+- `results/predictive-modeling-conclusion.md`
 - `figures/maize-yield-distribution.png`
 - `figures/maize-yield-trends.png`
 - `figures/growing-season-precipitation.png`
 - `figures/yield-versus-precipitation.png`
 - `figures/maize-yield-communication.png`
+- `figures/predictive-observed-versus-predicted.png`
 - `reports/maize-yield-report.html`
 - `reports/data-integration.html`
 - `reports/data-visualization.html`
 - `reports/descriptive-data-analysis.html`
 - `reports/explanatory-modeling.html`
+- `reports/predictive-modeling.html`
 
 Complete source downloads, derived datasets, analysis results, and rendered
 reports are excluded from version control because they are external or
