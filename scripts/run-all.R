@@ -12,6 +12,7 @@ scripts <- c(
   "scripts/integrate-data.R",
   "scripts/visualize-maize-data.R",
   "scripts/describe-maize-data.R",
+  "scripts/explain-maize-yield.R",
   "scripts/model-maize-yield.R"
 )
 
@@ -26,6 +27,7 @@ if (nzchar(Sys.which("quarto"))) {
     "reports/data-integration.qmd",
     "reports/data-visualization.qmd",
     "reports/descriptive-data-analysis.qmd",
+    "reports/explanatory-modeling.qmd",
     "reports/maize-yield-report.qmd"
   )
 

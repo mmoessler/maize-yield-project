@@ -8,7 +8,10 @@ dataset, integrating satellite-informed growing-season precipitation, exploring 
 
 ## Research question
 
-How have maize yields changed across selected Southern African countries, and how well do simple statistical models predict recently observed yields?
+How have maize yields changed across selected Southern African countries, what
+can the available data support about the causal role of growing-season
+precipitation, and how well do simple statistical models predict recently
+observed yields?
 
 The analysis covers:
 
@@ -37,13 +40,16 @@ The project introduces:
 - cleaning, filtering, reshaping, and unit conversion;
 - question-driven exploratory and communication visualization;
 - descriptive summaries of distributions, periods, associations, and temporal stability;
+- causal questions, diagrams, identification assumptions, and bounded explanatory claims;
 - train/test splits for predictive evaluation;
 - simple baseline and linear regression models;
 - MAE and RMSE as prediction-error measures;
 - communicating methods, findings, and limitations with Quarto; and
 - dependency management with `renv` and portable execution with Docker.
 
-The models describe associations and provide simple predictive benchmarks. They are not designed to estimate causal effects.
+The explanatory models describe adjusted associations because the available
+data do not identify a causal precipitation effect. Separate predictive models
+provide simple benchmarks for held-out years.
 
 ## Repository structure
 
@@ -80,7 +86,8 @@ The main scripts are:
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
 | `scripts/visualize-maize-data.R` | Create the exploratory figure set, communication figure, and manifest |
 | `scripts/describe-maize-data.R` | Quantify distributions, period changes, associations, and evidence relevant to stationarity |
-| `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
+| `scripts/explain-maize-yield.R` | Assess a causal precipitation-yield question and estimate bounded adjusted associations |
+| `scripts/model-maize-yield.R` | Fit predictive benchmarks and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
 | `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
@@ -97,6 +104,7 @@ This repository keeps one implementation note per topic so students and contribu
 - [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, spatial and temporal alignment, crosswalks, join audits, and lineage.
 - [Data-visualization implementation](docs/data-visualization.md) — visual questions, encodings, figure contracts, output policy, and interpretation boundaries.
 - [Descriptive-data-analysis implementation](docs/descriptive-data-analysis.md) — summary contracts, period comparisons, association scopes, stationarity diagnostics, and the modeling handoff.
+- [Explanatory-modeling implementation](docs/explanatory-modeling.md) — causal estimand, diagram, identification boundary, regression sequence, diagnostics, and bounded conclusion.
 
 Human-readable documentation for individual data artifacts is available under
 `docs/data/`:
@@ -131,7 +139,9 @@ analysis-ready country-year panel
         │         └──► figure manifest and visualization report
         ├──► descriptive summaries and stability evidence
         │         └──► modeling handoff and descriptive report
-        └──► model fitting and test-period evaluation
+        ├──► causal design and explanatory association models
+        │         └──► identification assessment and bounded conclusion
+        └──► predictive model fitting and test-period evaluation
                          │
                          ▼
                     Quarto reports
@@ -183,8 +193,9 @@ Rscript scripts/run-all.R
 3. `scripts/integrate-data.R`
 4. `scripts/visualize-maize-data.R`
 5. `scripts/describe-maize-data.R`
-6. `scripts/model-maize-yield.R`
-7. render the validation, integration, visualization, descriptive-analysis, and modeling reports
+6. `scripts/explain-maize-yield.R`
+7. `scripts/model-maize-yield.R`
+8. render the validation, integration, visualization, descriptive-analysis, explanatory-modeling, and predictive reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
 of the preceding stages to exist.
@@ -263,6 +274,12 @@ After a successful run, the principal outputs are:
 - `results/tables/yield-precipitation-association.csv`
 - `results/tables/stationarity-diagnostic.csv`
 - `results/descriptive-modeling-handoff.md`
+- `results/tables/explanatory-exposure-support.csv`
+- `results/tables/explanatory-model-estimates.csv`
+- `results/tables/explanatory-model-diagnostics.csv`
+- `results/tables/explanatory-residual-dependence.csv`
+- `results/models/explanatory-country-time-model.rds`
+- `results/explanatory-modeling-conclusion.md`
 - `results/tables/maize-yield-predictions.csv`
 - `results/tables/model-performance.csv`
 - `results/models/country-model.rds`
@@ -275,6 +292,7 @@ After a successful run, the principal outputs are:
 - `reports/data-integration.html`
 - `reports/data-visualization.html`
 - `reports/descriptive-data-analysis.html`
+- `reports/explanatory-modeling.html`
 
 Complete source downloads, derived datasets, analysis results, and rendered
 reports are excluded from version control because they are external or

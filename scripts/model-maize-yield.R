@@ -1,4 +1,4 @@
-# Fit explanatory and predictive models.
+# Fit and evaluate predictive benchmark models.
 
 source("scripts/functions.R")
 

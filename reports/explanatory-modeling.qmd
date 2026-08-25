@@ -1,0 +1,239 @@
+---
+title: "Maize-yield explanatory-modeling report"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This report presents the project's causal question, identification assessment,
+regression estimates, diagnostics, and bounded conclusion. The models quantify
+precipitation-yield associations under stated specifications. The available
+national observational data do not identify the proposed causal effect.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(here)
+library(knitr)
+library(readr)
+
+read_result <- function(file_name) {
+  path <- here("results", "tables", file_name)
+  if (!file.exists(path)) {
+    stop(
+      "Missing explanatory result: ", path,
+      ". Run Rscript scripts/explain-maize-yield.R first."
+    )
+  }
+  read_csv(path, show_col_types = FALSE)
+}
+
+support <- read_result("explanatory-exposure-support.csv")
+estimates <- read_result("explanatory-model-estimates.csv")
+diagnostics <- read_result("explanatory-model-diagnostics.csv")
+residual_dependence <- read_result(
+  "explanatory-residual-dependence.csv"
+)
+
+model_file <- here(
+  "results", "models", "explanatory-country-time-model.rds"
+)
+if (!file.exists(model_file)) {
+  stop("Run Rscript scripts/explain-maize-yield.R before rendering.")
+}
+country_time_model <- readRDS(model_file)
+```
+
+## Causal question and estimand
+
+The provisional question asks how national maize yield would differ under a
+100 mm increase in October-April country-area precipitation among the nine
+project countries from 1990 through 2022.
+
+The target contrast can be written as:
+
+$$
+E[Y(P + 100\text{ mm}) - Y(P)].
+$$
+
+This contrast is ambiguous because a seasonal total hides precipitation
+timing, intensity, and spatial distribution. The project records weather
+variation, not a controlled rainfall intervention.
+
+## Causal structure
+
+The tracked causal model uses this simplified diagram:
+
+```text
+seasonal weather ───► precipitation ───► maize yield
+       │                                      ▲
+       └──────────────────────────────────────┘
+
+country/time context ─► precipitation
+          │                    │
+          └───────────────────►yield
+
+irrigation, soils, inputs and management ────►yield
+```
+
+See `docs/causal-model.md` for the full variable inventory, arrow reasoning,
+adjustment strategy, and identification assessment.
+
+## Identification assessment
+
+| Requirement | Project judgment | Consequence |
+| --- | --- | --- |
+| Consistency | Doubtful | A 100 mm difference has multiple versions |
+| Conditional exchangeability | Not established | Changing weather and agricultural common causes are omitted |
+| Positivity | Partly assessable | Some within-country or period contrasts may extrapolate |
+| No interference | Uncertain | Regional weather, water, trade, and shocks connect units |
+| Measurement | Limited | National yield and country-area rainfall are imperfectly aligned |
+| Selection and transport | Limited target | Results do not generalize automatically |
+
+Country and year terms are available proxies. They are not treated as a
+sufficient causal adjustment set.
+
+## Exposure support
+
+The following table reports within-country precipitation support in units of
+100 mm:
+
+```{r}
+#| label: exposure-support
+support |>
+  filter(scope == "within_country") |>
+  select(
+    group_name,
+    n,
+    minimum_100mm,
+    q25_100mm,
+    median_100mm,
+    q75_100mm,
+    maximum_100mm,
+    range_100mm
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 2))) |>
+  kable()
+```
+
+Observed variation is necessary but does not prove conditional positivity.
+Country-period support contains as few as five observations and cannot justify
+arbitrary local contrasts.
+
+## Planned model sequence
+
+| Model | Terms beyond intercept | Intended statistical comparison |
+| --- | --- | --- |
+| `unadjusted` | Precipitation | Pooled linear association |
+| `country` | Precipitation and country indicators | Common within-country association |
+| `time` | Precipitation and common linear year | Association conditional on shared trend |
+| `country_time` | Precipitation, country, and year | Within-country association around shared trend |
+| `nonlinear_sensitivity` | Quadratic precipitation, country, and year | Functional-form sensitivity |
+
+## Model estimates
+
+```{r}
+#| label: model-estimates
+estimates |>
+  select(
+    model,
+    n,
+    estimate_t_per_ha_per_100mm,
+    standard_error,
+    confidence_low,
+    confidence_high,
+    r_squared,
+    adjusted_r_squared,
+    interpretation
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+Linear-model estimates represent modeled yield differences in tonnes per
+hectare per 100 mm. The nonlinear row reports the average modeled derivative
+at observed exposure values; the slope itself varies with precipitation.
+
+Intervals use default ordinary-linear-model assumptions. They do not represent
+uncertainty from unmeasured confounding, exposure ambiguity, measurement error,
+selection, interference, or arbitrary specification.
+
+## Numerical diagnostics
+
+```{r}
+#| label: model-diagnostics
+diagnostics |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+Cook's-distance thresholds identify observations for investigation, not
+automatic deletion. Residual-fitted correlations summarize selected patterns
+but do not replace visual inspection.
+
+## Country-and-time diagnostic plots
+
+```{r}
+#| label: fig-linear-diagnostics
+#| fig-cap: "Standard diagnostic plots for the country-and-time association model."
+#| fig-alt: "Four diagnostic plots showing residuals versus fitted values, a normal quantile comparison, residual scale and leverage for the country-and-time linear model."
+#| fig-width: 10
+#| fig-height: 8
+par(mfrow = c(2, 2))
+plot(country_time_model)
+par(mfrow = c(1, 1))
+```
+
+These plots assess functional form, residual behavior, and influence. They do
+not establish exchangeability, consistency, or causal direction.
+
+## Residual temporal dependence
+
+```{r}
+#| label: residual-dependence
+residual_dependence |>
+  filter(model == "country_time") |>
+  select(
+    project_country_name,
+    lag_one_pairs,
+    lag_one_residual_correlation
+  ) |>
+  mutate(
+    lag_one_residual_correlation =
+      round(lag_one_residual_correlation, 3)
+  ) |>
+  kable()
+```
+
+Lag-one residual correlation indicates remaining temporal structure. Default
+ordinary regression intervals assume an error structure that may not represent
+this dependence. Nine country clusters also limit simple asymptotic remedies.
+
+## Bounded conclusion
+
+```{r}
+#| label: bounded-conclusion
+#| results: asis
+conclusion_file <- here(
+  "results", "explanatory-modeling-conclusion.md"
+)
+if (!file.exists(conclusion_file)) {
+  stop("Run Rscript scripts/explain-maize-yield.R first.")
+}
+cat(paste(readLines(conclusion_file, warn = FALSE), collapse = "\n"))
+```
+
+## Reproducibility statement
+
+The causal question and assumptions are tracked separately from generated
+results. The script reads the validated integrated artifact, checks its grain
+and completeness, uses fixed model specifications and explicit units, and
+writes tables before the report renders them. Generated tables, model objects,
+the conclusion, diagnostic figures, and HTML are ignored because the tracked
+inputs, environment, script, causal model, and report source recreate them.
