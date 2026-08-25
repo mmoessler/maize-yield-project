@@ -36,6 +36,7 @@ The project introduces:
 - identifier crosswalks, satellite-informed precipitation integration, and join audits;
 - cleaning, filtering, reshaping, and unit conversion;
 - question-driven exploratory and communication visualization;
+- descriptive summaries of distributions, periods, associations, and temporal stability;
 - train/test splits for predictive evaluation;
 - simple baseline and linear regression models;
 - MAE and RMSE as prediction-error measures;
@@ -78,6 +79,7 @@ The main scripts are:
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
 | `scripts/visualize-maize-data.R` | Create the exploratory figure set, communication figure, and manifest |
+| `scripts/describe-maize-data.R` | Quantify distributions, period changes, associations, and evidence relevant to stationarity |
 | `scripts/model-maize-yield.R` | Fit models and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
 | `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
@@ -94,6 +96,7 @@ This repository keeps one implementation note per topic so students and contribu
 - [Data-preparation implementation](docs/data-preparation.md) — preparation contract, explicit transformations, audit evidence, and lineage.
 - [Data-acquisition-and-integration implementation](docs/data-acquisition-and-integration.md) — two-source acquisition, spatial and temporal alignment, crosswalks, join audits, and lineage.
 - [Data-visualization implementation](docs/data-visualization.md) — visual questions, encodings, figure contracts, output policy, and interpretation boundaries.
+- [Descriptive-data-analysis implementation](docs/descriptive-data-analysis.md) — summary contracts, period comparisons, association scopes, stationarity diagnostics, and the modeling handoff.
 
 Human-readable documentation for individual data artifacts is available under
 `docs/data/`:
@@ -126,6 +129,8 @@ analysis-ready country-year panel
         ├──► integrated derived dataset and join audit
         ├──► exploratory and communication figures
         │         └──► figure manifest and visualization report
+        ├──► descriptive summaries and stability evidence
+        │         └──► modeling handoff and descriptive report
         └──► model fitting and test-period evaluation
                          │
                          ▼
@@ -177,8 +182,9 @@ Rscript scripts/run-all.R
 2. `scripts/prepare-maize-data.R`
 3. `scripts/integrate-data.R`
 4. `scripts/visualize-maize-data.R`
-5. `scripts/model-maize-yield.R`
-6. render the validation, integration, visualization, and analysis reports
+5. `scripts/describe-maize-data.R`
+6. `scripts/model-maize-yield.R`
+7. render the validation, integration, visualization, descriptive-analysis, and modeling reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
 of the preceding stages to exist.
@@ -250,6 +256,13 @@ After a successful run, the principal outputs are:
 - `results/tables/data-preparation-audit.csv`
 - `results/tables/data-integration-audit.csv`
 - `results/tables/data-visualization-manifest.csv`
+- `results/tables/descriptive-coverage.csv`
+- `results/tables/maize-yield-summary.csv`
+- `results/tables/maize-yield-period-summary.csv`
+- `results/tables/precipitation-summary.csv`
+- `results/tables/yield-precipitation-association.csv`
+- `results/tables/stationarity-diagnostic.csv`
+- `results/descriptive-modeling-handoff.md`
 - `results/tables/maize-yield-predictions.csv`
 - `results/tables/model-performance.csv`
 - `results/models/country-model.rds`
@@ -261,6 +274,7 @@ After a successful run, the principal outputs are:
 - `reports/maize-yield-report.html`
 - `reports/data-integration.html`
 - `reports/data-visualization.html`
+- `reports/descriptive-data-analysis.html`
 
 Complete source downloads, derived datasets, analysis results, and rendered
 reports are excluded from version control because they are external or

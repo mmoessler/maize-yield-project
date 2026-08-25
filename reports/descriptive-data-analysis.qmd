@@ -1,0 +1,197 @@
+---
+title: "Maize-yield descriptive-data-analysis report"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This report presents the reproducible evidence created by
+`scripts/describe-maize-data.R`. It quantifies coverage, distributions, period
+differences, temporal dependence, and yield-precipitation association. The
+results prepare decisions for later models; they do not estimate causal
+effects or prove that a process is stationary.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(here)
+library(knitr)
+library(readr)
+
+read_result <- function(file_name) {
+  path <- here("results", "tables", file_name)
+  if (!file.exists(path)) {
+    stop(
+      "Missing descriptive result: ", path,
+      ". Run Rscript scripts/describe-maize-data.R first."
+    )
+  }
+  read_csv(path, show_col_types = FALSE)
+}
+
+coverage <- read_result("descriptive-coverage.csv")
+yield_summary <- read_result("maize-yield-summary.csv")
+yield_period <- read_result("maize-yield-period-summary.csv")
+precipitation <- read_result("precipitation-summary.csv")
+association <- read_result("yield-precipitation-association.csv")
+stationarity <- read_result("stationarity-diagnostic.csv")
+```
+
+## Scope and coverage
+
+One observation represents one selected country and year. Yield is a national
+FAOSTAT value, while growing-season precipitation is an October-April
+country-area CHIRPS estimate. Neither variable represents individual farms or
+within-country variation.
+
+```{r}
+#| label: coverage
+kable(coverage)
+```
+
+A `pass` confirms the expected 33 annual values from 1990 through 2022. It does
+not establish representativeness beyond the project countries or national
+grain.
+
+## Maize-yield distributions
+
+```{r}
+#| label: yield-summary
+yield_summary |>
+  select(
+    project_country_name,
+    n,
+    mean_t_per_ha,
+    median_t_per_ha,
+    sd_t_per_ha,
+    iqr_t_per_ha,
+    minimum_t_per_ha,
+    maximum_t_per_ha
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+Mean and median describe location; standard deviation, IQR, and range describe
+different aspects of dispersion. Interpret them with
+`figures/maize-yield-trends.png`: pooled or full-period statistics can conceal
+country trajectories and distribution shape.
+
+## Comparison across periods
+
+The predefined periods are `earlier_history` (1990–2005), `recent_training`
+(2006–2017), and `later_test` (2018–2022). They follow the modeling workflow
+rather than a contrast selected after examining results.
+
+```{r}
+#| label: yield-period-summary
+yield_period |>
+  select(
+    project_country_name,
+    analysis_period,
+    n,
+    mean_t_per_ha,
+    median_t_per_ha,
+    sd_t_per_ha,
+    iqr_t_per_ha
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+The later test period contains only five values per country. Its location and
+dispersion summaries are therefore sensitive to individual years. Period
+differences provide evidence about change, not proof for or against
+stationarity.
+
+## Growing-season precipitation
+
+```{r}
+#| label: precipitation-summary
+precipitation |>
+  select(
+    project_country_name,
+    analysis_period,
+    n,
+    mean_mm,
+    median_mm,
+    sd_mm,
+    iqr_mm
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 2))) |>
+  kable()
+```
+
+These summaries describe country-area seasonal estimates, not rainfall over
+maize-growing land. Spatial aggregation and the common October-April season
+limit agronomic interpretation.
+
+## Yield-precipitation association
+
+```{r}
+#| label: association-summary
+association |>
+  filter(scope != "within_country_period") |>
+  mutate(
+    covariance_mm_t_per_ha = round(covariance_mm_t_per_ha, 3),
+    pearson_correlation = round(pearson_correlation, 3)
+  ) |>
+  kable()
+```
+
+Covariance retains both variables' units. Pearson correlation standardizes
+linear association. Pooled, within-country, and within-period estimates answer
+different questions and can differ because of aggregation, country levels,
+trends, and omitted factors. None is a causal effect.
+
+## Evidence relevant to stationarity
+
+```{r}
+#| label: stationarity-diagnostic
+stationarity |>
+  select(
+    project_country_name,
+    n__recent_training,
+    n__later_test,
+    mean_change_t_per_ha,
+    standardized_mean_change,
+    sd_ratio,
+    lag_one_pairs,
+    lag_one_yield_correlation
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  kable()
+```
+
+The table compares mean and standard deviation between recent training and
+later test periods and reports full-series lag-one yield correlation. Review
+it with the complete time-series plots and all period summaries. A large
+change or correlation is a prompt for investigation; a small value does not
+certify stationarity. Formal tests, if added, require their own hypotheses,
+trend and lag specifications, and limitations.
+
+## Modeling handoff
+
+```{r}
+#| label: modeling-handoff
+#| results: asis
+handoff_file <- here("results", "descriptive-modeling-handoff.md")
+if (!file.exists(handoff_file)) {
+  stop("Run Rscript scripts/describe-maize-data.R first.")
+}
+cat(paste(readLines(handoff_file, warn = FALSE), collapse = "\n"))
+```
+
+## Reproducibility statement
+
+The report consumes generated tables rather than recalculating hidden variants
+of the analysis. The script uses the validated integrated artifact,
+project-relative paths, fixed period definitions, explicit denominators, and
+the package versions recorded in `renv.lock`. Generated tables, the handoff,
+and rendered HTML are ignored because they can be recreated.
