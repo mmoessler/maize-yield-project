@@ -4,13 +4,13 @@ This repository contains a small, instructional data science project for the **I
 certificate.
 
 The project uses maize production data to demonstrate a complete and reproducible analysis workflow: acquiring data, preparing tidy analytical
-datasets, integrating satellite-informed growing-season precipitation, exploring trends, fitting simple models, evaluating predictions, and communicating results in reports. A public agricultural expenditure input is also prepared for the planned revision of the explanatory analysis. The project is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
+datasets, integrating satellite-informed growing-season precipitation, exploring trends, fitting explanatory and predictive models, and communicating results in reports. Public agricultural expenditure provides the focal exposure for the explanatory analysis. The project is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
 
 ## Research question
 
 How have maize yields changed across selected Southern African countries, what
-can the available data support about the causal role of growing-season
-precipitation, and how well do simple statistical models predict recently
+can the available data support about the causal role of public agricultural
+expenditure, and how well do simple statistical models predict recently
 observed yields?
 
 The analysis covers:
@@ -49,8 +49,10 @@ The project introduces:
 - dependency management with `renv` and portable execution with Docker.
 
 The explanatory models describe adjusted associations because the available
-data do not identify a causal precipitation effect. Separate predictive models
-provide simple benchmarks for held-out years.
+data do not identify a causal public-expenditure effect. Growing-season
+precipitation remains an environmental covariate rather than the focal
+exposure. Separate predictive models provide simple benchmarks for held-out
+years.
 
 ## Repository structure
 
@@ -89,7 +91,7 @@ The main scripts are:
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
 | `scripts/visualize-maize-data.R` | Create the exploratory figure set, communication figure, and manifest |
 | `scripts/describe-maize-data.R` | Quantify distributions, period changes, associations, and evidence relevant to stationarity |
-| `scripts/explain-maize-yield.R` | Assess a causal precipitation-yield question and estimate bounded adjusted associations |
+| `scripts/explain-maize-yield.R` | Assess a causal public-expenditure question and estimate bounded adjusted associations |
 | `scripts/model-maize-yield.R` | Fit predictive benchmarks and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
 | `scripts/create-faostat-government-expenditure-teaching-sample.R` | Create the fixed expenditure teaching extract from the bulk input |
@@ -125,38 +127,26 @@ Human-readable documentation for individual data artifacts is available under
 ## Analysis workflow
 
 ```text
-FAOSTAT bulk data
-        │
-        ▼
-acquisition, validation and preparation
-        │
-        ├──► metadata and validation evidence
-        │
-        ▼ prepare with a stated grain and mappings
-        ├──► preparation dictionary and audit
-        │
-        ▼
-analysis-ready country-year panel
-        │
-        ├──── CHIRPS October-April precipitation
-        │              │
-        │              ▼
-        ├──► integrated derived dataset and join audit
-        ├──► exploratory and communication figures
-        │         └──► figure manifest and visualization report
-        ├──► descriptive summaries and stability evidence
-        │         └──► modeling handoff and descriptive report
-        ├──► causal design and explanatory association models
-        │         └──► identification assessment and bounded conclusion
-        └──► prediction contract and training-only benchmarks
-                  └──► held-out errors, diagnostics and bounded conclusion
-                                      │
-                                      ▼
-                                 Quarto reports
+FAOSTAT maize data ─► validated maize panel ─┐
+                                             ├─► yield + precipitation panel
+CHIRPS precipitation ────────────────────────┘              │
+                                                           ├─► visualization
+                                                           ├─► description
+                                                           └─► prediction
+
+FAOSTAT expenditure ─► prepared expenditure panel ─┐
+                                                    ├─► lagged explanatory sample
+yield + precipitation panel ────────────────────────┘              │
+                                                                  ▼
+                                                  causal design, models,
+                                                  diagnostics and conclusion
+
+Each preparation and integration boundary writes metadata or audit evidence;
+the analysis stages feed reproducible Quarto reports.
 ```
 
-In parallel, the planned explanatory-analysis revision adds a separate input
-path:
+The explanatory-analysis exposure follows a separate preparation path before
+joining the maize outcome inside the analysis script:
 
 ```text
 FAOSTAT Government Expenditure bulk data
@@ -166,6 +156,9 @@ fixed, tracked expenditure teaching sample
         │
         ▼ verify identity, coverage, values, flags, and government level
 unbalanced public agricultural expenditure panel
+        │
+        ▼ one-year lag and audited match to maize yield
+explanatory-analysis sample
 ```
 
 The preparation script supports the normalized FAOSTAT schema. It selects maize yield, production, and harvested area; reshapes the measures into one row
@@ -321,10 +314,11 @@ After a successful run, the principal outputs are:
 - `results/tables/stationarity-diagnostic.csv`
 - `results/descriptive-modeling-handoff.md`
 - `results/tables/explanatory-exposure-support.csv`
+- `results/tables/explanatory-analysis-sample-audit.csv`
 - `results/tables/explanatory-model-estimates.csv`
 - `results/tables/explanatory-model-diagnostics.csv`
 - `results/tables/explanatory-residual-dependence.csv`
-- `results/models/explanatory-country-time-model.rds`
+- `results/models/explanatory-country-year-weather-model.rds`
 - `results/explanatory-modeling-conclusion.md`
 - `results/tables/predictive-split-audit.csv`
 - `results/tables/maize-yield-predictions.csv`

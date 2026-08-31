@@ -1,138 +1,159 @@
-# Causal model for precipitation and maize yield
+# Causal model for public agricultural expenditure and maize yield
 
 ## Purpose
 
 This document records the causal question, estimand, assumptions, and
-identification judgment used by the project's Explanatory Modeling stage. It
+identification judgment used by the project's Explanatory Analysis stage. It
 is written before interpreting regression estimates so that statistical
 results cannot silently redefine the scientific question.
 
 ## Causal question
 
-> Among the nine selected countries from 1990 through 2022, how would national
-> maize yield differ if October-April precipitation were 100 mm higher than the
-> reference exposure, all else represented according to the causal model?
+> Among the observed project country-years, how would subsequent national
+> maize yield differ if the prior-year share of government expenditure
+> allocated to agriculture were one percentage point higher?
 
-This is a provisional question. The observed exposure is natural country-area
-weather variation, not a controlled intervention.
+The expenditure share is a broad policy-related exposure. It is not a
+randomized treatment, a particular agricultural programme, or expenditure on
+maize alone.
 
 ## Target estimand
 
 | Element | Definition |
 | --- | --- |
-| Target population | Country-years for the nine project countries, 1990–2022 |
+| Target population | Observed project country-years with lagged expenditure and maize-yield data |
 | Unit | One country-year |
-| Exposure | October-April country-area CHIRPS precipitation total |
-| Contrast | 100 mm higher versus the reference exposure |
-| Outcome | National FAOSTAT maize yield in tonnes per hectare |
-| Time zero | Start of the October-April season |
-| Follow-up | Yield reported for the corresponding ending year |
-| Estimand | Average difference in potential national yield under the two exposure conditions |
+| Exposure | Prior-year agriculture share of government expenditure |
+| Contrast | One percentage point higher versus the reference exposure |
+| Outcome | Subsequent national FAOSTAT maize yield in tonnes per hectare |
+| Exposure time | Calendar year `t - 1` |
+| Follow-up | Maize yield in calendar year `t` |
+| Provisional estimand | Average difference in potential subsequent yield under the two expenditure-share conditions |
 
 In potential-outcomes notation, the provisional target is:
 
 ```text
-E[Y(P + 100 mm) - Y(P)]
+E[Y(G + 1 percentage point) - Y(G)]
 ```
 
-The estimand is difficult to interpret because an additional 100 mm can differ
-in timing, intensity, spatial location, and mechanism. A seasonal total does
-not define one unique treatment version.
+The intervention is not fully defined. The same expenditure share can
+represent different absolute budgets, sectors, programmes, implementation
+quality, and government levels. The analysis therefore assesses whether the
+observed data support this causal interpretation before estimating models.
+
+## Temporal alignment
+
+The implemented analysis links expenditure in `t - 1` to yield in `t`. The
+one-year lag ensures that the recorded exposure precedes the outcome, but it
+does not eliminate reverse causality: spending in `t - 1` may respond to yields
+and agricultural conditions in earlier years.
+
+The annual expenditure share is not a timestamped intervention. The maize
+growing season begins in October of `t - 1`, so expenditure reporting and early
+crop development can overlap within the same calendar year. The lag is a
+transparent teaching convention, not proof of precise treatment timing.
+
+The matched sample has 172 rows. Outcomes cover 2002–2022, while Zimbabwe
+contributes only four exposure observations and corresponding outcomes. The
+target population is therefore the observed unbalanced sample, not all nine
+countries uniformly throughout the period.
 
 ## Causal diagram
 
-The simplified diagram used for teaching is:
+The simplified teaching diagram is:
 
 ```text
-seasonal weather ───► precipitation ───► maize yield
-       │                                      ▲
-       └──────────────────────────────────────┘
-
-country/time context ─► precipitation
-          │                    │
-          └───────────────────►yield
-
-irrigation, soils, inputs and management ────►yield
+prior agricultural conditions ─► expenditure share ─► productive capacity ─► maize yield
+             │                         ▲                                      ▲
+             └─────────────────────────┼──────────────────────────────────────┤
+                                       │                                      │
+politics, fiscal capacity and crises ──┘                                      │
+                                                                              │
+weather and precipitation ────────────────────────────────────────────────────┘
 ```
 
-The intended direct path is from precipitation to maize yield. Backdoor paths
-can arise through broader weather and country-time context. The broad nodes
-are conceptual summaries, not claims that country indicators and a linear year
-term measure every component.
+The intended path runs from expenditure orientation through productive
+capacity to yield. Backdoor paths arise because prior agricultural conditions,
+fiscal capacity, political priorities, crises, and other country-time
+conditions can affect both expenditure and yield.
 
 ## Variable inventory
 
 | Concept | Plausible role | Timing | Project representation | Limitation |
 | --- | --- | --- | --- | --- |
-| Seasonal precipitation | Exposure | During season | CHIRPS country-area total | Timing, intensity, and crop-area exposure hidden |
-| Maize yield | Outcome | End of season/year | FAOSTAT national yield | National aggregation and reporting error |
-| Temperature and weather systems | Common causes | Before/during season | Unmeasured | Important time-varying confounding |
-| Country context | Proxy for stable common causes | Before exposure | Country indicator | Does not measure changing conditions |
-| Calendar time | Proxy for shared change | Before/indexing exposure | Centered linear year | One common trend is restrictive |
-| Irrigation and water access | Confounder, modifier, or mediator depending on timing | Before/during season | Unmeasured | Role cannot be resolved from current data |
-| Soils and crop location | Common cause or modifier | Predominantly pre-exposure | Unmeasured | Country-area rainfall may miss maize land |
-| Inputs, varieties, and management | Outcome causes and possible time-varying common causes | Before/during season | Unmeasured | Likely related to country and time |
-| Pests and disease | Outcome cause or mediator | During season | Unmeasured | Can respond to weather |
-| Policy, markets, conflict, and reporting | Context and selection causes | Across period | Largely unmeasured | May affect production and recorded values |
+| Agriculture expenditure share | Exposure | Year before outcome | FAOSTAT percentage | Broad category; content and effectiveness hidden |
+| Maize yield | Outcome | Following year | FAOSTAT national yield | National aggregation and reporting error |
+| Precipitation | Outcome cause and possible policy-response cause | Growing season and prior periods | CHIRPS country-area total for outcome year | Not crop-area weighted; one season cannot represent prior policy response |
+| Country context | Proxy for stable common causes | Before exposure | Country indicators | Does not measure changing conditions |
+| Calendar year | Proxy for common shocks and changes | Across period | Outcome-year indicators | Does not capture country-specific shocks |
+| Prior yield and agricultural conditions | Confounders and policy triggers | Before exposure | Not included in the core model | Dynamic adjustment requires a separate estimand and stronger assumptions |
+| Fiscal capacity and budget constraints | Common causes | Before exposure | Unmeasured | Expenditure share can change without higher absolute spending |
+| Politics, crises, and food prices | Common causes | Before/around exposure | Largely unmeasured | Can trigger spending and affect production |
+| Research, extension, infrastructure, and input support | Mediating mechanisms | After expenditure decisions | Unmeasured | Adjusting for them would remove part of a total effect |
+| Government level | Measurement context | At exposure measurement | Retained category | Changes can create comparability breaks |
 
-Variables should not be added as controls solely because they are available.
-Their causal role and timing determine whether adjustment blocks bias, removes
-part of an effect, or opens a collider path.
+Variable roles depend on timing and the estimand. Variables should not be
+added as controls merely because they are available.
 
 ## Identification assessment
 
 | Requirement | Evidence | Judgment | Consequence |
 | --- | --- | --- | --- |
-| Consistency | Equal totals can have different timing, intensity, and location | Doubtful | The 100 mm contrast has multiple versions |
-| Conditional exchangeability | Country and year are observed; key weather and agricultural causes are not | Not established | Adjusted estimates may remain confounded |
-| Positivity | Each country has 33 years, but precipitation ranges differ | Partly assessable | Inspect support; some contrasts may extrapolate |
-| No interference | Countries share weather systems, water, trade, and shocks | Uncertain | Country-years may not be isolated units |
-| Measurement validity | National yield is paired with country-area precipitation | Limited | Exposure and outcome are imperfectly aligned |
-| Selection and transport | Nine countries with complete teaching snapshots | Limited target | Do not generalize automatically |
+| Consistency | Equal shares can fund different activities at different government levels | Doubtful | The one-point contrast has heterogeneous versions |
+| Conditional exchangeability | Country, year, and outcome-year precipitation are observed; major policy and economic causes are not | Not established | Adjusted estimates may remain confounded |
+| Positivity | Expenditure ranges differ substantially and Zimbabwe has four observations | Limited | Some comparisons depend on extrapolation or a few countries |
+| No interference | Countries share markets, aid, policies, and regional shocks | Uncertain | Country-years may not be isolated units |
+| Measurement validity | FAOSTAT reports estimated shares at the highest available government level | Limited | Level changes and broad categories affect comparability |
+| Selection and transport | Only observed country-years enter the lagged sample | Limited target | Do not generalize to missing years or other countries automatically |
 
 ## Adjustment strategy
 
-The analysis compares:
+The planned sequence compares:
 
-1. an unadjusted precipitation association;
-2. precipitation with country indicators;
-3. precipitation with a common linear time trend;
-4. precipitation with country indicators and time; and
-5. a nonlinear precipitation sensitivity model with country and time.
+1. an unadjusted pooled expenditure-share association;
+2. the association with country indicators;
+3. the association with country and outcome-year indicators;
+4. the association with country and outcome-year indicators plus
+   growing-season precipitation; and
+5. a quadratic expenditure sensitivity model with the same main adjustments.
 
-Country and time terms are available proxies used to expose specification
-sensitivity. They are not treated as a sufficient causal adjustment set.
+Country and year indicators are proxies for stable country characteristics
+and shared yearly shocks. Precipitation represents an important outcome cause.
+These variables do not form a demonstrably sufficient adjustment set.
 
 ## Identification judgment
 
-The current national observational dataset does **not** identify the proposed
-causal effect credibly. In particular:
+The current national observational data do **not** identify the proposed
+causal policy effect credibly. In particular:
 
-- the exposure contrast is not a unique intervention;
-- important time-varying common causes are unmeasured;
-- national and country-area aggregation weakens exposure-outcome alignment;
-- temporal and regional dependence challenge default uncertainty assumptions;
-- continuous-exposure support is limited within some country-period contexts.
+- expenditure can respond to previous agricultural performance;
+- the broad exposure has heterogeneous versions and unknown implementation;
+- important time-varying political, fiscal, market, and agricultural causes
+  are unmeasured;
+- reporting at changing government levels weakens comparability;
+- the panel is short and unbalanced; and
+- repeated country observations challenge default model uncertainty.
 
-The regression results are therefore reported as adjusted associations. The
-causal analysis remains useful because it documents why causal language is not
-supported and which evidence would be needed to strengthen it.
+The fitted coefficients are therefore reported as adjusted associations. The
+causal workflow remains useful because it makes the desired question,
+necessary assumptions, and unsupported interpretations explicit.
 
 ## Evidence needed for stronger inference
 
 Useful additions include:
 
-- crop-area or field-level precipitation aligned to maize phenology;
-- temperature, soil moisture, extreme-rainfall, and dry-spell measures;
-- irrigation, inputs, varieties, management, and planted-area information;
-- subnational outcomes and stable reporting definitions;
-- an explicit intervention or defensible natural experiment;
-- a larger panel supporting richer time and dependence structures; and
-- sensitivity analyses calibrated to plausible unmeasured confounding.
+- expenditure amounts and composition by programme and function;
+- stable and comparable government-level coverage;
+- policy eligibility, implementation intensity, and timing;
+- prior outcomes, fiscal capacity, food prices, conflict, and other policy
+  triggers;
+- longer and more complete country coverage;
+- subnational outcomes where expenditure varies subnationally;
+- a specific policy intervention or defensible natural experiment; and
+- sensitivity analysis for dynamic and unmeasured confounding.
 
 ## Maintenance rule
 
-Revise this document before changing the causal adjustment strategy. If the
-exposure, outcome, target population, or available measurements change, review
-the estimand, every arrow, the identification assumptions, and the conclusion
-before refitting models.
+Revise this document before changing the exposure lag, estimand, adjustment
+strategy, or sample. A statistically convenient model must not determine the
+causal question after results are known.

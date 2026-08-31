@@ -1,5 +1,5 @@
 ---
-title: "Maize-yield explanatory-modeling report"
+title: "Maize-yield explanatory-analysis report"
 format:
   html:
     toc: true
@@ -13,8 +13,9 @@ execute:
 
 This report presents the project's causal question, identification assessment,
 regression estimates, diagnostics, and bounded conclusion. The models quantify
-precipitation-yield associations under stated specifications. The available
-national observational data do not identify the proposed causal effect.
+associations between prior-year public agricultural expenditure orientation
+and subsequent national maize yield. The available observational data do not
+identify a causal policy effect.
 
 ```{r}
 #| label: setup
@@ -34,6 +35,7 @@ read_result <- function(file_name) {
   read_csv(path, show_col_types = FALSE)
 }
 
+sample_audit <- read_result("explanatory-analysis-sample-audit.csv")
 support <- read_result("explanatory-exposure-support.csv")
 estimates <- read_result("explanatory-model-estimates.csv")
 diagnostics <- read_result("explanatory-model-diagnostics.csv")
@@ -42,67 +44,85 @@ residual_dependence <- read_result(
 )
 
 model_file <- here(
-  "results", "models", "explanatory-country-time-model.rds"
+  "results", "models",
+  "explanatory-country-year-weather-model.rds"
 )
 if (!file.exists(model_file)) {
   stop("Run Rscript scripts/explain-maize-yield.R before rendering.")
 }
-country_time_model <- readRDS(model_file)
+main_model <- readRDS(model_file)
 ```
 
 ## Causal question and estimand
 
-The provisional question asks how national maize yield would differ under a
-100 mm increase in October-April country-area precipitation among the nine
-project countries from 1990 through 2022.
+The provisional question asks how subsequent national maize yield would differ
+if the prior-year agriculture share of government expenditure were one
+percentage point higher among the observed project country-years.
 
 The target contrast can be written as:
 
 $$
-E[Y(P + 100\text{ mm}) - Y(P)].
+E[Y(G + 1\text{ percentage point}) - Y(G)].
 $$
 
-This contrast is ambiguous because a seasonal total hides precipitation
-timing, intensity, and spatial distribution. The project records weather
-variation, not a controlled rainfall intervention.
+The exposure is broad: equal shares can represent different absolute budgets,
+sectors, programmes, government levels, and implementation quality. It is not
+a randomized treatment or maize-specific expenditure.
+
+## Temporal alignment and sample
+
+Expenditure in year $t-1$ is linked to maize yield in year $t$. This makes
+temporal order explicit but does not remove policy-response bias.
+The annual expenditure period can overlap the October–April growing season,
+so the lag is an alignment convention rather than a precisely timed policy
+intervention.
+
+```{r}
+#| label: sample-audit
+sample_audit |>
+  kable()
+```
+
+The matched analysis contains 172 observations. Eight countries cover outcome
+years 2002–2022, while Zimbabwe contributes four observations because its
+expenditure series is available only for 2009–2012. Missing exposure years are
+not imputed or treated as zero.
 
 ## Causal structure
 
 The tracked causal model uses this simplified diagram:
 
 ```text
-seasonal weather ───► precipitation ───► maize yield
-       │                                      ▲
-       └──────────────────────────────────────┘
-
-country/time context ─► precipitation
-          │                    │
-          └───────────────────►yield
-
-irrigation, soils, inputs and management ────►yield
+prior agricultural conditions ─► expenditure share ─► productive capacity ─► maize yield
+             │                         ▲                                      ▲
+             └─────────────────────────┼──────────────────────────────────────┤
+                                       │                                      │
+politics, fiscal capacity and crises ──┘                                      │
+                                                                              │
+weather and precipitation ────────────────────────────────────────────────────┘
 ```
 
-See `docs/causal-model.md` for the full variable inventory, arrow reasoning,
-adjustment strategy, and identification assessment.
+See `docs/causal-model.md` for variable roles, timing, the full identification
+assessment, and the planned adjustment strategy.
 
 ## Identification assessment
 
 | Requirement | Project judgment | Consequence |
 | --- | --- | --- |
-| Consistency | Doubtful | A 100 mm difference has multiple versions |
-| Conditional exchangeability | Not established | Changing weather and agricultural common causes are omitted |
-| Positivity | Partly assessable | Some within-country or period contrasts may extrapolate |
-| No interference | Uncertain | Regional weather, water, trade, and shocks connect units |
-| Measurement | Limited | National yield and country-area rainfall are imperfectly aligned |
-| Selection and transport | Limited target | Results do not generalize automatically |
+| Consistency | Doubtful | A one-point increase has heterogeneous spending versions |
+| Conditional exchangeability | Not established | Policy response and changing common causes remain |
+| Positivity | Limited | Country ranges differ and Zimbabwe contributes four observations |
+| No interference | Uncertain | Markets, aid, and regional shocks connect countries |
+| Measurement validity | Limited | Broad sectors and government-level changes affect comparability |
+| Selection and transport | Limited target | Results apply only to observed matched country-years |
 
-Country and year terms are available proxies. They are not treated as a
-sufficient causal adjustment set.
+Country and year indicators plus precipitation do not establish a sufficient
+causal adjustment set.
 
 ## Exposure support
 
-The following table reports within-country precipitation support in units of
-100 mm:
+The table reports within-country support for the prior-year agriculture share
+of government expenditure.
 
 ```{r}
 #| label: exposure-support
@@ -111,58 +131,65 @@ support |>
   select(
     group_name,
     n,
-    minimum_100mm,
-    q25_100mm,
-    median_100mm,
-    q75_100mm,
-    maximum_100mm,
-    range_100mm
+    first_expenditure_year,
+    last_expenditure_year,
+    minimum_percent,
+    median_percent,
+    maximum_percent,
+    range_percent,
+    government_levels
   ) |>
-  mutate(across(where(is.numeric), ~ round(.x, 2))) |>
+  mutate(across(
+    c(minimum_percent, median_percent, maximum_percent, range_percent),
+    ~ round(.x, 2)
+  )) |>
   kable()
 ```
 
-Observed variation is necessary but does not prove conditional positivity.
-Country-period support contains as few as five observations and cannot justify
-arbitrary local contrasts.
+Observed support does not prove conditional positivity. Government-level
+counts above one also identify possible measurement breaks rather than policy
+variation alone.
 
-## Planned model sequence
+## Planned specifications
 
-| Model | Terms beyond intercept | Intended statistical comparison |
+| Model | Added terms | Purpose |
 | --- | --- | --- |
-| `unadjusted` | Precipitation | Pooled linear association |
-| `country` | Precipitation and country indicators | Common within-country association |
-| `time` | Precipitation and common linear year | Association conditional on shared trend |
-| `country_time` | Precipitation, country, and year | Within-country association around shared trend |
-| `nonlinear_sensitivity` | Quadratic precipitation, country, and year | Functional-form sensitivity |
+| `unadjusted` | None | Pooled association |
+| `country` | Country indicators | Account for stable country differences |
+| `country_year` | Country and outcome-year indicators | Add common yearly shocks |
+| `country_year_weather` | Country, year, and precipitation | Main adjusted association |
+| `nonlinear_sensitivity` | Quadratic exposure, country, year, precipitation | Functional-form sensitivity |
 
-## Model estimates
+Outcome-year precipitation is an environmental cause of yield, not the focal
+exposure. Adjusting for it does not resolve omitted fiscal, political, market,
+or agricultural causes of expenditure and yield.
+
+## Estimates
 
 ```{r}
 #| label: model-estimates
 estimates |>
-  select(
+  transmute(
     model,
     n,
-    estimate_t_per_ha_per_100mm,
-    standard_error,
-    confidence_low,
-    confidence_high,
-    r_squared,
-    adjusted_r_squared,
+    estimate = round(
+      estimate_t_per_ha_per_percentage_point, 3
+    ),
+    confidence_low = round(confidence_low, 3),
+    confidence_high = round(confidence_high, 3),
+    adjusted_r_squared = round(adjusted_r_squared, 3),
     interpretation
   ) |>
-  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
   kable()
 ```
 
-Linear-model estimates represent modeled yield differences in tonnes per
-hectare per 100 mm. The nonlinear row reports the average modeled derivative
-at observed exposure values; the slope itself varies with precipitation.
+Linear-model estimates represent the modeled change in tonnes per hectare per
+one-percentage-point increase in prior-year expenditure share. The nonlinear
+sensitivity row reports an average modeled derivative over observed exposure
+values.
 
-Intervals use default ordinary-linear-model assumptions. They do not represent
-uncertainty from unmeasured confounding, exposure ambiguity, measurement error,
-selection, interference, or arbitrary specification.
+Differences across specifications are substantive sensitivity evidence. They
+are not a search for the model producing the preferred sign or p-value.
 
 ## Numerical diagnostics
 
@@ -173,20 +200,16 @@ diagnostics |>
   kable()
 ```
 
-Cook's-distance thresholds identify observations for investigation, not
-automatic deletion. Residual-fitted correlations summarize selected patterns
-but do not replace visual inspection.
-
-## Country-and-time diagnostic plots
+## Main-model diagnostic plots
 
 ```{r}
 #| label: fig-linear-diagnostics
-#| fig-cap: "Standard diagnostic plots for the country-and-time association model."
-#| fig-alt: "Four diagnostic plots showing residuals versus fitted values, a normal quantile comparison, residual scale and leverage for the country-and-time linear model."
+#| fig-cap: "Standard diagnostic plots for the country-year-weather association model."
+#| fig-alt: "Four diagnostic plots showing residuals versus fitted values, a normal quantile comparison, residual scale and leverage for the main linear model."
 #| fig-width: 10
 #| fig-height: 8
 par(mfrow = c(2, 2))
-plot(country_time_model)
+plot(main_model)
 par(mfrow = c(1, 1))
 ```
 
@@ -198,7 +221,7 @@ not establish exchangeability, consistency, or causal direction.
 ```{r}
 #| label: residual-dependence
 residual_dependence |>
-  filter(model == "country_time") |>
+  filter(model == "country_year_weather") |>
   select(
     project_country_name,
     lag_one_pairs,
@@ -211,9 +234,9 @@ residual_dependence |>
   kable()
 ```
 
-Lag-one residual correlation indicates remaining temporal structure. Default
-ordinary regression intervals assume an error structure that may not represent
-this dependence. Nine country clusters also limit simple asymptotic remedies.
+Lag-one residual correlation indicates remaining temporal structure. Ordinary
+regression intervals assume an error structure that may not represent this
+dependence. Only nine countries also limit simple cluster-based remedies.
 
 ## Bounded conclusion
 
@@ -232,8 +255,8 @@ cat(paste(readLines(conclusion_file, warn = FALSE), collapse = "\n"))
 ## Reproducibility statement
 
 The causal question and assumptions are tracked separately from generated
-results. The script reads the validated integrated artifact, checks its grain
-and completeness, uses fixed model specifications and explicit units, and
-writes tables before the report renders them. Generated tables, model objects,
-the conclusion, diagnostic figures, and HTML are ignored because the tracked
+results. The script checks both prepared inputs, constructs the lag explicitly,
+audits matching and selection, uses prespecified models, and writes result
+tables before this report renders them. Generated tables, model objects,
+conclusions, diagnostic figures, and HTML are ignored because the tracked
 inputs, environment, script, causal model, and report source recreate them.

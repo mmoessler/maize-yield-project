@@ -10,8 +10,9 @@ One row represents one observed country-year. Its candidate key is:
 country + year
 ```
 
-The table is intended for later integration with the maize-yield panel and for
-teaching explanatory analysis. It is generated and ignored by Git.
+The table is used by `scripts/explain-maize-yield.R`, which shifts expenditure
+forward by one year and matches it to the subsequent maize-yield outcome. It is
+generated and ignored by Git.
 
 ## Construction
 
@@ -47,8 +48,8 @@ expenditure on maize yield. Its values are not randomized, may respond to past
 agricultural outcomes, and represent heterogeneous expenditure packages.
 Government-level changes can also create measurement breaks.
 
-Before modeling, the later explanatory-analysis stage must define an exposure
-lag, inspect within-country support and missingness, record a causal diagram,
-and determine which comparisons are defensible. Any initial regression result
-should be described as an adjusted association unless a credible identification
-strategy is established.
+The explanatory-analysis stage uses a prespecified one-year lag, inspects
+within-country support and missingness, records a causal diagram, and assesses
+which comparisons are defensible. Its regression results are described as
+adjusted associations because the current data do not establish a credible
+identification strategy.
