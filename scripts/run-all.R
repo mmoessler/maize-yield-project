@@ -9,6 +9,7 @@ check_required_packages()
 scripts <- c(
   "scripts/validate-data.R",
   "scripts/prepare-maize-data.R",
+  "scripts/prepare-public-agricultural-expenditure-data.R",
   "scripts/integrate-data.R",
   "scripts/visualize-maize-data.R",
   "scripts/describe-maize-data.R",

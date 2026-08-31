@@ -17,6 +17,27 @@ artifacts:
     documentation: docs/data/faostat-maize-yield.md
     sensitivity: Aggregated national statistics; no personal or confidential data
 
+  - artifact_id: faostat_public_agricultural_expenditure_snapshot
+    artifact: data/input/faostat-public-agricultural-expenditure-sample.csv
+    source_id: faostat_ig
+    created: "2026-08-31"
+    retrieval: >-
+      Downloaded by scripts/acquire-faostat-government-expenditure-data.R and
+      reduced deterministically by
+      scripts/create-faostat-government-expenditure-teaching-sample.R to the
+      Agriculture share of Government Expenditure series for nine countries
+      and 2001-2022. Provider gaps are retained; Zimbabwe has observations for
+      2009-2012 only.
+    checksum_algorithm: SHA-256
+    checksum_sha256: c3f5c0e3e9b7f257f9e289a0f032aa6675f76d4060fca41007d54cee98669bb6
+    size_bytes: 25978
+    rows_excluding_header: 180
+    grain: One reporting area, indicator, calendar year, and unit per row
+    candidate_key: [area, item, element, year, unit]
+    dictionary: metadata/faostat-public-agricultural-expenditure-data-dictionary.csv
+    documentation: docs/data/faostat-public-agricultural-expenditure.md
+    sensitivity: Aggregated government statistics; no personal or confidential data
+
   - artifact_id: project_country_boundaries
     artifact: metadata/project-country-boundaries.geojson
     source_id: natural_earth_admin0_110m
@@ -88,6 +109,26 @@ derived_artifacts:
     dictionary: metadata/maize-yield-panel-data-dictionary.csv
     documentation: docs/data/maize-yield-panel.md
     audit: results/tables/data-preparation-audit.csv
+
+  - artifact_id: public_agricultural_expenditure_panel
+    artifact: data/derived/public-agricultural-expenditure-panel.csv
+    input_artifacts: [faostat_public_agricultural_expenditure_snapshot]
+    created_by: scripts/prepare-public-agricultural-expenditure-data.R
+    role: Analysis-ready unbalanced country-year public agricultural expenditure panel
+    grain: One observed selected country and calendar year per row
+    candidate_key: [country, year]
+    transformations:
+      - Verify source identity and select the documented indicator representation
+      - Rename provider columns to project-facing variable names
+      - Retain source flags and highest available government level
+      - Preserve provider gaps without imputation or zero replacement
+    information_loss: >-
+      The constant provider item, element, and unit columns are represented by
+      the prepared variable name and dictionary rather than repeated in every
+      output row.
+    dictionary: metadata/public-agricultural-expenditure-panel-data-dictionary.csv
+    documentation: docs/data/public-agricultural-expenditure-panel.md
+    audit: results/tables/public-agricultural-expenditure-preparation-audit.csv
 
   - artifact_id: maize_yield_with_precipitation
     artifact: data/derived/maize-yield-with-precipitation.csv

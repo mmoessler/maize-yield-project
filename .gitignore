@@ -11,6 +11,7 @@ data/source/
 data/input/*
 !data/input/faostat-maize-yield-sample.csv
 !data/input/chirps-growing-season-precipitation.csv
+!data/input/faostat-public-agricultural-expenditure-sample.csv
 data/derived/
 results/
 

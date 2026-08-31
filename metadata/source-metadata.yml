@@ -55,6 +55,44 @@ sources:
       - Country averages hide subnational rainfall and maize-growing-area differences.
       - ClimateSERV currently exposes CHIRPS v2; do not describe this snapshot as CHIRPS v3.
 
+  - source_id: faostat_ig
+    provider: Food and Agriculture Organization of the United Nations (FAO)
+    dataset: FAOSTAT Government Expenditure
+    dataset_code: IG
+    observation: Annual country-level government expenditure statistics
+    coverage:
+      geographic: Nine selected Southern African reporting areas
+      temporal: "Teaching extract: 2001-2022; coverage differs by country"
+      frequency: Annual
+    classifications:
+      item: "SDG 2.a.1: highest government level"
+      element: "SDG 2.a.1: Agriculture share of Government Expenditure"
+      represented_sector: Agriculture, forestry, fishing, and hunting
+    units:
+      Agriculture share of Government Expenditure: percent of total government expenditure
+    quality_flags:
+      reference: metadata/faostat-flag-code-list.csv
+      observed_in_snapshot: [E]
+      interpretation: >-
+        All values in the fixed teaching snapshot carry FAOSTAT's estimated
+        value flag. The flag is retained in the prepared panel.
+    missing_values: >-
+      An absent country-year is unavailable in the selected provider series and
+      must not be interpreted as zero.
+    references:
+      dataset: https://www.fao.org/faostat/en/#data/IG
+      catalog: https://data.fao.org/catalog/iso/b2d69af9-55f2-4fb7-8876-389fec38eede
+      indicator: https://www.fao.org/sustainable-development-goals-data-portal/data/indicators/2a1---agriculture-orientation-index-for-government-expenditures/
+      terms: https://www.fao.org/contact-us/terms/db-terms-of-use/en
+    license: CC BY 4.0, complemented by the FAO Statistical Database Terms of Use
+    revision_policy: Historical observations may be revised by FAOSTAT.
+    limitations:
+      - The share measures expenditure orientation rather than absolute spending or effectiveness.
+      - The represented sector is broader than maize and includes forestry, fishing, and hunting.
+      - Highest available government level differs between countries and can change over time.
+      - Zimbabwe has only four observations in the 2001-2022 teaching period.
+      - Public expenditure can respond to agricultural outcomes and is not an exogenous intervention.
+
   - source_id: natural_earth_admin0_110m
     provider: Natural Earth
     dataset: Admin 0 - Countries, version 5.1.1, 1:110 million

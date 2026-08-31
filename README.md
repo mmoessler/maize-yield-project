@@ -3,8 +3,8 @@
 This repository contains a small, instructional data science project for the **Introduction to Data Science** course in a Data Science and Food Systems
 certificate.
 
-The project uses maize production data to demonstrate a complete and reproducible analysis workflow: acquiring data, preparing a tidy analytical
-dataset, integrating satellite-informed growing-season precipitation, exploring trends, fitting simple models, evaluating predictions, and communicating results in reports. It is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
+The project uses maize production data to demonstrate a complete and reproducible analysis workflow: acquiring data, preparing tidy analytical
+datasets, integrating satellite-informed growing-season precipitation, exploring trends, fitting simple models, evaluating predictions, and communicating results in reports. A public agricultural expenditure input is also prepared for the planned revision of the explanatory analysis. The project is intended as a teaching example rather than a production forecasting system or a definitive analysis of maize production.
 
 ## Research question
 
@@ -80,16 +80,19 @@ The main scripts are:
 |---|---|
 | `scripts/setup.R` | Restore and verify the package environment |
 | `scripts/acquire-faostat-data.R` | Download and extract FAOSTAT data |
+| `scripts/acquire-faostat-government-expenditure-data.R` | Download and extract FAOSTAT Government Expenditure data |
 | `scripts/acquire-country-boundaries.R` | Recreate the project-country polygons from pinned Natural Earth data |
 | `scripts/acquire-chirps-data.R` | Use or deliberately refresh the CHIRPS precipitation snapshot |
 | `scripts/validate-data.R` | Validate the fixed teaching extract |
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
+| `scripts/prepare-public-agricultural-expenditure-data.R` | Create the unbalanced country-year agricultural expenditure panel |
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
 | `scripts/visualize-maize-data.R` | Create the exploratory figure set, communication figure, and manifest |
 | `scripts/describe-maize-data.R` | Quantify distributions, period changes, associations, and evidence relevant to stationarity |
 | `scripts/explain-maize-yield.R` | Assess a causal precipitation-yield question and estimate bounded adjusted associations |
 | `scripts/model-maize-yield.R` | Fit predictive benchmarks and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
+| `scripts/create-faostat-government-expenditure-teaching-sample.R` | Create the fixed expenditure teaching extract from the bulk input |
 | `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
 
@@ -113,6 +116,8 @@ Human-readable documentation for individual data artifacts is available under
 
 - [FAOSTAT maize-yield teaching data](docs/data/faostat-maize-yield.md)
 - [Prepared maize-yield panel](docs/data/maize-yield-panel.md)
+- [FAOSTAT public agricultural expenditure teaching data](docs/data/faostat-public-agricultural-expenditure.md)
+- [Prepared public agricultural expenditure panel](docs/data/public-agricultural-expenditure-panel.md)
 - [CHIRPS growing-season precipitation](docs/data/chirps-growing-season-precipitation.md)
 - [Project-country boundaries](docs/data/project-country-boundaries.md)
 - [Maize yield augmented with precipitation](docs/data/maize-yield-with-precipitation.md)
@@ -148,6 +153,19 @@ analysis-ready country-year panel
                                       │
                                       ▼
                                  Quarto reports
+```
+
+In parallel, the planned explanatory-analysis revision adds a separate input
+path:
+
+```text
+FAOSTAT Government Expenditure bulk data
+        │
+        ▼ select the agriculture expenditure share and teaching period
+fixed, tracked expenditure teaching sample
+        │
+        ▼ verify identity, coverage, values, flags, and government level
+unbalanced public agricultural expenditure panel
 ```
 
 The preparation script supports the normalized FAOSTAT schema. It selects maize yield, production, and harvested area; reshapes the measures into one row
@@ -199,12 +217,13 @@ Rscript scripts/run-all.R
 
 1. `scripts/validate-data.R`
 2. `scripts/prepare-maize-data.R`
-3. `scripts/integrate-data.R`
-4. `scripts/visualize-maize-data.R`
-5. `scripts/describe-maize-data.R`
-6. `scripts/explain-maize-yield.R`
-7. `scripts/model-maize-yield.R`
-8. render the validation, integration, visualization, descriptive-analysis,
+3. `scripts/prepare-public-agricultural-expenditure-data.R`
+4. `scripts/integrate-data.R`
+5. `scripts/visualize-maize-data.R`
+6. `scripts/describe-maize-data.R`
+7. `scripts/explain-maize-yield.R`
+8. `scripts/model-maize-yield.R`
+9. render the validation, integration, visualization, descriptive-analysis,
    explanatory-modeling, predictive-modeling, and overview reports
 
 Individual stages can also be run in this order. Each stage expects the outputs
@@ -240,6 +259,21 @@ These are maintenance commands, not learner prerequisites. A regenerated
 sample can differ when FAOSTAT revises historical data. Review it and update
 its metadata deliberately before replacing the tracked snapshot.
 
+The public agricultural expenditure input follows the same maintainer
+workflow. It selects the agriculture share of government expenditure rather
+than the composite Agriculture Orientation Index:
+
+```bash
+Rscript scripts/acquire-faostat-government-expenditure-data.R
+Rscript scripts/create-faostat-government-expenditure-teaching-sample.R
+```
+
+The tracked extract covers 2001–2022 but is intentionally unbalanced:
+Zimbabwe has observations only for 2009–2012. Do not impute or discard that
+limitation during acquisition. Review the refreshed sample, checksum,
+dictionaries, source metadata, provenance, flags, and government-level notes
+before committing a replacement.
+
 To render only the report after the processed outputs have been created:
 
 ```bash
@@ -273,8 +307,10 @@ See [Reproducible-environment implementation](docs/reproducible-environment.md) 
 After a successful run, the principal outputs are:
 
 - `data/derived/maize-yield-panel.csv`
+- `data/derived/public-agricultural-expenditure-panel.csv`
 - `data/derived/maize-yield-with-precipitation.csv`
 - `results/tables/data-preparation-audit.csv`
+- `results/tables/public-agricultural-expenditure-preparation-audit.csv`
 - `results/tables/data-integration-audit.csv`
 - `results/tables/data-visualization-manifest.csv`
 - `results/tables/descriptive-coverage.csv`
