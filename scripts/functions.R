@@ -27,6 +27,41 @@ artifact_registry_columns <- c(
   "last_change_detected_by"
 )
 
+# Keep the registry readable as a record of the teaching workflow. These
+# vectors, rather than alphabetical labels or execution time, define its order.
+artifact_topic_order <- c(
+  "data-management",
+  "data-integration",
+  "data-preparation",
+  "data-visualization",
+  "descriptive-analysis",
+  "explanatory-analysis",
+  "predictive-analysis",
+  "course-project"
+)
+
+artifact_producer_order <- c(
+  "manual",
+  "scripts/acquire-faostat-data.R",
+  "scripts/create-faostat-data-teaching-sample.R",
+  "scripts/validate-data.R",
+  "reports/data-validation.qmd",
+  "scripts/acquire-country-boundaries.R",
+  "scripts/acquire-chirps-data.R",
+  "scripts/integrate-data.R",
+  "reports/data-integration.qmd",
+  "scripts/prepare-maize-data.R",
+  "scripts/visualize-maize-data.R",
+  "reports/data-visualization.qmd",
+  "scripts/describe-maize-data.R",
+  "reports/descriptive-data-analysis.qmd",
+  "scripts/explain-maize-yield.R",
+  "reports/explanatory-modeling.qmd",
+  "scripts/model-maize-yield.R",
+  "reports/predictive-modeling.qmd",
+  "reports/maize-yield-report.qmd"
+)
+
 required_project_packages <- c(
   "digest",
   "dplyr",
@@ -190,6 +225,34 @@ read_artifact_registry <- function(
   registry[artifact_registry_columns]
 }
 
+order_artifact_registry <- function(registry) {
+  topic_rank <- match(registry$topic, artifact_topic_order)
+  producer_rank <- match(registry$producer_step, artifact_producer_order)
+
+  # Unknown or missing values follow the declared workflow. Their labels and
+  # artifact paths provide deterministic ordering until a rank is assigned.
+  topic_rank[is.na(topic_rank)] <- length(artifact_topic_order) + 1L
+  producer_rank[is.na(producer_rank)] <-
+    length(artifact_producer_order) + 1L
+  topic_label <- ifelse(is.na(registry$topic), "", registry$topic)
+  producer_label <- ifelse(
+    is.na(registry$producer_step),
+    "",
+    registry$producer_step
+  )
+
+  registry[
+    order(
+      topic_rank,
+      topic_label,
+      producer_rank,
+      producer_label,
+      registry$artifact
+    ),
+    artifact_registry_columns
+  ]
+}
+
 check_artifact_state <- function(
   paths,
   checked_by,
@@ -269,7 +332,7 @@ check_artifact_state <- function(
     )
   })
 
-  registry <- registry[order(registry$artifact), artifact_registry_columns]
+  registry <- order_artifact_registry(registry)
   registry_directory <- dirname(registry_file)
   if (!dir.exists(registry_directory)) {
     dir.create(registry_directory, recursive = TRUE)

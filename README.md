@@ -98,8 +98,9 @@ operation and checks its outputs again afterward. The shared helpers maintain
 `metadata/artifacts.csv`, a project-wide SHA-256 state registry. An unchanged
 rerun preserves the previous change timestamp. The registry also identifies
 the learning-module topic and producer step for generated artifacts; later
-input checks do not overwrite that origin. Reports retain the explanatory and
-interpretive information.
+input checks do not overwrite that origin. Its rows follow the declared topic
+and producer-step order of the analysis pipeline, with artifact paths breaking
+ties. Reports retain the explanatory and interpretive information.
 
 ## Further documentation
 

@@ -120,6 +120,13 @@ scientific validity. Reports provide the human-readable interpretation of
 outputs; source metadata, dictionaries, and provenance retain stable meanings,
 provider information, and expected identities.
 
+Rows are ordered by the declared topic sequence and then by the producer's
+position in the analysis pipeline. Artifact paths provide a stable tie-breaker
+for outputs from the same producer. The explicit order is defined in
+`scripts/functions.R`; unknown future topics and producers appear after known
+ones until they are added there. Thus, row order documents the intended
+workflow and does not depend on alphabetical script names or execution time.
+
 ## Run validation
 
 From the repository root:
