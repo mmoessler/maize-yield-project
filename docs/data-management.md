@@ -16,6 +16,7 @@ This document describes how the standalone `maize-yield-project` makes its teach
 | Project country crosswalk | `metadata/project-country-crosswalk.csv` | Maps stable project identifiers to source-specific country labels |
 | Source metadata | `metadata/source-metadata.yml` | Describes FAOSTAT, CHIRPS, and Natural Earth sources without duplicating artifact history |
 | Multi-artifact provenance | `metadata/provenance.yml` | Records exact snapshots, checksums, parameters, and derived artifacts |
+| Artifact-state registry | `metadata/artifacts.csv` | Records the currently observed SHA-256 state of workflow inputs and outputs |
 | Validation code | `scripts/validate-data.R` | Tests justified structural and semantic expectations |
 | Validation report | `reports/data-validation.qmd` | Presents evidence, findings, and unresolved questions |
 
@@ -93,6 +94,27 @@ The project keeps three complementary forms of documentation:
 
 The flag code list is separated into `metadata/faostat-flag-code-list.csv` so that both people and validation code can use the same allowed codes and meanings.
 
+## Artifact-state registry
+
+Every workflow step checks its direct inputs and any existing outputs before
+the operation. After writing its outputs, the step checks those artifacts
+again. The shared implementation in `scripts/functions.R` maintains one
+project-wide registry at `metadata/artifacts.csv`.
+
+Each registry row records:
+
+- the project-relative artifact path;
+- whether the artifact is present or missing;
+- its current SHA-256 checksum when present;
+- when and by which script it was last checked; and
+- when and by which script a change was last detected.
+
+The `last_changed_at` value is preserved when a repeated execution produces
+identical bytes. A changed checksum establishes a byte-level change, not its
+scientific validity. Reports provide the human-readable interpretation of
+outputs; source metadata, dictionaries, and provenance retain stable meanings,
+provider information, and expected identities.
+
 ## Run validation
 
 From the repository root:
@@ -138,6 +160,7 @@ must be justified separately.
 | Fixed teaching sample | Track | Small, licensed snapshot supports reliable offline teaching |
 | Fixed CHIRPS teaching snapshot | Track | Small, cited country-season summary supports reliable offline integration teaching |
 | Metadata and validation source | Track | Required to interpret and audit the data |
+| Artifact-state registry | Track | Makes changes in workflow inputs and outputs reviewable in Git |
 | Full FAOSTAT download | Ignore | Large, externally retrievable, and subject to revision |
 | Derived data and analysis results | Ignore | Recreated by project scripts |
 | Rendered HTML | Ignore | Recreated from Quarto source and generated results |

@@ -23,29 +23,40 @@ library(here)
 library(knitr)
 library(readr)
 
-manifest_file <- here(
-  "results", "tables", "data-visualization-manifest.csv"
-)
-if (!file.exists(manifest_file)) {
+registry_file <- here("metadata", "artifacts.csv")
+if (!file.exists(registry_file)) {
   stop("Run Rscript scripts/visualize-maize-data.R before rendering.")
 }
 
-manifest <- read_csv(manifest_file, show_col_types = FALSE)
-if (any(manifest$status != "pass")) {
-  stop("The visualization manifest contains a failed artifact status.")
-}
+registry <- read_csv(registry_file, show_col_types = FALSE)
+figure_state <- registry |>
+  filter(
+    artifact %in% c(
+      "figures/maize-yield-distribution.png",
+      "figures/maize-yield-trends.png",
+      "figures/growing-season-precipitation-trends.png",
+      "figures/yield-versus-precipitation.png",
+      "figures/maize-yield-communication.png"
+    )
+  )
 ```
 
-## Figure manifest
+## Figure artifact state
 
-The manifest records figure contracts and verifies that each expected output
-was created and is non-empty. Visual quality and interpretation still require
-human review.
+The project-wide artifact registry records the current SHA-256 checksum and the
+most recent detected change for each generated figure. A checksum identifies
+the exact file; it does not assess visual quality or interpretation.
 
 ```{r}
-#| label: figure-manifest
-manifest |>
-  select(figure, role, question, grain, width_in, height_in, status)
+#| label: figure-artifact-state
+figure_state |>
+  select(
+    artifact,
+    current_sha256,
+    last_changed_at,
+    last_change_detected_by
+  ) |>
+  kable()
 ```
 
 ## Maize-yield distribution
@@ -152,6 +163,7 @@ of those differences.
 ## Reproducibility statement
 
 The figures were generated through a version-controlled script from the
-validated, prepared, and integrated project artifacts. Package versions are
-recorded in `renv.lock`; output paths and dimensions are explicit; and the
-manifest records the intended question and grain of every figure.
+prepared and integrated project artifacts. Package versions are recorded in
+`renv.lock`; output paths and dimensions are explicit; and
+`metadata/artifacts.csv` records input and output checksums before and after
+the visualization operation.

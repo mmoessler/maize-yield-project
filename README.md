@@ -62,7 +62,7 @@ maize-yield-project/
 │   └── derived/       # Generated analytical datasets (ignored)
 ├── docs/              # Supplementary setup documentation
 ├── figures/           # Generated plots
-├── metadata/          # Dictionaries, crosswalks, source metadata, and provenance
+├── metadata/          # Dictionaries, source metadata, provenance, and artifact state
 ├── reports/           # Quarto report source and rendered output
 ├── results/
 │   ├── tables/        # Generated audits, summaries, and metrics
@@ -85,13 +85,19 @@ The main scripts are:
 | `scripts/validate-data.R` | Validate the fixed teaching extract |
 | `scripts/prepare-maize-data.R` | Create the country-year maize panel |
 | `scripts/integrate-data.R` | Join the maize panel to growing-season precipitation and audit the result |
-| `scripts/visualize-maize-data.R` | Create the exploratory figure set, communication figure, and manifest |
+| `scripts/visualize-maize-data.R` | Create the exploratory and communication figure set and update artifact state |
 | `scripts/describe-maize-data.R` | Quantify distributions, period changes, associations, and evidence relevant to stationarity |
 | `scripts/explain-maize-yield.R` | Assess a causal precipitation-yield question and estimate bounded adjusted associations |
 | `scripts/model-maize-yield.R` | Fit predictive benchmarks and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
 | `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
+
+Each workflow step checks its direct inputs and existing outputs before the
+operation and checks its outputs again afterward. The shared helpers maintain
+`metadata/artifacts.csv`, a project-wide SHA-256 state registry. An unchanged
+rerun preserves the previous change timestamp; reports retain the explanatory
+and interpretive information.
 
 ## Further documentation
 
@@ -138,7 +144,7 @@ analysis-ready country-year panel
         │              ▼
         ├──► integrated derived dataset and join audit
         ├──► exploratory and communication figures
-        │         └──► figure manifest and visualization report
+        │         └──► artifact-state registry and visualization report
         ├──► descriptive summaries and stability evidence
         │         └──► modeling handoff and descriptive report
         ├──► causal design and explanatory association models
@@ -260,6 +266,7 @@ Run the workflow while retaining data and generated outputs on the host:
 mkdir -p data/source data/derived results/tables results/models figures reports
 docker run --rm \
   -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/metadata:/work/metadata" \
   -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
@@ -276,7 +283,7 @@ After a successful run, the principal outputs are:
 - `data/derived/maize-yield-with-precipitation.csv`
 - `results/tables/data-preparation-audit.csv`
 - `results/tables/data-integration-audit.csv`
-- `results/tables/data-visualization-manifest.csv`
+- `metadata/artifacts.csv`
 - `results/tables/descriptive-coverage.csv`
 - `results/tables/maize-yield-summary.csv`
 - `results/tables/maize-yield-period-summary.csv`

@@ -160,19 +160,25 @@ Run:
 ```bash
 docker run --rm \
   -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/metadata:/work/metadata" \
   -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \
   maize-yield-project
 ```
 
-The container is disposable. Bind mounts preserve downloaded data and generated outputs on the host. Mounting `reports/` also supplies the tracked Quarto source from the host, so run this command from a complete project checkout.
+The container is disposable. Bind mounts preserve downloaded data, artifact
+state, and generated outputs on the host. Mounting `metadata/` preserves the
+project-wide artifact registry, while mounting `reports/` also supplies the
+tracked Quarto source from the host. Run this command from a complete project
+checkout.
 
 For an interactive shell:
 
 ```bash
 docker run --rm -it \
   -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/metadata:/work/metadata" \
   -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \

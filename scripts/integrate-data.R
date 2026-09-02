@@ -18,6 +18,20 @@ provenance_file <- here("metadata", "provenance.yml")
 output_file <- here("data", "derived", "maize-yield-with-precipitation.csv")
 audit_file <- here("results", "tables", "data-integration-audit.csv")
 
+step_script <- "scripts/integrate-data.R"
+step_inputs <- c(
+  maize_file,
+  precipitation_file,
+  crosswalk_file,
+  provenance_file
+)
+step_outputs <- c(output_file, audit_file)
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 required_files <- c(maize_file, precipitation_file, crosswalk_file, provenance_file)
 missing_files <- required_files[!file.exists(required_files)]
 if (length(missing_files) > 0) {
@@ -151,6 +165,7 @@ audit <- tribble(
 
 write_csv(integrated, output_file, na = "")
 write_csv(audit, audit_file, na = "")
+check_artifact_state(step_outputs, step_script, phase = "after")
 message(
   "Integrated data written to: ", output_file, "\n",
   "Integration audit written to: ", audit_file, "\n",

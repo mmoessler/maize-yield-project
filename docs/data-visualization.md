@@ -16,7 +16,7 @@ prepared maize panel ───────────────┐
 integrated maize-precipitation data ┘             │
                                                   ├──► exploratory figures
                                                   ├──► communication figure
-                                                  └──► figure manifest
+                                                  └──► artifact-state registry
 ```
 
 The script reveals distributions, trends, and associations that later
@@ -33,10 +33,10 @@ or causal model.
 | `data/derived/maize-yield-panel.csv` | One selected country and year | `country + year` | Yield distributions and trends |
 | `data/derived/maize-yield-with-precipitation.csv` | One project country and year | `project_country_id + year` | Precipitation and paired relationships |
 
-Before plotting, the script checks required columns, 297-row coverage,
-candidate-key uniqueness, and non-negative yield and precipitation. These
-checks protect the plotting contract; they do not replace the preparation and
-integration audits.
+Before plotting, the script records the current checksums of its direct inputs
+and any existing figure outputs. After saving the figures, it records their
+new checksums. Structural and semantic validation belongs to the preparation
+and integration stages that created the analytical inputs.
 
 ## Figure set
 
@@ -79,8 +79,8 @@ precipitation. Saved figures use explicit dimensions and readable base text.
 
 ### Binning and overplotting
 
-The yield-histogram bin width is visible in code and the manifest records that
-a mark is a binned count. The paired scatterplot uses transparency to expose
+The yield-histogram bin width is visible in code. The paired scatterplot uses
+transparency to expose
 overlapping points and facets to separate country contexts. Transparency does
 not solve every density problem, so the figure remains exploratory.
 
@@ -122,26 +122,24 @@ Alternatively, run the complete offline workflow:
 Rscript scripts/run-all.R
 ```
 
-The script uses project-relative paths, the recorded package environment, fixed
-input artifacts, explicit dimensions, and deterministic plotting code. It
-writes figures only after checking the analytical input contracts.
+The script uses project-relative paths, the recorded package environment,
+explicit dimensions, and version-controlled plotting code. The artifact
+registry makes changes in the direct inputs and generated figures visible.
 
-## Manifest and review evidence
+## Artifact state and review evidence
 
-`results/tables/data-visualization-manifest.csv` records:
+`metadata/artifacts.csv` records:
 
-- figure name and role;
-- analytical question;
-- input artifact;
-- represented grain;
-- output path;
-- width, height, format, and resolution;
-- generated file size; and
-- calculated creation status.
+- artifact path and presence state;
+- current SHA-256 checksum;
+- most recent check time and checking script; and
+- most recent detected change time and detecting script.
 
-A `pass` confirms that the expected file exists and is non-empty. It cannot
-confirm that labels are readable, encodings are appropriate, or interpretations
-are justified. Those properties require human review of the saved artifact.
+The registry is checked before the visualization operation and again after its
+outputs are written. An unchanged checksum shows byte identity. It cannot
+confirm that labels are readable, encodings are appropriate, or
+interpretations are justified. Those properties require human review of the
+saved artifact and its report.
 
 Review each figure at its intended display size and ask:
 
@@ -158,14 +156,14 @@ embeds the generated figures.
 ## Figure and version-control policy
 
 The four exploratory PNG files are reproducible working artifacts and are
-ignored by Git. Their script, contracts, and manifest definition are tracked.
+ignored by Git. Their script and artifact state are tracked.
 
 `figures/maize-yield-communication.png` is tracked as the visible example
 artifact. It lets learners inspect the intended result immediately and should
 be regenerated deliberately whenever its data, code, environment, or design
 changes.
 
-Rendered HTML and the generated manifest remain ignored. This policy avoids
+Rendered HTML remains ignored. This policy avoids
 storing every exploratory view while retaining one inspectable teaching figure.
 
 ## Relationship to adjacent topics
@@ -188,7 +186,7 @@ When data, questions, or figure code change:
 1. review input grain, keys, units, and limitations;
 2. revise the figure contract before changing encodings;
 3. rerun preparation and integration checks;
-4. regenerate every figure and the manifest through code;
+4. regenerate every figure and update the artifact registry through code;
 5. inspect saved outputs at their intended dimensions;
 6. review accessibility and claim boundaries;
 7. render `reports/data-visualization.qmd`;

@@ -60,6 +60,7 @@ docker build -t maize-yield-project .
 mkdir -p data/source data/input data/derived results/tables results/models figures reports
 docker run --rm \
   -v "$(pwd)/data:/work/data" \
+  -v "$(pwd)/metadata:/work/metadata" \
   -v "$(pwd)/results:/work/results" \
   -v "$(pwd)/figures:/work/figures" \
   -v "$(pwd)/reports:/work/reports" \

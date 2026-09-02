@@ -20,6 +20,15 @@ output_file <- here("data", "derived", "maize-yield-panel.csv")
 audit_file <- here("results", "tables", "data-preparation-audit.csv")
 provenance_file <- here("metadata", "provenance.yml")
 
+step_script <- "scripts/prepare-maize-data.R"
+step_inputs <- c(input_file, provenance_file)
+step_outputs <- c(output_file, audit_file)
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 required_files <- c(input_file, provenance_file)
 missing_files <- required_files[!file.exists(required_files)]
 if (length(missing_files) > 0) {
@@ -163,6 +172,7 @@ if (any(audit$status == "failure")) {
 }
 
 write_csv(panel, output_file, na = "")
+check_artifact_state(step_outputs, step_script, phase = "after")
 message(
   "Prepared data written to: ", output_file, "\n",
   "Preparation audit written to: ", audit_file

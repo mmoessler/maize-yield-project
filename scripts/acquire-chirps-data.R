@@ -25,6 +25,15 @@ output_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
 boundaries_file <- here("metadata", "project-country-boundaries.geojson")
 refresh <- "--refresh" %in% arguments
 
+step_script <- "scripts/acquire-chirps-data.R"
+step_inputs <- boundaries_file
+step_outputs <- output_file
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 if (file.exists(output_file) && !refresh) {
   message(
     "Using tracked CHIRPS teaching snapshot: ", output_file, "\n",
@@ -234,3 +243,5 @@ if (file.exists(output_file) && !refresh) {
     "Review it and update metadata/provenance.yml with its SHA-256 checksum."
   )
 }
+
+check_artifact_state(step_outputs, step_script, phase = "after")

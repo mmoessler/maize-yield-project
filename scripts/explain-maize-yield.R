@@ -16,6 +16,27 @@ input_file <- here(
 )
 causal_model_file <- here("docs", "causal-model.md")
 
+step_script <- "scripts/explain-maize-yield.R"
+step_inputs <- c(input_file, causal_model_file)
+step_outputs <- c(
+  file.path(
+    here("results", "tables"),
+    c(
+      "explanatory-exposure-support.csv",
+      "explanatory-model-estimates.csv",
+      "explanatory-model-diagnostics.csv",
+      "explanatory-residual-dependence.csv"
+    )
+  ),
+  here("results", "models", "explanatory-country-time-model.rds"),
+  here("results", "explanatory-modeling-conclusion.md")
+)
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 required_files <- c(input_file, causal_model_file)
 missing_files <- required_files[!file.exists(required_files)]
 if (length(missing_files) > 0) {
@@ -433,6 +454,8 @@ writeLines(
   here("results", "explanatory-modeling-conclusion.md"),
   useBytes = TRUE
 )
+
+check_artifact_state(step_outputs, step_script, phase = "after")
 
 message(
   "Explanatory-modeling tables written to: ",

@@ -18,6 +18,21 @@ dictionary_file <- here("metadata", "faostat-maize-yield-data-dictionary.csv")
 flag_code_file <- here("metadata", "faostat-flag-code-list.csv")
 source_metadata_file <- here("metadata", "source-metadata.yml")
 
+step_script <- "scripts/validate-data.R"
+step_inputs <- c(
+  input_file,
+  provenance_file,
+  dictionary_file,
+  flag_code_file,
+  source_metadata_file
+)
+step_outputs <- output_file
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 expected_countries <- c(
   "Botswana", "Eswatini", "Lesotho", "Malawi", "Mozambique",
   "Namibia", "South Africa", "Zambia", "Zimbabwe"
@@ -290,6 +305,7 @@ record_status(
 )
 
 write_csv(results, output_file, na = "")
+check_artifact_state(step_outputs, step_script, phase = "after")
 message("Validation results written to: ", output_file)
 print(results, n = Inf)
 

@@ -17,6 +17,28 @@ library(tidyr)
 
 input_file <- here("data", "derived", "maize-yield-panel.csv")
 
+step_script <- "scripts/model-maize-yield.R"
+step_inputs <- input_file
+step_outputs <- c(
+  file.path(
+    here("results", "tables"),
+    c(
+      "predictive-split-audit.csv",
+      "maize-yield-predictions.csv",
+      "model-performance.csv",
+      "predictive-performance-by-country.csv"
+    )
+  ),
+  here("results", "models", "predictive-benchmark-models.rds"),
+  here("figures", "predictive-observed-versus-predicted.png"),
+  here("results", "predictive-modeling-conclusion.md")
+)
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 if (!file.exists(input_file)) {
   stop(
     "Predictive-modeling input not found: ", input_file,
@@ -291,5 +313,7 @@ writeLines(
   conclusion,
   here("results", "predictive-modeling-conclusion.md")
 )
+
+check_artifact_state(step_outputs, step_script, phase = "after")
 
 message("Predictive-modeling outputs created.")

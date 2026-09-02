@@ -26,6 +26,15 @@ output_file <- here("metadata", "project-country-boundaries.geojson")
 crosswalk_file <- here("metadata", "project-country-crosswalk.csv")
 provenance_file <- here("metadata", "provenance.yml")
 
+step_script <- "scripts/acquire-country-boundaries.R"
+step_inputs <- c(crosswalk_file, provenance_file)
+step_outputs <- output_file
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 natural_earth_version <- "5.1.1"
 source_url <- paste0(
   "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v",
@@ -156,3 +165,5 @@ if (file.exists(output_file) && !refresh) {
     "Review the file and update metadata/provenance.yml with its SHA-256."
   )
 }
+
+check_artifact_state(step_outputs, step_script, phase = "after")

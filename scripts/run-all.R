@@ -33,11 +33,18 @@ if (nzchar(Sys.which("quarto"))) {
   )
 
   for (report in reports) {
+    report_output <- sub("\\.qmd$", ".html", report)
+    check_artifact_state(
+      c(report, report_output),
+      report,
+      phase = "before"
+    )
     status <- system2("quarto", c("render", report))
 
     if (!identical(status, 0L)) {
       stop("Quarto failed to render: ", report, call. = FALSE)
     }
+    check_artifact_state(report_output, report, phase = "after")
   }
 } else {
   message("Quarto was not found. Render the reports in reports/ manually.")

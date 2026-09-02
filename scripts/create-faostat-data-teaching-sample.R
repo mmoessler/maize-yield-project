@@ -43,6 +43,15 @@ output_file <- if (length(arguments) == 2) {
   here("data", "input", "faostat-maize-yield-sample.csv")
 }
 
+step_script <- "scripts/create-faostat-data-teaching-sample.R"
+step_inputs <- input_file
+step_outputs <- output_file
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 countries <- c(
   "Botswana", "Eswatini", "Lesotho", "Malawi", "Mozambique",
   "Namibia", "South Africa", "Zambia", "Zimbabwe"
@@ -136,6 +145,8 @@ if (!dir.exists(output_directory)) {
 }
 
 write_csv(sample, output_file, na = "")
+
+check_artifact_state(step_outputs, step_script, phase = "after")
 
 message(
   "Teaching sample written to: ", output_file, "\n",

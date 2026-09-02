@@ -16,6 +16,11 @@ raw_zip <- here("data", "source", "faostat-crops-livestock-products.csv.zip")
 raw_csv <- here("data", "source", "faostat-crops-livestock-products.csv")
 sample_csv <- here("data", "input", "faostat-maize-yield-sample.csv")
 
+step_script <- "scripts/acquire-faostat-data.R"
+step_inputs <- character()
+step_outputs <- c(raw_zip, raw_csv)
+check_artifact_state(step_outputs, step_script, phase = "before")
+
 # FAOSTAT bulk-download URLs can change. Confirm the current endpoint before a course run.
 faostat_url <- paste0(
   "https://bulks-faostat.fao.org/production/",
@@ -79,4 +84,5 @@ if (!file.exists(raw_csv) || file.info(raw_csv)$size <= 0) {
   stop("Acquisition did not produce a non-empty raw CSV.")
 }
 
+check_artifact_state(step_outputs, step_script, phase = "after")
 message("Raw input ready: ", raw_csv)

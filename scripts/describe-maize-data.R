@@ -16,6 +16,28 @@ input_file <- here(
   "data", "derived", "maize-yield-with-precipitation.csv"
 )
 
+step_script <- "scripts/describe-maize-data.R"
+step_inputs <- input_file
+step_outputs <- c(
+  file.path(
+    here("results", "tables"),
+    c(
+      "descriptive-coverage.csv",
+      "maize-yield-summary.csv",
+      "maize-yield-period-summary.csv",
+      "precipitation-summary.csv",
+      "yield-precipitation-association.csv",
+      "stationarity-diagnostic.csv"
+    )
+  ),
+  here("results", "descriptive-modeling-handoff.md")
+)
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
+
 if (!file.exists(input_file)) {
   stop(
     "Descriptive-analysis input not found: ", input_file,
@@ -451,6 +473,8 @@ writeLines(
   here("results", "descriptive-modeling-handoff.md"),
   useBytes = TRUE
 )
+
+check_artifact_state(step_outputs, step_script, phase = "after")
 
 if (any(coverage$status != "pass") ||
     any(yield_period_summary$coverage_status != "pass")) {

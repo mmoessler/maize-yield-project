@@ -4,74 +4,37 @@ source("scripts/functions.R")
 
 assert_project_root()
 ensure_project_directories()
-check_required_packages(c("dplyr", "ggplot2", "here", "readr", "tibble"))
+check_required_packages(c("dplyr", "ggplot2", "here", "readr"))
 
 library(dplyr)
 library(ggplot2)
 library(here)
 library(readr)
-library(tibble)
 
 panel_file <- here("data", "derived", "maize-yield-panel.csv")
 integrated_file <- here(
   "data", "derived", "maize-yield-with-precipitation.csv"
 )
-manifest_file <- here("results", "tables", "data-visualization-manifest.csv")
+figure_names <- c(
+  "maize-yield-distribution.png",
+  "maize-yield-trends.png",
+  "growing-season-precipitation-trends.png",
+  "yield-versus-precipitation.png",
+  "maize-yield-communication.png"
+)
+figure_files <- file.path(here("figures"), figure_names)
 
-required_files <- c(panel_file, integrated_file)
-missing_files <- required_files[!file.exists(required_files)]
-if (length(missing_files) > 0) {
-  stop(
-    "Visualization input(s) not found: ",
-    paste(missing_files, collapse = ", "),
-    "\nRun preparation and integration first.",
-    call. = FALSE
-  )
-}
+step_script <- "scripts/visualize-maize-data.R"
+step_inputs <- c(panel_file, integrated_file)
+step_outputs <- figure_files
+check_artifact_state(
+  c(step_inputs, step_outputs),
+  step_script,
+  phase = "before"
+)
 
 maize <- read_csv(panel_file, show_col_types = FALSE)
 integrated <- read_csv(integrated_file, show_col_types = FALSE)
-
-required_panel_columns <- c(
-  "country", "year", "yield_tonnes_per_hectare"
-)
-required_integrated_columns <- c(
-  "project_country_id", "project_country_name", "year",
-  "yield_tonnes_per_hectare", "growing_season_precipitation_mm"
-)
-
-missing_panel_columns <- setdiff(required_panel_columns, names(maize))
-missing_integrated_columns <- setdiff(
-  required_integrated_columns, names(integrated)
-)
-if (length(missing_panel_columns) > 0) {
-  stop(
-    "Prepared maize panel is missing column(s): ",
-    paste(missing_panel_columns, collapse = ", "),
-    call. = FALSE
-  )
-}
-if (length(missing_integrated_columns) > 0) {
-  stop(
-    "Integrated data are missing column(s): ",
-    paste(missing_integrated_columns, collapse = ", "),
-    call. = FALSE
-  )
-}
-
-if (nrow(maize) != 297L || anyDuplicated(maize[c("country", "year")])) {
-  stop("Prepared maize panel must contain 297 unique country-year rows.")
-}
-if (nrow(integrated) != 297L ||
-    anyDuplicated(integrated[c("project_country_id", "year")])) {
-  stop("Integrated data must contain 297 unique project-country-year rows.")
-}
-if (any(maize$yield_tonnes_per_hectare < 0, na.rm = TRUE)) {
-  stop("Yield must be non-negative before visualization.")
-}
-if (any(integrated$growing_season_precipitation_mm < 0, na.rm = TRUE)) {
-  stop("Growing-season precipitation must be non-negative before visualization.")
-}
 
 project_theme <- theme_minimal(base_size = 11) +
   theme(
@@ -174,27 +137,6 @@ communication_plot <- yield_trends +
     )
   )
 
-figure_contract <- tribble(
-  ~figure, ~role, ~question, ~input, ~grain, ~width_in, ~height_in,
-  "maize-yield-distribution.png", "exploratory",
-  "How are annual maize-yield observations distributed?",
-  "data/derived/maize-yield-panel.csv", "one binned count", 9, 6,
-  "maize-yield-trends.png", "exploratory",
-  "How does maize yield change within and differ across countries?",
-  "data/derived/maize-yield-panel.csv", "one country-year", 10, 7,
-  "growing-season-precipitation-trends.png", "exploratory",
-  "How does growing-season precipitation change within countries over time?",
-  "data/derived/maize-yield-with-precipitation.csv",
-  "one country-season", 10, 7,
-  "yield-versus-precipitation.png", "exploratory",
-  "How do maize yield and growing-season precipitation vary together?",
-  "data/derived/maize-yield-with-precipitation.csv",
-  "one country-year", 10, 7,
-  "maize-yield-communication.png", "communication",
-  "How do maize-yield trajectories differ across countries?",
-  "data/derived/maize-yield-panel.csv", "one country-year", 10, 7
-)
-
 plots <- list(
   "maize-yield-distribution.png" = yield_distribution,
   "maize-yield-trends.png" = yield_trends,
@@ -203,42 +145,27 @@ plots <- list(
   "maize-yield-communication.png" = communication_plot
 )
 
-for (index in seq_len(nrow(figure_contract))) {
-  figure_name <- figure_contract$figure[[index]]
+figure_dimensions <- list(
+  "maize-yield-distribution.png" = c(width = 9, height = 6),
+  "maize-yield-trends.png" = c(width = 10, height = 7),
+  "growing-season-precipitation-trends.png" = c(width = 10, height = 7),
+  "yield-versus-precipitation.png" = c(width = 10, height = 7),
+  "maize-yield-communication.png" = c(width = 10, height = 7)
+)
+
+for (figure_name in names(plots)) {
   ggsave(
     filename = here("figures", figure_name),
     plot = plots[[figure_name]],
-    width = figure_contract$width_in[[index]],
-    height = figure_contract$height_in[[index]],
+    width = figure_dimensions[[figure_name]][["width"]],
+    height = figure_dimensions[[figure_name]][["height"]],
     units = "in",
     dpi = 300
   )
 }
 
-manifest <- figure_contract |>
-  mutate(
-    path = file.path("figures", figure),
-    format = "png",
-    dpi = 300L,
-    size_bytes = vapply(
-      path,
-      function(file) as.numeric(file.info(file)$size),
-      FUN.VALUE = numeric(1)
-    ),
-    status = if_else(!is.na(size_bytes) & size_bytes > 0, "pass", "failure")
-  ) |>
-  select(
-    figure, role, question, input, grain, path,
-    width_in, height_in, format, dpi, size_bytes, status
-  )
-
-write_csv(manifest, manifest_file, na = "")
-if (any(manifest$status == "failure")) {
-  stop("At least one visualization artifact was not created successfully.")
-}
-
+check_artifact_state(step_outputs, step_script, phase = "after")
 message(
   "Visualization artifacts written to: ", here("figures"), "\n",
-  "Visualization manifest written to: ", manifest_file, "\n",
   "Interpret plotted associations as descriptive, not causal."
 )
