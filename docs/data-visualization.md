@@ -45,13 +45,13 @@ The script produces five complementary artifacts:
 | Figure | Role | Question | Mark or aggregate |
 | --- | --- | --- | --- |
 | `maize-yield-distribution.png` | Exploratory | How are annual maize-yield observations distributed? | Count of observations in a 0.25 t/ha bin |
+| `maize-yield-distribution-by-country.png` | Communication | How do maize-yield distributions differ across countries? | Count of observations in a 0.25 t/ha bin within each country |
 | `maize-yield-trends.png` | Exploratory | How does yield change within and differ across countries? | One country-year point joined within a country |
 | `growing-season-precipitation-trends.png` | Exploratory | How does seasonal precipitation change within countries over time? | One country-season point joined within a country |
 | `yield-versus-precipitation.png` | Exploratory | How do yield and precipitation vary together? | One country-year point |
-| `maize-yield-communication.png` | Communication | How do maize-yield trajectories differ across countries? | One country-year point joined within a country |
 
-The exploratory set examines different structures. The communication figure
-refines the common-scale maize trend plot into the retained teaching artifact.
+The exploratory set examines different structures. The faceted distribution
+figure is retained as an immediately inspectable teaching artifact.
 
 ## Visual decisions
 
@@ -131,6 +131,7 @@ registry makes changes in the direct inputs and generated figures visible.
 `metadata/artifacts.csv` records:
 
 - artifact path and presence state;
+- learning-module topic and producer step;
 - current SHA-256 checksum;
 - most recent check time and checking script; and
 - most recent detected change time and detecting script.
@@ -158,10 +159,10 @@ embeds the generated figures.
 The four exploratory PNG files are reproducible working artifacts and are
 ignored by Git. Their script and artifact state are tracked.
 
-`figures/maize-yield-communication.png` is tracked as the visible example
-artifact. It lets learners inspect the intended result immediately and should
-be regenerated deliberately whenever its data, code, environment, or design
-changes.
+`figures/maize-yield-distribution-by-country.png` is tracked as the visible
+example artifact. It lets learners inspect the intended result immediately
+and should be regenerated deliberately whenever its data, code, environment,
+or design changes.
 
 Rendered HTML remains ignored. This policy avoids
 storing every exploratory view while retaining one inspectable teaching figure.

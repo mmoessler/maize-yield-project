@@ -1,4 +1,6 @@
-# Fit and evaluate predefined predictive benchmark models.
+# Topic: Fit and evaluate predictive benchmark models.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -15,9 +17,12 @@ library(readr)
 library(tibble)
 library(tidyr)
 
+# 01) Check artifacts before ----
+
 input_file <- here("data", "derived", "maize-yield-panel.csv")
 
 step_script <- "scripts/model-maize-yield.R"
+step_topic <- "predictive-analysis"
 step_inputs <- input_file
 step_outputs <- c(
   file.path(
@@ -38,6 +43,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Read and prepare analysis data ----
 
 if (!file.exists(input_file)) {
   stop(
@@ -84,6 +91,8 @@ maize <- maize |>
     country = factor(country)
   )
 
+# 03) Create the temporal split ----
+
 training <- maize |> filter(partition == "training")
 testing <- maize |> filter(partition == "test")
 
@@ -116,9 +125,13 @@ split_audit <- maize |>
   mutate(country = as.character(country)) |>
   arrange(factor(partition, levels = c("training", "test")), country)
 
+# 04) Fit predictive benchmark models ----
+
 historical_mean <- mean(training$log_yield)
 trend_model <- lm(log_yield ~ year, data = training)
 country_model <- lm(log_yield ~ year + country, data = training)
+
+# 05) Generate and evaluate predictions ----
 
 predictions <- testing |>
   transmute(
@@ -194,6 +207,8 @@ performance_by_country <- prediction_long |>
   mutate(model = factor(model, levels = model_order)) |>
   arrange(model, country) |>
   mutate(model = as.character(model))
+
+# 06) Create the evaluation figure and conclusion ----
 
 prediction_plot <- ggplot(
   prediction_long |>
@@ -277,6 +292,8 @@ conclusion <- c(
   )
 )
 
+# 07) Write predictive outputs ----
+
 write_csv(
   split_audit,
   here("results", "tables", "predictive-split-audit.csv")
@@ -314,6 +331,13 @@ writeLines(
   here("results", "predictive-modeling-conclusion.md")
 )
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 08) Check artifacts after ----
+
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
+)
 
 message("Predictive-modeling outputs created.")

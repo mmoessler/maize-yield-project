@@ -13,7 +13,7 @@ library(here)
 library(readr)
 library(tidyr)
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
 output_file <- here("results", "tables", "data-validation-results.csv")
@@ -23,6 +23,7 @@ flag_code_file <- here("metadata", "faostat-flag-code-list.csv")
 source_metadata_file <- here("metadata", "source-metadata.yml")
 
 step_script <- "scripts/validate-data.R"
+step_topic <- "data-management"
 step_inputs <- c(
   input_file,
   provenance_file,
@@ -310,13 +311,18 @@ record_status(
   "cannot be established from internal validation alone"
 )
 
-# 03) Wrte validation results ----
+# 03) Write validation results ----
 
 write_csv(results, output_file, na = "")
 
 # 04) Check artifacts after ----
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
+)
 
 message("Validation results written to: ", output_file)
 

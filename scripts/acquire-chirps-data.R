@@ -25,12 +25,13 @@ if (length(setdiff(arguments, "--refresh")) > 0) {
 
 refresh <- "--refresh" %in% arguments
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 output_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
 boundaries_file <- here("metadata", "project-country-boundaries.geojson")
 
 step_script <- "scripts/acquire-chirps-data.R"
+step_topic <- "data-integration"
 step_inputs <- boundaries_file
 step_outputs <- output_file
 check_artifact_state(
@@ -254,7 +255,8 @@ if (file.exists(output_file) && !refresh) {
 # 03) Check artifacts after ----
 
 check_artifact_state(
-  step_outputs, 
-  step_script, 
-  phase = "after"
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
 )

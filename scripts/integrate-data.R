@@ -13,7 +13,7 @@ library(here)
 library(readr)
 library(tibble)
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 maize_file <- here("data", "derived", "maize-yield-panel.csv")
 precipitation_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
@@ -23,6 +23,7 @@ output_file <- here("data", "derived", "maize-yield-with-precipitation.csv")
 audit_file <- here("results", "tables", "data-integration-audit.csv")
 
 step_script <- "scripts/integrate-data.R"
+step_topic <- "data-integration"
 step_inputs <- c(
   maize_file,
   precipitation_file,
@@ -78,7 +79,7 @@ if (anyDuplicated(crosswalk$faostat_area_label) ||
   stop("Crosswalk source labels and project identifiers must each be unique.")
 }
 
-# 04) Join data ----
+# 03) Join data ----
 
 maize_with_id <- maize |>
   left_join(
@@ -153,7 +154,7 @@ if (nrow(integrated) != nrow(maize_with_id) ||
   stop("The integration changed row count or introduced duplicate keys.")
 }
 
-# 05) Audit joined data ----
+# 04) Audit joined data ----
 
 audit <- tribble(
   ~check, ~expectation, ~observed, ~status,
@@ -173,17 +174,18 @@ audit <- tribble(
           "pass", "failure")
 )
 
-# 05) Write data ----
+# 05) Write integrated data ----
 
 write_csv(integrated, output_file, na = "")
 write_csv(audit, audit_file, na = "")
 
-# 06) Check artifact after ----
+# 06) Check artifacts after ----
 
 check_artifact_state(
   step_outputs,
   step_script,
-  phase = "after"
+  phase = "after",
+  topic = step_topic
 )
 
 message(

@@ -14,13 +14,14 @@ library(readr)
 library(tibble)
 library(tidyr)
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 input_file <- here(
   "data", "derived", "maize-yield-with-precipitation.csv"
 )
 
 step_script <- "scripts/describe-maize-data.R"
+step_topic <- "descriptive-analysis"
 step_inputs <- input_file
 step_outputs <- c(
   file.path(
@@ -480,12 +481,13 @@ writeLines(
   useBytes = TRUE
 )
 
-# 03) Check artifact before ----
+# 03) Check artifacts after ----
 
 check_artifact_state(
-  step_outputs, 
-  step_script, 
-  phase = "after"
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
 )
 
 if (any(coverage$status != "pass") ||

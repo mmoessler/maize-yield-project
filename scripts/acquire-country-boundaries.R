@@ -25,13 +25,14 @@ if (length(setdiff(arguments, "--refresh")) > 0) {
 
 refresh <- "--refresh" %in% arguments
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 output_file <- here("metadata", "project-country-boundaries.geojson")
 crosswalk_file <- here("metadata", "project-country-crosswalk.csv")
 provenance_file <- here("metadata", "provenance.yml")
 
 step_script <- "scripts/acquire-country-boundaries.R"
+step_topic <- "data-integration"
 step_inputs <- c(crosswalk_file, provenance_file)
 step_outputs <- output_file
 check_artifact_state(
@@ -175,4 +176,9 @@ if (file.exists(output_file) && !refresh) {
 
 # 03) Check artifacts after ----
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
+)

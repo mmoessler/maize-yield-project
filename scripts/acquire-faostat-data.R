@@ -14,13 +14,14 @@ library(here)
 library(readr)
 library(stringr)
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 raw_zip <- here("data", "source", "faostat-crops-livestock-products.csv.zip")
 raw_csv <- here("data", "source", "faostat-crops-livestock-products.csv")
 sample_csv <- here("data", "input", "faostat-maize-yield-sample.csv")
 
 step_script <- "scripts/acquire-faostat-data.R"
+step_topic <- "data-management"
 step_inputs <- character()
 step_outputs <- c(raw_zip, raw_csv)
 check_artifact_state(
@@ -29,7 +30,7 @@ check_artifact_state(
   phase = "before"
 )
 
-# 02) Download & extract FAOSTAT ----
+# 02) Download and extract FAOSTAT data ----
 
 # FAOSTAT bulk-download URLs can change. Confirm the current endpoint before a course run.
 faostat_url <- paste0(
@@ -99,9 +100,10 @@ if (!file.exists(raw_csv) || file.info(raw_csv)$size <= 0) {
 # 03) Check artifacts after ----
 
 check_artifact_state(
-  step_outputs, 
+  step_outputs,
   step_script,
-  phase = "after"
+  phase = "after",
+  topic = step_topic
 )
 
 message("Raw input ready: ", raw_csv)

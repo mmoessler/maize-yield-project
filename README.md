@@ -96,8 +96,10 @@ The main scripts are:
 Each workflow step checks its direct inputs and existing outputs before the
 operation and checks its outputs again afterward. The shared helpers maintain
 `metadata/artifacts.csv`, a project-wide SHA-256 state registry. An unchanged
-rerun preserves the previous change timestamp; reports retain the explanatory
-and interpretive information.
+rerun preserves the previous change timestamp. The registry also identifies
+the learning-module topic and producer step for generated artifacts; later
+input checks do not overwrite that origin. Reports retain the explanatory and
+interpretive information.
 
 ## Further documentation
 
@@ -304,10 +306,10 @@ After a successful run, the principal outputs are:
 - `results/models/predictive-benchmark-models.rds`
 - `results/predictive-modeling-conclusion.md`
 - `figures/maize-yield-distribution.png`
+- `figures/maize-yield-distribution-by-country.png`
 - `figures/maize-yield-trends.png`
 - `figures/growing-season-precipitation-trends.png`
 - `figures/yield-versus-precipitation.png`
-- `figures/maize-yield-communication.png`
 - `figures/predictive-observed-versus-predicted.png`
 - `reports/maize-yield-report.html`
 - `reports/data-integration.html`

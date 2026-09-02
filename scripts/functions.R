@@ -1,8 +1,8 @@
-# Reusable helper functions.
+# Topic: Provide reusable project, artifact-state, and analysis helpers.
 
-preferred_tz <- c(
-  "Europe/Berlin"
-)
+# 00) Configure shared project values ----
+
+preferred_tz <- "Europe/Berlin"
 
 project_directories <- c(
   "data/source",
@@ -17,6 +17,8 @@ project_directories <- c(
 artifact_registry_file <- "metadata/artifacts.csv"
 artifact_registry_columns <- c(
   "artifact",
+  "topic",
+  "producer_step",
   "state",
   "current_sha256",
   "last_checked_at",
@@ -38,6 +40,8 @@ required_project_packages <- c(
   "tidyr",
   "yaml"
 )
+
+# 01) Check and initialize the project environment ----
 
 assert_project_root <- function() {
   required_paths <- c(
@@ -103,6 +107,17 @@ check_required_packages <- function(
   invisible(packages)
 }
 
+# 02) Track artifact state ----
+
+format_artifact_timestamp <- function(time = Sys.time()) {
+  timestamp <- format(
+    time,
+    tz = preferred_tz,
+    format = "%Y-%m-%dT%H:%M:%S%z"
+  )
+  sub("([+-][0-9]{2})([0-9]{2})$", "\\1:\\2", timestamp)
+}
+
 artifact_path <- function(path) {
   path <- as.character(path)
   project_root <- normalizePath(".", winslash = "/", mustWork = TRUE)
@@ -156,6 +171,14 @@ read_artifact_registry <- function(
     na.strings = "",
     check.names = FALSE
   )
+
+  # Add producer fields when reading a registry created by an earlier version.
+  for (column in c("topic", "producer_step")) {
+    if (!column %in% names(registry)) {
+      registry[[column]] <- NA_character_
+    }
+  }
+
   missing_columns <- setdiff(artifact_registry_columns, names(registry))
   if (length(missing_columns) > 0) {
     stop(
@@ -171,9 +194,21 @@ check_artifact_state <- function(
   paths,
   checked_by,
   phase = c("before", "after"),
+  topic = NULL,
+  producer_step = checked_by,
   registry_file = artifact_registry_file
 ) {
   phase <- match.arg(phase)
+
+  if (!is.null(topic)) {
+    if (length(topic) != 1L || is.na(topic) || !nzchar(topic)) {
+      stop("topic must be one non-empty value when supplied.", call. = FALSE)
+    }
+    if (!grepl("^[a-z0-9]+(-[a-z0-9]+)*$", topic)) {
+      stop("topic must use a lowercase hyphenated identifier.", call. = FALSE)
+    }
+  }
+
   paths <- unique(as.character(paths))
   paths <- paths[nzchar(paths)]
   if (length(paths) == 0) {
@@ -181,11 +216,7 @@ check_artifact_state <- function(
   }
 
   check_required_packages("digest")
-  checked_at <- format(
-    Sys.time(),
-    tz = preferred_tz,
-    format = "%Y-%m-%dT%H:%M:%SZ"
-  )
+  checked_at <- format_artifact_timestamp()
   registry <- read_artifact_registry(registry_file)
   observations <- lapply(paths, function(path) {
     relative_path <- artifact_path(path)
@@ -200,6 +231,8 @@ check_artifact_state <- function(
       changed <- TRUE
       registry[nrow(registry) + 1L, ] <<- list(
         relative_path,
+        if (phase == "after" && !is.null(topic)) topic else NA_character_,
+        if (phase == "after" && !is.null(topic)) producer_step else NA_character_,
         current_state,
         current_sha256,
         checked_at,
@@ -217,6 +250,10 @@ check_artifact_state <- function(
       registry$current_sha256[[existing_index]] <<- current_sha256
       registry$last_checked_at[[existing_index]] <<- checked_at
       registry$last_checked_by[[existing_index]] <<- checked_by
+      if (phase == "after" && !is.null(topic)) {
+        registry$topic[[existing_index]] <<- topic
+        registry$producer_step[[existing_index]] <<- producer_step
+      }
       if (changed) {
         registry$last_changed_at[[existing_index]] <<- checked_at
         registry$last_change_detected_by[[existing_index]] <<- checked_by
@@ -257,6 +294,8 @@ check_artifact_state <- function(
   )
   invisible(observations)
 }
+
+# 03) Provide shared analysis helpers ----
 
 safe_log <- function(x) {
   ifelse(is.na(x) | x <= 0, NA_real_, log(x))

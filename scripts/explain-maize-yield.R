@@ -1,4 +1,6 @@
-# Estimate and diagnose precipitation-yield associations for causal analysis.
+# Topic: Estimate and diagnose precipitation-yield associations.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -11,12 +13,15 @@ library(here)
 library(readr)
 library(tibble)
 
+# 01) Check artifacts before ----
+
 input_file <- here(
   "data", "derived", "maize-yield-with-precipitation.csv"
 )
 causal_model_file <- here("docs", "causal-model.md")
 
 step_script <- "scripts/explain-maize-yield.R"
+step_topic <- "explanatory-analysis"
 step_inputs <- c(input_file, causal_model_file)
 step_outputs <- c(
   file.path(
@@ -36,6 +41,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Read and prepare analysis data ----
 
 required_files <- c(input_file, causal_model_file)
 missing_files <- required_files[!file.exists(required_files)]
@@ -91,6 +98,8 @@ maize <- maize |>
       TRUE ~ "later_test"
     )
   )
+
+# 03) Assess precipitation support ----
 
 summarize_support <- function(data, scope, group_id, group_name, period) {
   tibble(
@@ -161,6 +170,8 @@ exposure_support <- bind_rows(
   country_support,
   country_period_support
 )
+
+# 04) Fit explanatory models ----
 
 models <- list(
   unadjusted = lm(
@@ -264,6 +275,8 @@ nonlinear_estimate <- tibble(
 
 model_estimates <- bind_rows(linear_estimates, nonlinear_estimate)
 
+# 05) Diagnose fitted models ----
+
 diagnose_model <- function(model, model_name) {
   residual <- residuals(model)
   fitted <- fitted(model)
@@ -321,6 +334,8 @@ residual_dependence <- bind_rows(lapply(names(models), function(name) {
   residual_data
 }))
 
+# 06) Write model outputs ----
+
 output_tables <- list(
   "explanatory-exposure-support.csv" = exposure_support,
   "explanatory-model-estimates.csv" = model_estimates,
@@ -340,6 +355,8 @@ saveRDS(
   models$country_time,
   here("results", "models", "explanatory-country-time-model.rds")
 )
+
+# 07) Create the bounded conclusion ----
 
 main_estimate <- model_estimates |>
   filter(model == "country_time")
@@ -455,7 +472,14 @@ writeLines(
   useBytes = TRUE
 )
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 08) Check artifacts after ----
+
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
+)
 
 message(
   "Explanatory-modeling tables written to: ",

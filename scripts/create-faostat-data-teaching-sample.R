@@ -33,7 +33,7 @@ if (length(arguments) > 2) {
   )
 }
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 input_file <- if (length(arguments) >= 1) {
   arguments[[1]]
@@ -48,6 +48,7 @@ output_file <- if (length(arguments) == 2) {
 }
 
 step_script <- "scripts/create-faostat-data-teaching-sample.R"
+step_topic <- "data-management"
 step_inputs <- input_file
 step_outputs <- output_file
 check_artifact_state(
@@ -127,7 +128,7 @@ if (length(missing_countries) > 0) {
   )
 }
 
-# 05) Check candidate key
+# 05) Check the candidate key ----
 
 candidate_key <- c("area", "item", "element", "year", "unit")
 duplicate_keys <- sample |>
@@ -146,7 +147,7 @@ if (nrow(duplicate_keys) > 0) {
 sample <- sample |>
   arrange(area, year, element, unit)
 
-# 05) Write sample data ----
+# 06) Write sample data ----
 
 output_directory <- dirname(output_file)
 
@@ -160,12 +161,13 @@ if (!dir.exists(output_directory)) {
 
 write_csv(sample, output_file, na = "")
 
-# 06) Check artifacts after ----
+# 07) Check artifacts after ----
 
 check_artifact_state(
   step_outputs,
   step_script,
-  phase = "after"
+  phase = "after",
+  topic = step_topic
 )
 
 message(

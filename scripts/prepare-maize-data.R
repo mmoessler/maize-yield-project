@@ -17,7 +17,7 @@ library(tibble)
 library(tidyr)
 library(yaml)
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
 output_file <- here("data", "derived", "maize-yield-panel.csv")
@@ -25,6 +25,7 @@ audit_file <- here("results", "tables", "data-preparation-audit.csv")
 provenance_file <- here("metadata", "provenance.yml")
 
 step_script <- "scripts/prepare-maize-data.R"
+step_topic <- "data-preparation"
 step_inputs <- c(input_file, provenance_file)
 step_outputs <- c(output_file, audit_file)
 check_artifact_state(
@@ -183,9 +184,14 @@ if (any(audit$status == "failure")) {
 
 write_csv(panel, output_file, na = "")
 
-# 05) Check artifact after ----
+# 05) Check artifacts after ----
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after",
+  topic = step_topic
+)
 
 message(
   "Prepared data written to: ", output_file, "\n",

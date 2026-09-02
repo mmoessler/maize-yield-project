@@ -1,10 +1,14 @@
-# Run the complete teaching workflow from the repository root.
+# Topic: Run the complete teaching workflow from the repository root.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
 assert_project_root()
 ensure_project_directories()
 check_required_packages()
+
+# 01) Run the analysis stages ----
 
 scripts <- c(
   "scripts/validate-data.R",
@@ -21,6 +25,8 @@ for (script in scripts) {
   source(script, echo = FALSE)
 }
 
+# 02) Render the reports ----
+
 if (nzchar(Sys.which("quarto"))) {
   reports <- c(
     "reports/data-validation.qmd",
@@ -30,6 +36,15 @@ if (nzchar(Sys.which("quarto"))) {
     "reports/explanatory-modeling.qmd",
     "reports/predictive-modeling.qmd",
     "reports/maize-yield-report.qmd"
+  )
+  report_topics <- c(
+    "reports/data-validation.qmd" = "data-management",
+    "reports/data-integration.qmd" = "data-integration",
+    "reports/data-visualization.qmd" = "data-visualization",
+    "reports/descriptive-data-analysis.qmd" = "descriptive-analysis",
+    "reports/explanatory-modeling.qmd" = "explanatory-analysis",
+    "reports/predictive-modeling.qmd" = "predictive-analysis",
+    "reports/maize-yield-report.qmd" = "course-project"
   )
 
   for (report in reports) {
@@ -44,7 +59,12 @@ if (nzchar(Sys.which("quarto"))) {
     if (!identical(status, 0L)) {
       stop("Quarto failed to render: ", report, call. = FALSE)
     }
-    check_artifact_state(report_output, report, phase = "after")
+    check_artifact_state(
+      report_output,
+      report,
+      phase = "after",
+      topic = unname(report_topics[[report]])
+    )
   }
 } else {
   message("Quarto was not found. Render the reports in reports/ manually.")

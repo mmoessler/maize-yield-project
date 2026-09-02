@@ -13,7 +13,7 @@ library(ggplot2)
 library(here)
 library(readr)
 
-# 01) Check artifact before ----
+# 01) Check artifacts before ----
 
 panel_file <- here(
   "data", "derived", "maize-yield-panel.csv"
@@ -31,6 +31,7 @@ figure_names <- c(
 figure_files <- file.path(here("figures"), figure_names)
 
 step_script <- "scripts/visualize-maize-data.R"
+step_topic <- "data-visualization"
 step_inputs <- c(panel_file, integrated_file)
 step_outputs <- figure_files
 check_artifact_state(
@@ -195,7 +196,8 @@ for (figure_name in names(plots)) {
 check_artifact_state(
   step_outputs,
   step_script,
-  phase = "after"
+  phase = "after",
+  topic = step_topic
 )
 
 message(

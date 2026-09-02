@@ -104,12 +104,17 @@ project-wide registry at `metadata/artifacts.csv`.
 Each registry row records:
 
 - the project-relative artifact path;
+- the learning-module topic in which an output is produced;
+- the script or report that produces the output;
 - whether the artifact is present or missing;
 - its current SHA-256 checksum when present;
 - when and by which script it was last checked; and
 - when and by which script a change was last detected.
 
-The `last_changed_at` value is preserved when a repeated execution produces
+The topic and producer are assigned during the after-operation check and are
+not overwritten when later steps consume the artifact as an input. Manually
+maintained source artifacts use `manual` as their producer. The
+`last_changed_at` value is preserved when a repeated execution produces
 identical bytes. A changed checksum establishes a byte-level change, not its
 scientific validity. Reports provide the human-readable interpretation of
 outputs; source metadata, dictionaries, and provenance retain stable meanings,

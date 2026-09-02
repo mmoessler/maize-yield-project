@@ -33,7 +33,7 @@ figure_state <- registry |>
   filter(
     artifact %in% c(
       "figures/maize-yield-distribution.png",
-      "maize-yield-distribution-by-country.png",
+      "figures/maize-yield-distribution-by-country.png",
       "figures/maize-yield-trends.png",
       "figures/growing-season-precipitation-trends.png",
       "figures/yield-versus-precipitation.png"
@@ -52,6 +52,8 @@ the exact file; it does not assess visual quality or interpretation.
 figure_state |>
   select(
     artifact,
+    topic,
+    producer_step,
     current_sha256,
     last_changed_at,
     last_change_detected_by
