@@ -30,7 +30,7 @@ read_result <- function(file_name) {
   if (!file.exists(path)) {
     stop(
       "Missing predictive result: ", path,
-      ". Run Rscript scripts/model-maize-yield.R first."
+      ". Run Rscript scripts/predict-maize-yield.R first."
     )
   }
   read_csv(path, show_col_types = FALSE)
@@ -174,7 +174,7 @@ overall average. It should be interpreted together with both error metrics.
 #| results: asis
 conclusion_file <- here("results", "predictive-modeling-conclusion.md")
 if (!file.exists(conclusion_file)) {
-  stop("Run Rscript scripts/model-maize-yield.R before rendering.")
+  stop("Run Rscript scripts/predict-maize-yield.R before rendering.")
 }
 cat(paste(readLines(conclusion_file, warn = FALSE), collapse = "\n"))
 ```

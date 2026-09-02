@@ -25,6 +25,7 @@ figure_names <- c(
   "maize-yield-distribution.png",
   "maize-yield-distribution-by-country.png",
   "maize-yield-trends.png",
+  "growing-season-precipitation-distribution-by-country.png",
   "growing-season-precipitation-trends.png",
   "yield-versus-precipitation.png"
 )
@@ -117,6 +118,30 @@ yield_trends <- ggplot(
   ) +
   project_theme
 
+precipitation_distribution_by_country <- ggplot(
+  integrated,
+  aes(x = growing_season_precipitation_mm)
+) +
+  geom_histogram(
+    binwidth = 100,
+    boundary = 0,
+    colour = "white",
+    fill = "#3B8B47",
+    na.rm = TRUE
+  ) +
+  facet_wrap(vars(project_country_name), ncol = 3) +
+  labs(
+    title = "Distribution of growing-season precipitation by country",
+    subtitle = "1990-2022",
+    x = "Country-area seasonal precipitation (mm)",
+    y = "Country-year observations",
+    caption = paste(
+      "Source: CHIRPS v2 via ClimateSERV.",
+      "Each panel shows annual growing-season precipitation for one country."
+    )
+  ) +
+  project_theme
+
 precipitation_trends <- ggplot(
   integrated,
   aes(x = year, y = growing_season_precipitation_mm)
@@ -168,6 +193,7 @@ plots <- list(
   "maize-yield-distribution.png" = yield_distribution,
   "maize-yield-distribution-by-country.png" = yield_distribution_by_country,
   "maize-yield-trends.png" = yield_trends,
+  "growing-season-precipitation-distribution-by-country.png" = precipitation_distribution_by_country,
   "growing-season-precipitation-trends.png" = precipitation_trends,
   "yield-versus-precipitation.png" = yield_precipitation
 )
@@ -176,6 +202,7 @@ figure_dimensions <- list(
   "maize-yield-distribution.png" = c(width = 9, height = 6),
   "maize-yield-distribution-by-country.png" = c(width = 10, height = 7),
   "maize-yield-trends.png" = c(width = 10, height = 7),
+  "growing-season-precipitation-distribution-by-country.png" = c(width = 10, height = 7),
   "growing-season-precipitation-trends.png" = c(width = 10, height = 7),
   "yield-versus-precipitation.png" = c(width = 10, height = 7)
 )

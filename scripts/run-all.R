@@ -17,7 +17,7 @@ scripts <- c(
   "scripts/visualize-maize-data.R",
   "scripts/describe-maize-data.R",
   "scripts/explain-maize-yield.R",
-  "scripts/model-maize-yield.R"
+  "scripts/predict-maize-yield.R"
 )
 
 for (script in scripts) {

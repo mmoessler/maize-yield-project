@@ -21,7 +21,7 @@ library(tidyr)
 
 input_file <- here("data", "derived", "maize-yield-panel.csv")
 
-step_script <- "scripts/model-maize-yield.R"
+step_script <- "scripts/predict-maize-yield.R"
 step_topic <- "predictive-analysis"
 step_inputs <- input_file
 step_outputs <- c(

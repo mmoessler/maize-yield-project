@@ -212,7 +212,7 @@ Rscript scripts/run-all.R
 4. `scripts/visualize-maize-data.R`
 5. `scripts/describe-maize-data.R`
 6. `scripts/explain-maize-yield.R`
-7. `scripts/model-maize-yield.R`
+7. `scripts/predict-maize-yield.R`
 8. render the validation, integration, visualization, descriptive-analysis,
    explanatory-modeling, predictive-modeling, and overview reports
 

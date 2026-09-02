@@ -57,7 +57,7 @@ artifact_producer_order <- c(
   "reports/descriptive-data-analysis.qmd",
   "scripts/explain-maize-yield.R",
   "reports/explanatory-modeling.qmd",
-  "scripts/model-maize-yield.R",
+  "scripts/predict-maize-yield.R",
   "reports/predictive-modeling.qmd",
   "reports/maize-yield-report.qmd"
 )
