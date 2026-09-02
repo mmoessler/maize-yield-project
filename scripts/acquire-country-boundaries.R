@@ -1,7 +1,9 @@
-# Acquire the project-country boundary reference from a pinned Natural Earth release.
+# Topic: Acquire the project-country boundary reference from a pinned Natural Earth release.
 #
 # The tracked GeoJSON keeps the normal workflow available offline. Maintainers
 # can pass --refresh to recreate it deliberately from the verified source file.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -22,6 +24,9 @@ if (length(setdiff(arguments, "--refresh")) > 0) {
 }
 
 refresh <- "--refresh" %in% arguments
+
+# 01) Check artifact before ----
+
 output_file <- here("metadata", "project-country-boundaries.geojson")
 crosswalk_file <- here("metadata", "project-country-crosswalk.csv")
 provenance_file <- here("metadata", "provenance.yml")
@@ -34,6 +39,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Download and write data ----
 
 natural_earth_version <- "5.1.1"
 source_url <- paste0(
@@ -165,5 +172,7 @@ if (file.exists(output_file) && !refresh) {
     "Review the file and update metadata/provenance.yml with its SHA-256."
   )
 }
+
+# 03) Check artifacts after ----
 
 check_artifact_state(step_outputs, step_script, phase = "after")

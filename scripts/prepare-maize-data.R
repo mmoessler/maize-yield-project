@@ -1,4 +1,6 @@
-# Prepare the fixed FAOSTAT maize teaching sample.
+# Topic: Prepare the fixed FAOSTAT maize teaching sample.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -15,6 +17,8 @@ library(tibble)
 library(tidyr)
 library(yaml)
 
+# 01) Check artifact before ----
+
 input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
 output_file <- here("data", "derived", "maize-yield-panel.csv")
 audit_file <- here("results", "tables", "data-preparation-audit.csv")
@@ -28,6 +32,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Prepare data ----
 
 required_files <- c(input_file, provenance_file)
 missing_files <- required_files[!file.exists(required_files)]
@@ -137,6 +143,8 @@ missing_log_for_positive <- panel |>
   pull(n)
 non_finite_log_values <- sum(!is.finite(panel$log_yield[!is.na(panel$log_yield)]))
 
+# 03) Audit prepared data ----
+
 audit <- tribble(
   ~check, ~expectation, ~observed, ~status,
   "input-checksum", expected_checksum, observed_checksum,
@@ -166,13 +174,19 @@ audit <- tribble(
   if_else(non_finite_log_values == 0L, "pass", "failure")
 )
 
+# 04) Write prepared data ----
+
 write_csv(audit, audit_file, na = "")
 if (any(audit$status == "failure")) {
   stop("Data preparation audit failed; inspect ", audit_file, call. = FALSE)
 }
 
 write_csv(panel, output_file, na = "")
+
+# 05) Check artifact after ----
+
 check_artifact_state(step_outputs, step_script, phase = "after")
+
 message(
   "Prepared data written to: ", output_file, "\n",
   "Preparation audit written to: ", audit_file

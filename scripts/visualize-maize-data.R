@@ -1,4 +1,6 @@
-# Create reproducible visualizations of maize yield and precipitation.
+# Topic: Create visualizations of maize yield and precipitation.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -11,16 +13,20 @@ library(ggplot2)
 library(here)
 library(readr)
 
-panel_file <- here("data", "derived", "maize-yield-panel.csv")
+# 01) Check artifact before ----
+
+panel_file <- here(
+  "data", "derived", "maize-yield-panel.csv"
+)
 integrated_file <- here(
   "data", "derived", "maize-yield-with-precipitation.csv"
 )
 figure_names <- c(
   "maize-yield-distribution.png",
+  "maize-yield-distribution-by-country.png",
   "maize-yield-trends.png",
   "growing-season-precipitation-trends.png",
-  "yield-versus-precipitation.png",
-  "maize-yield-communication.png"
+  "yield-versus-precipitation.png"
 )
 figure_files <- file.path(here("figures"), figure_names)
 
@@ -33,6 +39,8 @@ check_artifact_state(
   phase = "before"
 )
 
+# 02) Read data ----
+
 maize <- read_csv(panel_file, show_col_types = FALSE)
 integrated <- read_csv(integrated_file, show_col_types = FALSE)
 
@@ -42,6 +50,8 @@ project_theme <- theme_minimal(base_size = 11) +
     plot.title.position = "plot",
     plot.caption.position = "plot"
   )
+
+# 03) Create visualizations ----
 
 yield_distribution <- ggplot(
   maize,
@@ -62,6 +72,30 @@ yield_distribution <- ggplot(
     caption = paste(
       "Source: fixed FAOSTAT teaching sample.",
       "One observation represents one country-year."
+    )
+  ) +
+  project_theme
+
+yield_distribution_by_country <- ggplot(
+  maize,
+  aes(x = yield_tonnes_per_hectare)
+) +
+  geom_histogram(
+    binwidth = 0.25,
+    boundary = 0,
+    colour = "white",
+    fill = "#29508A",
+    na.rm = TRUE
+  ) +
+  facet_wrap(vars(country), ncol = 3) +
+  labs(
+    title = "Distribution of annual maize yield by country",
+    subtitle = "1990-2022",
+    x = "Yield (tonnes per hectare)",
+    y = "Country-year observations",
+    caption = paste(
+      "Source: fixed FAOSTAT teaching sample.",
+      "Each panel shows annual observations for one country."
     )
   ) +
   project_theme
@@ -127,30 +161,22 @@ yield_precipitation <- ggplot(
   ) +
   project_theme
 
-communication_plot <- yield_trends +
-  labs(
-    title = "Maize-yield trajectories differ across countries",
-    subtitle = "Annual country-level observations, 1990-2022",
-    caption = paste(
-      "Source: fixed FAOSTAT teaching sample.",
-      "National observations do not show within-country variation."
-    )
-  )
+# 04) Write outputs ----
 
 plots <- list(
   "maize-yield-distribution.png" = yield_distribution,
+  "maize-yield-distribution-by-country.png" = yield_distribution_by_country,
   "maize-yield-trends.png" = yield_trends,
   "growing-season-precipitation-trends.png" = precipitation_trends,
-  "yield-versus-precipitation.png" = yield_precipitation,
-  "maize-yield-communication.png" = communication_plot
+  "yield-versus-precipitation.png" = yield_precipitation
 )
 
 figure_dimensions <- list(
   "maize-yield-distribution.png" = c(width = 9, height = 6),
+  "maize-yield-distribution-by-country.png" = c(width = 10, height = 7),
   "maize-yield-trends.png" = c(width = 10, height = 7),
   "growing-season-precipitation-trends.png" = c(width = 10, height = 7),
-  "yield-versus-precipitation.png" = c(width = 10, height = 7),
-  "maize-yield-communication.png" = c(width = 10, height = 7)
+  "yield-versus-precipitation.png" = c(width = 10, height = 7)
 )
 
 for (figure_name in names(plots)) {
@@ -164,8 +190,14 @@ for (figure_name in names(plots)) {
   )
 }
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 05) Check artifacts after ----
+
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after"
+)
+
 message(
-  "Visualization artifacts written to: ", here("figures"), "\n",
-  "Interpret plotted associations as descriptive, not causal."
+  "Visualization artifacts written to: ", here("figures"), "\n"
 )

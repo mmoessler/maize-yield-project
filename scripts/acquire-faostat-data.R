@@ -1,5 +1,7 @@
-# Acquire FAOSTAT Crops and Livestock Products data.
+# Topic: Acquire FAOSTAT Crops and Livestock Products data.
 # Complete downloads are placed in data/source and are not committed to Git.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -12,6 +14,8 @@ library(here)
 library(readr)
 library(stringr)
 
+# 01) Check artifact before ----
+
 raw_zip <- here("data", "source", "faostat-crops-livestock-products.csv.zip")
 raw_csv <- here("data", "source", "faostat-crops-livestock-products.csv")
 sample_csv <- here("data", "input", "faostat-maize-yield-sample.csv")
@@ -19,7 +23,13 @@ sample_csv <- here("data", "input", "faostat-maize-yield-sample.csv")
 step_script <- "scripts/acquire-faostat-data.R"
 step_inputs <- character()
 step_outputs <- c(raw_zip, raw_csv)
-check_artifact_state(step_outputs, step_script, phase = "before")
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "before"
+)
+
+# 02) Download & extract FAOSTAT ----
 
 # FAOSTAT bulk-download URLs can change. Confirm the current endpoint before a course run.
 faostat_url <- paste0(
@@ -56,13 +66,15 @@ tryCatch(
       stop("Could not move the completed download into place.")
     }
 
-  extracted <- unzip(raw_zip, exdir = here("data", "source"))
-  normalized_file <- extracted[str_detect(basename(extracted), "Normalized.*\\.csv$")][1]
-  if (is.na(normalized_file)) stop("Normalized CSV not found in archive.")
-
-    if (!file.copy(normalized_file, raw_csv, overwrite = TRUE)) {
-      stop("Could not copy the normalized FAOSTAT CSV into place.")
-    }
+    message("Extracting FAOSTAT bulk data...")
+      
+    extracted <- unzip(raw_zip, exdir = here("data", "source"))
+    normalized_file <- extracted[str_detect(basename(extracted), "Normalized.*\\.csv$")][1]
+    if (is.na(normalized_file)) stop("Normalized CSV not found in archive.")
+  
+      if (!file.copy(normalized_file, raw_csv, overwrite = TRUE)) {
+        stop("Could not copy the normalized FAOSTAT CSV into place.")
+      }
   },
   error = function(e) {
     stop(
@@ -84,5 +96,12 @@ if (!file.exists(raw_csv) || file.info(raw_csv)$size <= 0) {
   stop("Acquisition did not produce a non-empty raw CSV.")
 }
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 03) Check artifacts after ----
+
+check_artifact_state(
+  step_outputs, 
+  step_script,
+  phase = "after"
+)
+
 message("Raw input ready: ", raw_csv)

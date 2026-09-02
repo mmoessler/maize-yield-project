@@ -1,4 +1,4 @@
-# Create a compact, repository-friendly teaching sample from FAOSTAT data.
+# Topic: Create a compact, repository-friendly teaching sample from FAOSTAT data.
 #
 # Run this script after acquiring the full normalized FAOSTAT dataset:
 #   Rscript scripts/acquire-faostat-data.R
@@ -6,6 +6,8 @@
 #
 # Optional command-line arguments override the input and output paths:
 #   Rscript scripts/create-faostat-data-teaching-sample.R <input.csv> <output.csv>
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -31,6 +33,8 @@ if (length(arguments) > 2) {
   )
 }
 
+# 01) Check artifact before ----
+
 input_file <- if (length(arguments) >= 1) {
   arguments[[1]]
 } else {
@@ -52,6 +56,8 @@ check_artifact_state(
   phase = "before"
 )
 
+# 02) Select sample countries and years ----
+
 countries <- c(
   "Botswana", "Eswatini", "Lesotho", "Malawi", "Mozambique",
   "Namibia", "South Africa", "Zambia", "Zimbabwe"
@@ -59,6 +65,8 @@ countries <- c(
 
 first_year <- 1990L
 last_year <- 2022L
+
+# 03) Read raw data ----
 
 if (!file.exists(input_file)) {
   stop(
@@ -81,6 +89,8 @@ if (length(missing_columns) > 0) {
     call. = FALSE
   )
 }
+
+# 04) Extract sample data ----
 
 sample <- raw |>
   filter(
@@ -117,6 +127,8 @@ if (length(missing_countries) > 0) {
   )
 }
 
+# 05) Check candidate key
+
 candidate_key <- c("area", "item", "element", "year", "unit")
 duplicate_keys <- sample |>
   count(across(all_of(candidate_key)), name = "records") |>
@@ -134,6 +146,8 @@ if (nrow(duplicate_keys) > 0) {
 sample <- sample |>
   arrange(area, year, element, unit)
 
+# 05) Write sample data ----
+
 output_directory <- dirname(output_file)
 
 if (!dir.exists(output_directory)) {
@@ -146,7 +160,13 @@ if (!dir.exists(output_directory)) {
 
 write_csv(sample, output_file, na = "")
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 06) Check artifacts after ----
+
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after"
+)
 
 message(
   "Teaching sample written to: ", output_file, "\n",

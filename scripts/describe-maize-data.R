@@ -1,4 +1,6 @@
-# Create reproducible descriptive summaries of maize yield and precipitation.
+# Topic: Create reproducible descriptive summaries of maize yield and precipitation.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -11,6 +13,8 @@ library(here)
 library(readr)
 library(tibble)
 library(tidyr)
+
+# 01) Check artifact before ----
 
 input_file <- here(
   "data", "derived", "maize-yield-with-precipitation.csv"
@@ -37,6 +41,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Descriptive analysis ----
 
 if (!file.exists(input_file)) {
   stop(
@@ -474,7 +480,13 @@ writeLines(
   useBytes = TRUE
 )
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 03) Check artifact before ----
+
+check_artifact_state(
+  step_outputs, 
+  step_script, 
+  phase = "after"
+)
 
 if (any(coverage$status != "pass") ||
     any(yield_period_summary$coverage_status != "pass")) {

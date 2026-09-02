@@ -11,9 +11,9 @@ execute:
 
 ## Purpose
 
-This report presents the reproducible figure set created by
+This report presents the figure set created by
 `scripts/visualize-maize-data.R`. The graphics examine distributions, temporal
-patterns, and paired observations and prepare questions for later descriptive
+patterns, and paired observations and prepare questions for later 
 analysis. They do not establish stationarity or causal effects.
 
 ```{r}
@@ -33,10 +33,10 @@ figure_state <- registry |>
   filter(
     artifact %in% c(
       "figures/maize-yield-distribution.png",
+      "maize-yield-distribution-by-country.png",
       "figures/maize-yield-trends.png",
       "figures/growing-season-precipitation-trends.png",
-      "figures/yield-versus-precipitation.png",
-      "figures/maize-yield-communication.png"
+      "figures/yield-versus-precipitation.png"
     )
   )
 ```
@@ -69,11 +69,19 @@ figure_state |>
 include_graphics(here("figures", "maize-yield-distribution.png"))
 ```
 
+```{r}
+#| label: fig-yield-distribution-by-country
+#| echo: false
+#| fig-cap: "Distribution of annual maize-yield observations by country."
+#| fig-alt: "Histogram of maize yield in tonnes per hectare by country for year observations from nine selected countries between 1990 and 2022."
+include_graphics(here("figures", "maize-yield-distribution-by-country.png"))
+```
+
 The visible shape combines observations from countries with different yield
 levels and trajectories. It depends on the documented 0.25 t/ha bin width and
 should not be interpreted as one homogeneous population distribution.
 
-## Maize-yield trends
+## Maize-yield over time
 
 ```{r}
 #| label: fig-yield-trends
@@ -134,21 +142,6 @@ Each point represents one country-year. The graphic can reveal possible
 within-country patterns and unusual observations, but it does not control for
 time trends, measurement error, temperature, inputs, irrigation, or other
 factors. It describes association, not causation.
-
-## Communication figure
-
-```{r}
-#| label: fig-communication
-#| echo: false
-#| fig-cap: "Selected communication figure: country maize-yield trajectories."
-#| fig-alt: "Nine common-scale country panels showing that maize-yield levels and trajectories differ across selected countries from 1990 to 2022."
-include_graphics(here("figures", "maize-yield-communication.png"))
-```
-
-The retained communication figure focuses on one comparison: maize-yield
-levels and trajectories differ across the selected countries. National annual
-observations do not show subnational variation and cannot identify the causes
-of those differences.
 
 ## Review questions
 

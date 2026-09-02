@@ -1,4 +1,6 @@
-# Integrate the maize country-year panel with CHIRPS growing-season rainfall.
+# Topic: Integrate the maize country-year panel with CHIRPS growing-season rainfall.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -10,6 +12,8 @@ library(dplyr)
 library(here)
 library(readr)
 library(tibble)
+
+# 01) Check artifact before ----
 
 maize_file <- here("data", "derived", "maize-yield-panel.csv")
 precipitation_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
@@ -37,6 +41,8 @@ missing_files <- required_files[!file.exists(required_files)]
 if (length(missing_files) > 0) {
   stop("Integration input(s) not found: ", paste(missing_files, collapse = ", "), call. = FALSE)
 }
+
+# 02) Read data ----
 
 maize <- read_csv(maize_file, show_col_types = FALSE)
 precipitation <- read_csv(precipitation_file, show_col_types = FALSE)
@@ -71,6 +77,8 @@ if (anyDuplicated(crosswalk$faostat_area_label) ||
     anyDuplicated(crosswalk$project_country_id)) {
   stop("Crosswalk source labels and project identifiers must each be unique.")
 }
+
+# 04) Join data ----
 
 maize_with_id <- maize |>
   left_join(
@@ -145,6 +153,8 @@ if (nrow(integrated) != nrow(maize_with_id) ||
   stop("The integration changed row count or introduced duplicate keys.")
 }
 
+# 05) Audit joined data ----
+
 audit <- tribble(
   ~check, ~expectation, ~observed, ~status,
   "maize-input-rows", "preserved by left join", as.character(nrow(maize_with_id)), "pass",
@@ -163,9 +173,19 @@ audit <- tribble(
           "pass", "failure")
 )
 
+# 05) Write data ----
+
 write_csv(integrated, output_file, na = "")
 write_csv(audit, audit_file, na = "")
-check_artifact_state(step_outputs, step_script, phase = "after")
+
+# 06) Check artifact after ----
+
+check_artifact_state(
+  step_outputs,
+  step_script,
+  phase = "after"
+)
+
 message(
   "Integrated data written to: ", output_file, "\n",
   "Integration audit written to: ", audit_file, "\n",

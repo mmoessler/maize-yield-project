@@ -1,4 +1,6 @@
-# Validate the fixed FAOSTAT teaching extract without modifying it.
+# Topic: Validate the fixed FAOSTAT teaching extract without modifying it.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -10,6 +12,8 @@ library(dplyr)
 library(here)
 library(readr)
 library(tidyr)
+
+# 01) Check artifact before ----
 
 input_file <- here("data", "input", "faostat-maize-yield-sample.csv")
 output_file <- here("results", "tables", "data-validation-results.csv")
@@ -32,6 +36,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Validate data ----
 
 expected_countries <- c(
   "Botswana", "Eswatini", "Lesotho", "Malawi", "Mozambique",
@@ -304,9 +310,16 @@ record_status(
   "cannot be established from internal validation alone"
 )
 
+# 03) Wrte validation results ----
+
 write_csv(results, output_file, na = "")
+
+# 04) Check artifacts after ----
+
 check_artifact_state(step_outputs, step_script, phase = "after")
+
 message("Validation results written to: ", output_file)
+
 print(results, n = Inf)
 
 failures <- filter(results, status == "failure")

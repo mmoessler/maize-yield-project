@@ -1,5 +1,9 @@
 # Reusable helper functions.
 
+preferred_tz <- c(
+  "Europe/Berlin"
+)
+
 project_directories <- c(
   "data/source",
   "data/input",
@@ -179,7 +183,7 @@ check_artifact_state <- function(
   check_required_packages("digest")
   checked_at <- format(
     Sys.time(),
-    tz = "UTC",
+    tz = preferred_tz,
     format = "%Y-%m-%dT%H:%M:%SZ"
   )
   registry <- read_artifact_registry(registry_file)

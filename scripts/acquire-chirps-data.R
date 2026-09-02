@@ -1,7 +1,9 @@
-# Acquire country-average CHIRPS precipitation for the teaching integration.
+# Topic: Acquire country-average CHIRPS precipitation for the teaching integration.
 #
 # The tracked snapshot keeps the normal workflow available offline. Maintainers
 # can pass --refresh to submit deliberate ClimateSERV zonal-statistics requests.
+
+# 00) Setup ----
 
 source("scripts/functions.R")
 
@@ -21,9 +23,12 @@ if (length(setdiff(arguments, "--refresh")) > 0) {
   stop("Usage: Rscript scripts/acquire-chirps-data.R [--refresh]", call. = FALSE)
 }
 
+refresh <- "--refresh" %in% arguments
+
+# 01) Check artifact before ----
+
 output_file <- here("data", "input", "chirps-growing-season-precipitation.csv")
 boundaries_file <- here("metadata", "project-country-boundaries.geojson")
-refresh <- "--refresh" %in% arguments
 
 step_script <- "scripts/acquire-chirps-data.R"
 step_inputs <- boundaries_file
@@ -33,6 +38,8 @@ check_artifact_state(
   step_script,
   phase = "before"
 )
+
+# 02) Download and write data ----
 
 if (file.exists(output_file) && !refresh) {
   message(
@@ -244,4 +251,10 @@ if (file.exists(output_file) && !refresh) {
   )
 }
 
-check_artifact_state(step_outputs, step_script, phase = "after")
+# 03) Check artifacts after ----
+
+check_artifact_state(
+  step_outputs, 
+  step_script, 
+  phase = "after"
+)
