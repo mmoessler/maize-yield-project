@@ -12,9 +12,9 @@ execute:
 ## Purpose
 
 This report presents the reproducible figure set created by
-`scripts/visualize-maize-data.R`. The graphics examine distributions, trends,
-and paired observations and prepare questions for later descriptive analysis.
-They do not establish causal effects.
+`scripts/visualize-maize-data.R`. The graphics examine distributions, temporal
+patterns, and paired observations and prepare questions for later descriptive
+analysis. They do not establish stationarity or causal effects.
 
 ```{r}
 #| label: setup
@@ -74,21 +74,40 @@ include_graphics(here("figures", "maize-yield-trends.png"))
 
 Common vertical scales support comparison of absolute yield levels. The lines
 connect ordered annual observations within each country; they do not imply
-measurements between years or explain why trajectories differ.
+measurements between years or explain why trajectories differ. Persistent
+changes in level, such as the increase visible for South Africa, motivate a
+closer assessment of whether the mean is stable over time.
 
-## Growing-season precipitation
+## Growing-season precipitation over time
 
 ```{r}
-#| label: fig-precipitation-distribution
+#| label: fig-precipitation-trends
 #| echo: false
-#| fig-cap: "Distributions of October-April country-area precipitation estimates."
-#| fig-alt: "Nine faceted histograms showing distributions of growing-season precipitation totals for selected countries."
-include_graphics(here("figures", "growing-season-precipitation.png"))
+#| fig-cap: "Growing-season precipitation estimates over time using common-scale country panels."
+#| fig-alt: "Nine faceted line charts showing annual October-April growing-season precipitation from 1990 to 2022, with one panel for each selected country and a shared vertical scale."
+include_graphics(
+  here("figures", "growing-season-precipitation-trends.png")
+)
 ```
 
 CHIRPS values are seasonal totals of country-area mean daily estimates. They
 do not measure exposure specifically over maize-growing land and conceal
-within-country rainfall variation.
+within-country rainfall variation. Using the same period and panel structure
+as the yield plot makes it possible to compare temporal patterns without
+combining variables with different units on a dual-axis graphic.
+
+## Visual questions about temporal stability
+
+Read the two time-series figures together. Ask whether each country series
+appears to have a stable level and variability, whether adjacent observations
+are similar, and whether unusual years or persistent changes are visible.
+Yield and precipitation need not have the same temporal structure even though
+both are observed at the country-year grain.
+
+These plots can reveal reasons to question a stationarity assumption, but they
+cannot prove stationarity or distinguish a deterministic trend from a unit
+root. The descriptive-analysis stage quantifies period changes and temporal
+dependence before modeling decisions are made.
 
 ## Yield and precipitation
 
@@ -123,10 +142,12 @@ of those differences.
 ## Review questions
 
 1. Which distribution features remain stable under reasonable bin widths?
-2. How would free facet scales change the interpretation of country trends?
-3. Where does overplotting affect the yield-precipitation figure?
-4. Which visible patterns should be quantified in Descriptive Data Analysis?
-5. Which additional evidence would be needed for an explanatory claim?
+2. Which countries show persistent changes in yield level over time?
+3. Does precipitation show the same temporal patterns as yield?
+4. How would free facet scales change the interpretation of country trends?
+5. Where does overplotting affect the yield-precipitation figure?
+6. Which visible patterns should be quantified in Descriptive Data Analysis?
+7. Which additional evidence would be needed for an explanatory claim?
 
 ## Reproducibility statement
 

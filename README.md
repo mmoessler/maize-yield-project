@@ -298,7 +298,7 @@ After a successful run, the principal outputs are:
 - `results/predictive-modeling-conclusion.md`
 - `figures/maize-yield-distribution.png`
 - `figures/maize-yield-trends.png`
-- `figures/growing-season-precipitation.png`
+- `figures/growing-season-precipitation-trends.png`
 - `figures/yield-versus-precipitation.png`
 - `figures/maize-yield-communication.png`
 - `figures/predictive-observed-versus-predicted.png`

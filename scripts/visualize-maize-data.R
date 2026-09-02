@@ -119,23 +119,18 @@ yield_trends <- ggplot(
   ) +
   project_theme
 
-precipitation_plot <- ggplot(
+precipitation_trends <- ggplot(
   integrated,
-  aes(x = growing_season_precipitation_mm)
+  aes(x = year, y = growing_season_precipitation_mm)
 ) +
-  geom_histogram(
-    binwidth = 100,
-    boundary = 0,
-    colour = "white",
-    fill = "#3B8B47",
-    na.rm = TRUE
-  ) +
+  geom_line(colour = "#3B8B47", linewidth = 0.5, na.rm = TRUE) +
+  geom_point(colour = "#3B8B47", size = 0.8, na.rm = TRUE) +
   facet_wrap(vars(project_country_name), ncol = 3) +
   labs(
-    title = "Growing-season precipitation distributions",
-    subtitle = "October-April seasons ending in 1990-2022",
-    x = "Country-area seasonal precipitation (mm)",
-    y = "Seasons",
+    title = "Growing-season precipitation over time",
+    subtitle = "Panels share a common precipitation scale",
+    x = "Season-ending year",
+    y = "Country-area seasonal precipitation (mm)",
     caption = paste(
       "Source: CHIRPS v2 via ClimateSERV.",
       "Country-area estimates are not maize-field exposure."
@@ -187,10 +182,10 @@ figure_contract <- tribble(
   "maize-yield-trends.png", "exploratory",
   "How does maize yield change within and differ across countries?",
   "data/derived/maize-yield-panel.csv", "one country-year", 10, 7,
-  "growing-season-precipitation.png", "exploratory",
-  "How does growing-season precipitation vary across countries?",
+  "growing-season-precipitation-trends.png", "exploratory",
+  "How does growing-season precipitation change within countries over time?",
   "data/derived/maize-yield-with-precipitation.csv",
-  "one binned country-season count", 10, 7,
+  "one country-season", 10, 7,
   "yield-versus-precipitation.png", "exploratory",
   "How do maize yield and growing-season precipitation vary together?",
   "data/derived/maize-yield-with-precipitation.csv",
@@ -203,7 +198,7 @@ figure_contract <- tribble(
 plots <- list(
   "maize-yield-distribution.png" = yield_distribution,
   "maize-yield-trends.png" = yield_trends,
-  "growing-season-precipitation.png" = precipitation_plot,
+  "growing-season-precipitation-trends.png" = precipitation_trends,
   "yield-versus-precipitation.png" = yield_precipitation,
   "maize-yield-communication.png" = communication_plot
 )

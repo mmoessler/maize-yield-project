@@ -46,7 +46,7 @@ The script produces five complementary artifacts:
 | --- | --- | --- | --- |
 | `maize-yield-distribution.png` | Exploratory | How are annual maize-yield observations distributed? | Count of observations in a 0.25 t/ha bin |
 | `maize-yield-trends.png` | Exploratory | How does yield change within and differ across countries? | One country-year point joined within a country |
-| `growing-season-precipitation.png` | Exploratory | How does seasonal precipitation vary across countries? | Count of country-seasons in a 100 mm bin |
+| `growing-season-precipitation-trends.png` | Exploratory | How does seasonal precipitation change within countries over time? | One country-season point joined within a country |
 | `yield-versus-precipitation.png` | Exploratory | How do yield and precipitation vary together? | One country-year point |
 | `maize-yield-communication.png` | Communication | How do maize-yield trajectories differ across countries? | One country-year point joined within a country |
 
@@ -57,16 +57,18 @@ refines the common-scale maize trend plot into the retained teaching artifact.
 
 ### Observation grain
 
-The trend and relationship figures preserve the country-year grain. The
-histograms apply explicit binning and label their vertical axes as counts. The
-precipitation figure describes country-area October-April estimates, not
-rainfall measured at maize fields.
+The time-series and relationship figures preserve the country-year grain. The
+yield histogram applies explicit binning and labels its vertical axis as a
+count. The precipitation figure describes country-area October-April
+estimates, not rainfall measured at maize fields.
 
 ### Position and faceting
 
 Quantitative comparisons use horizontal and vertical position. Countries are
-faceted rather than encoded as nine similar colours. The trend panels use a
-common yield scale so absolute levels remain comparable across countries.
+faceted rather than encoded as nine similar colours. The yield panels use one
+common yield scale and the precipitation panels use one common precipitation
+scale, so levels remain comparable across countries. Yield and precipitation
+remain in separate figures because their units and scales differ.
 
 ### Colour and access
 
@@ -77,10 +79,24 @@ precipitation. Saved figures use explicit dimensions and readable base text.
 
 ### Binning and overplotting
 
-Histogram bin widths are visible in code and the manifest records that a mark
-is a binned count. The paired scatterplot uses transparency to expose
+The yield-histogram bin width is visible in code and the manifest records that
+a mark is a binned count. The paired scatterplot uses transparency to expose
 overlapping points and facets to separate country contexts. Transparency does
 not solve every density problem, so the figure remains exploratory.
+
+### Temporal stability
+
+The parallel yield and precipitation time-series figures make temporal order
+visible at the same country-year grain. They support questions about changes
+in level, changes in variability, unusual years, and similarity between
+adjacent observations. In particular, persistent yield increases for some
+countries warn against treating the complete series as identically
+distributed over time.
+
+Visual evidence can challenge a stationarity assumption but cannot establish
+stationarity or identify the process that generated a trend. The following
+descriptive-analysis stage combines these figures with predefined period
+summaries and temporal-dependence diagnostics.
 
 ### Claims
 
