@@ -35,6 +35,7 @@ figure_state <- registry |>
       "figures/maize-yield-distribution.png",
       "figures/maize-yield-distribution-by-country.png",
       "figures/maize-yield-trends.png",
+      "figures/growing-season-precipitation-distribution-by-country.png",
       "figures/growing-season-precipitation-trends.png",
       "figures/yield-versus-precipitation.png"
     )
@@ -98,6 +99,16 @@ connect ordered annual observations within each country; they do not imply
 measurements between years or explain why trajectories differ. Persistent
 changes in level, such as the increase visible for South Africa, motivate a
 closer assessment of whether the mean is stable over time.
+
+## Growing-season precipitation distribution
+
+```{r}
+#| label: fig-precipitation-distribution-by-country
+#| echo: false
+#| fig-cap: "Distribution of growing-season precipitation estimates by country."
+#| fig-alt: "Histogram of growing-season precipitation estimates in mm from nine selected countries between 1990 and 2022."
+include_graphics(here("figures", "growing-season-precipitation-distribution-by-country.png"))
+```
 
 ## Growing-season precipitation over time
 
