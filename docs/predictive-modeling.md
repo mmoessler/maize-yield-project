@@ -61,7 +61,7 @@ contract and potentially different precipitation information.
 
 ## Input and split contract
 
-`scripts/model-maize-yield.R` reads
+`scripts/predict-maize-yield.R` reads
 `data/derived/maize-yield-panel.csv` and requires:
 
 - 297 complete country-year observations;
@@ -150,7 +150,7 @@ Run the upstream preparation and predictive stage from the repository root:
 ```bash
 Rscript scripts/validate-data.R
 Rscript scripts/prepare-maize-data.R
-Rscript scripts/model-maize-yield.R
+Rscript scripts/predict-maize-yield.R
 quarto render reports/predictive-modeling.qmd
 ```
 

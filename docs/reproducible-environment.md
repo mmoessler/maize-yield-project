@@ -76,7 +76,7 @@ Rscript scripts/validate-data.R
 Rscript scripts/prepare-maize-data.R
 Rscript scripts/integrate-data.R
 Rscript scripts/visualize-maize-data.R
-Rscript scripts/model-maize-yield.R
+Rscript scripts/predict-maize-yield.R
 ```
 
 Each stage creates required directories and checks its package subset. It still expects outputs from preceding stages.

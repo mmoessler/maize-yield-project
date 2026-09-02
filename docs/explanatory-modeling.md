@@ -160,7 +160,7 @@ assessment in `docs/causal-model.md`.
 
 ## Relationship to predictive modeling
 
-`scripts/model-maize-yield.R` remains a separate predictive benchmark. It uses
+`scripts/predict-maize-yield.R` remains a separate predictive benchmark. It uses
 a time-aware split, fits only the training period, predicts 2018–2022, and
 compares MAE and RMSE. Its old header has been corrected so it no longer claims
 to fit explanatory models.

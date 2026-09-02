@@ -88,7 +88,7 @@ The main scripts are:
 | `scripts/visualize-maize-data.R` | Create the exploratory and communication figure set and update artifact state |
 | `scripts/describe-maize-data.R` | Quantify distributions, period changes, associations, and evidence relevant to stationarity |
 | `scripts/explain-maize-yield.R` | Assess a causal precipitation-yield question and estimate bounded adjusted associations |
-| `scripts/model-maize-yield.R` | Fit predictive benchmarks and evaluate recent predictions |
+| `scripts/predict-maize-yield.R` | Fit predictive benchmarks and evaluate recent predictions |
 | `scripts/create-faostat-data-teaching-sample.R` | Create the fixed FAOSTAT teaching extract from the bulk input |
 | `scripts/run-all.R` | Run the analysis from fixed inputs through reporting |
 | `scripts/functions.R` | Define reusable transformation and metric helpers |
